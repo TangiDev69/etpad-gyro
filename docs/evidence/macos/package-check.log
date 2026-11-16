@@ -5,5 +5,6 @@ ZIP CRC validation: passed.
 Client app, cgame_mac, ui_mac, qagame_mac and librenderer_opengl1_mac present.
 Original pak0.pk3, pak1.pk3, pak2.pk3 and etkey absent.
 otool -L: client and renderer depend on system libraries/frameworks only; no Homebrew library dependency.
-Package runtime without explicit filesystem arguments: pending.
+Package runtime without explicit fs_basepath: passed main menu; renderer/modules resolved from build/output/ETPad-mac. Original paks were supplied through a separate local profile etmain symlink, not embedded in package.
 Device and simulator packaging: not implemented.
+Final repeat build: one current generated Legacy pack only; ZIP CRCs valid; original media/etkey excluded.

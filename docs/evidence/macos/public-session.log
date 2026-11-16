@@ -1,0 +1,31 @@
+2026-11-16 UTC: joined 87.116.30.113:27960 by 16:01:15; stayed through Oasis -> Battery until after 16:11:21; explicit disconnect/reconnect loaded Battery again by 16:12:15.
+Input: CUA keyboard movement/turning, mouse fire, reload, jump, tapout. No server administration or chat sent. Player name ETLegacyPlayer (test profile defaults).
+       0 Client download complete - restarting ...
+       0 Client download complete
+       0 Loaded entities from maps/oasis.bsp
+       0 CL_InitCGame:  1.40 seconds
+       0 ]/connect 87.116.30.113:27960
+       0 Client download complete
+       0 Loaded entities from maps/oasis.bsp
+       0 CL_InitCGame:  0.86 seconds
+1419473950 ]/team b 2 8
+1419593050 Wrote screenshots/public-oasis-intermission.png
+       0 Client download complete
+       0 Loaded entities from maps/battery.bsp
+       0 CL_InitCGame:  0.47 seconds
+1419653900 ETLegacyPlayer drowned
+1419691600 ETLegacyPlayer drowned
+1419731650 ETLegacyPlayer drowned
+1419975500 ETLegacyPlayer was killed by [BOT]WhittlinMan's Thompson
+1420000900 revive: [BOT]Merki revived ETLegacyPlayer.
+1420005500 ETLegacyPlayer was killed by [BOT]Halfwit's MP 34
+1420022000 revive: [BOT]Merki revived ETLegacyPlayer.
+1420027600 ETLegacyPlayer was exploded by [BOT]Merki's grenade
+1420082300 Wrote screenshots/public-ten-minutes.png
+1420095900 ]/disconnect
+       0 ]/connect 87.116.30.113:27960
+       0 Client download complete
+       0 Loaded entities from maps/battery.bsp
+       0 CL_InitCGame:  0.84 seconds
+1420136650 ]/team b 2 8
+1420138050 Wrote screenshots/public-reconnected.png

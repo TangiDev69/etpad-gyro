@@ -44,14 +44,20 @@ export SDKROOT="$sdk"
 cmake -S . -B build/macos -G Ninja -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
  -DCMAKE_OSX_SYSROOT="$sdk" -DXCODE_SDK_PATH="$sdk" \
- -DINSTALL_EXTRA=OFF -DFEATURE_AUTOUPDATE=OFF
+ -DINSTALL_EXTRA=OFF -DFEATURE_AUTOUPDATE=OFF \
+ -DFORCE_OMNIBOT=ON -DFEATURE_OMNIBOT=ON -DINSTALL_OMNIBOT=OFF
 cmake --build build/macos -j$(( $(sysctl -n hw.ncpu) / 2 ))
 stage="$repo/build/package-macos"
 mkdir -p "$stage/legacy" "$stage/etmain"
 ditto 'build/macos/ET Legacy.app' "$stage/ET Legacy.app"
 cp build/macos/legacy/cgame_mac build/macos/legacy/ui_mac build/macos/legacy/qagame_mac "$stage/legacy/"
 cp apple/shared/etpad-controller.cfg "$stage/legacy/"
-cp build/macos/legacy/legacy_*.pk3 "$stage/legacy/"
+# Remove only ETPad-generated mod packs from previous exports.
+for stale in "$stage"/legacy/legacy_*.pk3 "$output"/ETPad-mac/legacy/legacy_*.pk3; do
+ if [[ -f "$stale" ]]; then rm -f "$stale"; fi
+done
+mod_pack=$(cat build/macos/etpad-mod-pack.txt)
+cp "build/macos/$mod_pack" "$stage/legacy/"
 cp build/macos/librenderer_opengl1_mac "$stage/"
 cp COPYING.txt "$stage/" 2>/dev/null || cp COPYING "$stage/"
 # Original pak0/1/2 and saved profiles are deliberately excluded.

@@ -1,0 +1,44 @@
+Source-built client/renderer/Legacy modules, native arm64 Omni-bot 0.93. Three bots + player; two-minute rounds. Objective travel uses devmap/setviewpos, then real trigger interaction. Input via CUA.
+       0 Omni-bot 0.93 initialized in 0.06 seconds.
+       0 Omni-bot: Omni-bot Loaded Successfully
+   37850 Changed MaxBots to 4 
+   37950 ]/team b 2 8
+   38100 ETPadTest has joined the Allied team!
+   38100 ]/set timelimit 2
+   39250 [BOT]Halfwit has joined the Axis team!
+   39750 [BOT]Merki has joined the Allied team!
+   40250 [BOT]NoAmmo has joined the Axis team!
+   61050 Omni-bot 0.93 initialized in 0.05 seconds.
+   61050 Omni-bot: Omni-bot Loaded Successfully
+   61850 [skipnotify]FIGHT!
+   99350 ]/set timelimit 2
+   99500 ]/setviewpos 3708 7352 -480 0
+   99700 Allies capture the Old City!
+  102150 Wrote screenshots/shot0011.png
+  107050 ETPadTest was killed by [BOT]NoAmmo's MP 40
+  120350 ]/kill
+  120500 ]/forcetapout
+  181100 [skipnotify]Timelimit hit.
+  203500 Wrote screenshots/bots-oasis-intermission.png
+  217950 Wrote screenshots/bots-oasis-final.png
+  231600 Omni-bot 0.93 initialized in 0.05 seconds.
+  231600 Omni-bot: Omni-bot Loaded Successfully
+  282600 ]/set timelimit 2
+  282700 ]/team b 2 8
+  282900 ]/setviewpos 2478 -2248 -280 0
+  285700 Wrote screenshots/shot0012.png
+  292650 Omni-bot 0.93 initialized in 0.05 seconds.
+  292650 Omni-bot: Omni-bot Loaded Successfully
+  293500 [skipnotify]FIGHT!
+  337800 ]/set timelimit 2
+  337950 ]/setviewpos 2478 -2248 -280 0
+  338300 Allies have stolen The Gold Crate!
+  338300 Picked up an Objective
+  339900 Wrote screenshots/shot0013.png
+  340050 ]/kill
+  340200 ETPadTest committed suicide
+  340200 ]/forcetapout
+  412700 [skipnotify]Timelimit hit.
+  442400 Wrote screenshots/bots-goldrush-final.png
+  472700 Omni-bot 0.93 initialized in 0.05 seconds.
+  472700 Omni-bot: Omni-bot Loaded Successfully

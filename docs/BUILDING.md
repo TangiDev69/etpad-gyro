@@ -55,3 +55,20 @@ git -C /Users/chrissotraidis/GitHub/padmint archive main | tar -x -C build/padmi
 ```
 
 Local assisted gameplay commands: `map oasis`, `team b 2 8`, `forcetapout`; bind normal movement/fire/reload; `kill`, `forcetapout`; `set timelimit 2`. Objective-specific developer tests: `devmap oasis`, `setviewpos 3708 7352 -480 0`, then move forward into the flag; `devmap goldrush`, `setviewpos 2478 -2248 -280 0` to test gold pickup. For screenshots set `r_screenshotFormat 2` and use `screenshot NAME`; in a UI catcher run `wait 300; screenshot NAME`, then close the console. These assisted tests are not unassisted map traversal or physical input validation.
+
+## Local native bots (macOS)
+
+```sh
+scripts/prepare-bots.sh
+scripts/build-etpad.sh --platform macos --output build/output
+```
+
+The macOS build enables the source-built Legacy Omni-bot interface. The optional bot core is the official ET: Legacy mirror's Omni-bot 0.93 universal macOS binary, including arm64, extracted only under ignored build/omnibot-runtime. It is not included in the package. This is separate from the source-built engine and game module.
+
+Launch with the baseline command above plus:
+
+```sh
++set omnibot_enable 1 +set omnibot_path "$PWD/build/omnibot-runtime/omni-bot" +set g_minGameClients 2 +set g_gametype 2 +devmap oasis
+```
+
+Console: `bot maxbots 4` (three bots plus the player), `team b 2 8`. After the warmup restart announces FIGHT, set `timelimit 2` again because the map script resets its time limit at round start. Use Goldrush in the same way. Objective positioning remains an explicitly assisted developer test. Gameplay input was driven through CUA, not a physical controller.
