@@ -24,6 +24,16 @@ int OSX_NeedsQuarantineFix(void) { return 0; }
 void ETPad_MetalDrawable(void *pointer,int width,int height)
 {
     CAMetalLayer *layer=(CAMetalLayer *)pointer;
+    // SDL initially sizes its Metal UIView in the requested render dimensions.
+    // Keep presentation in UIKit points independent of the drawable pixels.
+    UIView *metalView=[layer.delegate isKindOfClass:UIView.class] ? (UIView *)layer.delegate : nil;
+    if(metalView.superview && !CGRectEqualToRect(metalView.frame,metalView.superview.bounds)){
+        metalView.frame=metalView.superview.bounds;
+        metalView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    }
+    // ANGLE Metal derives its framebuffer from bounds * contentsScale and
+    // overwrites drawableSize. Match that calculation to the render width.
+    if(layer.bounds.size.width>0)layer.contentsScale=(CGFloat)width/layer.bounds.size.width;
     CGSize size=CGSizeMake(width,height);
     if(!CGSizeEqualToSize(layer.drawableSize,size))layer.drawableSize=size;
 }

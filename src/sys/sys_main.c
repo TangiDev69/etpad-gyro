@@ -1293,8 +1293,9 @@ void Sys_SetUpConsoleAndSignals(void)
 	CON_Init();
 #endif
 
-// don't set signal handlers for anything that will generate coredump (in DEBUG builds)
-#if !defined(ETLEGACY_DEBUG)
+// UIKit's crash reporter needs the original fatal signal and faulting stack.
+// Desktop release builds retain the upstream cleanup handler.
+#if !defined(ETLEGACY_DEBUG) && !defined(ETPAD_IOS)
 	signal(SIGILL, Sys_SigHandler);
 	signal(SIGFPE, Sys_SigHandler);
 	signal(SIGSEGV, Sys_SigHandler);

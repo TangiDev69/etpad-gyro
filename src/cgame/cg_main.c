@@ -2147,6 +2147,10 @@ void CG_DemoBackwardsCompatInit()
  */
 void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum, qboolean demoPlayback, int etLegacyClient, demoPlayInfo_t *info, int clientVersion)
 {
+#ifdef ETPAD_IOS
+	extern void ETPad_CGameBeginInit(void);
+	ETPad_CGameBeginInit();
+#endif
 	const char *s;
 	int        i;
 	char       versionString[128];
