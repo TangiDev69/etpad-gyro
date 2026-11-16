@@ -8,6 +8,12 @@ other_booted() {
   xcrun simctl list devices booted -j | python3 -c 'import json,sys; d=json.load(sys.stdin); allowed=sys.argv[1]; print("\n".join(x["udid"] for a in d["devices"].values() for x in a if x.get("state")=="Booted" and x["udid"]!=allowed))' "${udid:-}"
 }
 udid=$(cat "$state" 2>/dev/null || true)
+# The tracked reservation survives build-folder cleanup. Never allocate a second device.
+if [[ -z "$udid" && -f docs/SIMULATOR.md ]]; then
+ udid=$(sed -n 's/^UDID: `\([^`]*\)`.*/\1/p' docs/SIMULATOR.md)
+ [[ -n "$udid" ]] || { echo 'Simulator reservation exists but its UDID is unreadable.' >&2; exit 1; }
+ printf '%s\n' "$udid" > "$state"
+fi
 if [[ -n "$(other_booted)" ]]; then echo 'Refusing: another simulator is booted.' >&2; exit 1; fi
 case "${1:-}" in
  inventory) xcrun simctl list devicetypes;;
@@ -21,7 +27,7 @@ case "${1:-}" in
  test)
   [[ -n "$udid" ]] || { echo 'Run scripts/sim.sh init first.' >&2; exit 1; }
   [[ $# -ge 3 ]] || { echo 'Usage: scripts/sim.sh test APP BUNDLE_ID [launch arguments...]' >&2; exit 2; }
-  if pgrep -x etl >/dev/null; then echo 'Stop the macOS game first.' >&2; exit 1; fi
+  if pgrep -f 'ET Legacy.app/Contents/MacOS/ET Legacy|(^|/)etl($| )' >/dev/null; then echo 'Stop the macOS game first.' >&2; exit 1; fi
   trap 'xcrun simctl shutdown "$udid" >/dev/null 2>&1 || true; osascript -e '\''tell application "Simulator" to quit'\'' >/dev/null 2>&1 || true' EXIT
   xcrun simctl shutdown all
   xcrun simctl boot "$udid"

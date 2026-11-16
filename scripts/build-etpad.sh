@@ -31,9 +31,16 @@ fi
 trap 'rmdir "$repo/build/etpad-build-active"' EXIT
 if [[ ! -f libs/CMakeLists.txt ]]; then
  git config submodule.libs.url https://github.com/etlegacy/etlegacy-libs.git
- git submodule update --init libs
+ if ! git submodule update --init libs; then
+  dependency_commit=$(git rev-parse HEAD:libs)
+  git -C libs fetch origin "$dependency_commit"
+  git -C libs checkout "$dependency_commit"
+ fi
 fi
+[[ "$(git -C libs rev-parse HEAD)" = "$(git rev-parse HEAD:libs)" ]] || { echo 'libs must match the pinned upstream submodule commit' >&2; exit 1; }
+[[ -z "$(git -C libs status --porcelain)" ]] || { echo 'libs has local changes; preserve them and use a clean dependency checkout' >&2; exit 1; }
 sdk=$(xcrun --sdk macosx --show-sdk-path)
+export SDKROOT="$sdk"
 cmake -S . -B build/macos -G Ninja -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
  -DCMAKE_OSX_SYSROOT="$sdk" -DXCODE_SDK_PATH="$sdk" \
@@ -43,6 +50,7 @@ stage="$repo/build/package-macos"
 mkdir -p "$stage/legacy" "$stage/etmain"
 ditto 'build/macos/ET Legacy.app' "$stage/ET Legacy.app"
 cp build/macos/legacy/cgame_mac build/macos/legacy/ui_mac build/macos/legacy/qagame_mac "$stage/legacy/"
+cp apple/shared/etpad-controller.cfg "$stage/legacy/"
 cp build/macos/legacy/legacy_*.pk3 "$stage/legacy/"
 cp build/macos/librenderer_opengl1_mac "$stage/"
 cp COPYING.txt "$stage/" 2>/dev/null || cp COPYING "$stage/"
@@ -51,4 +59,5 @@ if [[ -n "$zip" ]]; then
  mkdir -p "$(dirname "$zip")"
  ditto -c -k --keepParent "$stage" "$zip"
 fi
-printf 'Experimental macOS package: %s\n' "$stage"
+ditto "$stage" "$output/ETPad-mac"
+printf 'Experimental macOS package: %s\n' "$output/ETPad-mac"
