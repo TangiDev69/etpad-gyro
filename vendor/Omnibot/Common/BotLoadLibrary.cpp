@@ -56,6 +56,9 @@ void Omnibot_strncpy(char *dest, const char *source, int count)
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#ifdef ETPAD_IOS
+#include <mach-o/dyld.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -293,7 +296,27 @@ HINSTANCE Omnibot_LL(const char *file)
 eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
 {
 	eomnibot_error r = BOT_ERROR_NONE;
-#ifdef WIN32
+#ifdef ETPAD_IOS
+	// Native bot code is built with the app and signed by its embedding target.
+	// Ignore omnibot_path and never search writable game-data directories.
+	char executable[4096];
+	uint32_t executableSize = sizeof(executable);
+	if (_NSGetExecutablePath(executable, &executableSize) == 0)
+	{
+		char *lastSlash = strrchr(executable, '/');
+		if (lastSlash)
+		{
+			*lastSlash = '\0';
+			std::string bundledPath = executable;
+			bundledPath += "/Frameworks/ETPadOmnibot.framework/ETPadOmnibot";
+			// The core derives its read-only script/nav root from this file's
+			// parent; resources are packaged inside the signed framework.
+			g_BotLibrary = Omnibot_LL(bundledPath.c_str());
+		}
+	}
+	(void)lib;
+	(void)path;
+#elif defined WIN32
 #ifdef _WIN64
 #define SUFFIX "_x64"
 #else
