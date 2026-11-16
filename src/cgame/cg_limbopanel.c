@@ -3425,8 +3425,15 @@ void CG_LimboPanel_Setup(void)
  */
 void CG_LimboPanel_Init(void)
 {
+#ifdef ETPAD_IOS
+	static float previousWideXoffset;
+	float offset = cgs.wideXoffset - previousWideXoffset;
+	previousWideXoffset = cgs.wideXoffset;
+#else
+	float offset = cgs.wideXoffset;
+#endif
 	BG_PanelButtonsSetup(limboPanelButtons);
-	C_PanelButtonsSetup(limboPanelButtons, cgs.wideXoffset);    // convert to possible widescreen coordinates..
+	C_PanelButtonsSetup(limboPanelButtons, offset);    // convert to possible widescreen coordinates..
 }
 
 /**

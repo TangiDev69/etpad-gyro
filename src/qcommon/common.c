@@ -2718,6 +2718,14 @@ int64_t Com_EventLoop(void)
 		case SE_MOUSE:
 			CL_MouseEvent(ev.evValue, ev.evValue2, ev.evTime);
 			break;
+#ifdef ETPAD_IOS
+		case SE_ETPAD_POINTER:
+		{
+			extern void ETPad_SetModulePointer(float, float);
+			ETPad_SetModulePointer(ev.evValue / 1000000.0f, ev.evValue2 / 1000000.0f);
+			break;
+		}
+#endif
 		case SE_JOYSTICK_AXIS:
 			CL_JoystickEvent(ev.evValue, ev.evValue2, ev.evTime);
 			break;

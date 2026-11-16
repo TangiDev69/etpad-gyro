@@ -299,6 +299,15 @@ void CG_DrawConnectScreen(qboolean interactive, qboolean forcerefresh)
 
 	if (!bg_loadscreeninited)
 	{
+#ifdef ETPAD_IOS
+		// Framework globals survive dlclose; the static rectangles already have
+		// the previous initialization's widescreen translation applied.
+		static float previousWideXoffset;
+		float offset = cgs.wideXoffset - previousWideXoffset;
+		previousWideXoffset = cgs.wideXoffset;
+#else
+		float offset = cgs.wideXoffset;
+#endif
 		trap_Cvar_Set("ui_connecting", "0");
 
 		CG_RegisterFonts();
@@ -318,7 +327,7 @@ void CG_DrawConnectScreen(qboolean interactive, qboolean forcerefresh)
 		bg_mappic = 0;
 
 		BG_PanelButtonsSetup(loadpanelButtons);
-		C_PanelButtonsSetup(loadpanelButtons, cgs.wideXoffset);
+		C_PanelButtonsSetup(loadpanelButtons, offset);
 
 		bg_loadscreeninited = qtrue;
 	}

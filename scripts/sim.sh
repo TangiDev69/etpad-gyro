@@ -58,5 +58,8 @@ case "${1:-}" in
   [[ -n "$udid" && -d build/ios-engine-sim ]] || exit 1
   [[ "${2:-latest}" =~ ^[a-zA-Z0-9_-]+$ ]] || exit 2
   xcrun simctl io "$udid" screenshot "docs/evidence/ios-sim/${2:-latest}.png";;
+ logs)
+  [[ -n "$udid" ]] || exit 1
+  xcrun simctl spawn "$udid" log show --last 5m --style compact --predicate 'process == "ETPad" OR eventMessage CONTAINS "com.etpad.ETPad"';;
  *) echo 'Usage: scripts/sim.sh init | test APP BUNDLE_ID [arguments...]' >&2; exit 2;;
 esac

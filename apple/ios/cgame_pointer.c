@@ -10,7 +10,15 @@ void ETPad_CGameBeginInit(void)
     Init_Display(NULL);
     bg_loadscreeninited = qfalse;
 }
-__attribute__((visibility("default"))) void etpad_module_pointer(float x,float y)
+void etpad_module_pointer(float x,float y)
 {
+    if (cgs.initing) return;
+    // Match the normal CG_MOUSE_EVENT entry point's display-context setup.
+    cgDC.cursorx = cgs.cursorX;
+    cgDC.cursory = cgs.cursorY;
     CG_MouseEvent((int)(x*Ccg_WideX(SCREEN_WIDTH)-cgs.cursorX),(int)(y*SCREEN_HEIGHT-cgs.cursorY));
+    // The queued mouse-down follows immediately, before another pointer event.
+    // Panel hit testing must see the position just installed by this event.
+    cgDC.cursorx = cgs.cursorX;
+    cgDC.cursory = cgs.cursorY;
 }

@@ -20,10 +20,11 @@ EXPORT void etpad_touch_move(float side,float forward)
     Com_QueueEvent(0,SE_JOYSTICK_AXIS,Cvar_VariableIntegerValue("j_side_axis"),(int)(side*32767),0,NULL);
     Com_QueueEvent(0,SE_JOYSTICK_AXIS,Cvar_VariableIntegerValue("j_forward_axis"),(int)(-forward*32767),0,NULL);
 }
-extern void ETPad_SetModulePointer(float,float);
 EXPORT void etpad_pointer(float x,float y,int edge)
 {
-    ETPad_SetModulePointer(x,y);
+    // UIKit callbacks may arrive in SDL's nested runloop. Deliver under the
+    // engine event/error boundary, in order before the corresponding key edge.
+    Com_QueueEvent(0,SE_ETPAD_POINTER,(int)(x*1000000),(int)(y*1000000),0,NULL);
     if(edge>=0)Com_QueueEvent(0,SE_KEY,K_MOUSE1,edge,0,NULL);
 }
 #include <SDL2/SDL.h>

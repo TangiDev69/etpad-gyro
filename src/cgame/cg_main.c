@@ -35,6 +35,10 @@
 
 #include "cg_local.h"
 #include "cg_cvars.h"
+#ifdef ETPAD_IOS
+#include "../../apple/shared/etpad_vm_commands.h"
+extern void etpad_module_pointer(float x, float y);
+#endif
 
 displayContextDef_t cgDC;
 
@@ -73,6 +77,11 @@ Q_EXPORT intptr_t vmMain(intptr_t command, intptr_t arg0, intptr_t arg1, intptr_
 {
 	switch (command)
 	{
+#ifdef ETPAD_IOS
+	case ETPAD_VM_ABSOLUTE_POINTER:
+		etpad_module_pointer((float)arg0 / ETPAD_POINTER_SCALE, (float)arg1 / ETPAD_POINTER_SCALE);
+		return 0;
+#endif
 	case CG_INIT:
 		CG_Init(arg0, arg1, arg2, (qboolean)arg3, arg4, (demoPlayInfo_t *)arg5, arg6);
 		cgs.initing = qfalse;
@@ -2473,6 +2482,23 @@ void CG_Shutdown(void)
 		cg.logFile = 0;
 	}
 
+#ifdef ETPAD_IOS
+	// CG_RegisterFonts copies these helpers into cgs.media; cgDC owns their
+	// allocations. dyld may retain this framework after dlclose, so clear the
+	// owners as well as the aliases before another RegisterSharedFonts call.
+	Q_UTF8_FreeFont(&cgDC.Assets.limboFont1);
+	Q_UTF8_FreeFont(&cgDC.Assets.limboFont1_lo);
+	Q_UTF8_FreeFont(&cgDC.Assets.limboFont2);
+	Q_UTF8_FreeFont(&cgDC.Assets.limboFont2_lo);
+	Q_UTF8_FreeFont(&cgDC.Assets.bg_loadscreenfont1);
+	Q_UTF8_FreeFont(&cgDC.Assets.bg_loadscreenfont2);
+	Com_Memset(&cgs.media.limboFont1, 0, sizeof(cgs.media.limboFont1));
+	Com_Memset(&cgs.media.limboFont1_lo, 0, sizeof(cgs.media.limboFont1_lo));
+	Com_Memset(&cgs.media.limboFont2, 0, sizeof(cgs.media.limboFont2));
+	Com_Memset(&cgs.media.limboFont2_lo, 0, sizeof(cgs.media.limboFont2_lo));
+	Com_Memset(&cgs.media.bg_loadscreenfont1, 0, sizeof(cgs.media.bg_loadscreenfont1));
+	Com_Memset(&cgs.media.bg_loadscreenfont2, 0, sizeof(cgs.media.bg_loadscreenfont2));
+#else
 	Q_UTF8_FreeFont(&cgs.media.limboFont1);
 	Q_UTF8_FreeFont(&cgs.media.limboFont1_lo);
 	Q_UTF8_FreeFont(&cgs.media.limboFont2);
@@ -2480,6 +2506,7 @@ void CG_Shutdown(void)
 
 	Q_UTF8_FreeFont(&cgs.media.bg_loadscreenfont1);
 	Q_UTF8_FreeFont(&cgs.media.bg_loadscreenfont2);
+#endif
 }
 
 /**

@@ -2,10 +2,8 @@
 // GPL-3.0-or-later; see COPYING.txt.
 #import <Foundation/Foundation.h>
 #include <dlfcn.h>
-#include "../../src/client/keys.h"
-#include "../../src/qcommon/q_shared.h"
-#include "../../src/qcommon/qcommon.h"
-static void (*uiPointer)(float,float),(*gamePointer)(float,float);
+#include "../../src/client/client.h"
+#include "../shared/etpad_vm_commands.h"
 void *ETPad_LoadBundledModule(const char *name, qboolean gameModule)
 {
     const char *framework = NULL;
@@ -16,6 +14,7 @@ void *ETPad_LoadBundledModule(const char *name, qboolean gameModule)
         else if (!strcmp(name,"ui")) framework="ETPadUI";
         else if (!strcmp(name,"qagame")) framework="ETPadGame";
     } else if (!strcmp(name,"librenderer_opengles_mac")) framework="ETPadRenderer";
+    else if (!strcmp(name,"librenderer_vulkan_mac")) framework="ETPadVulkanRenderer";
     if (!framework) {
         Com_Printf("ETPad refused native module: %s\n",name);
         return NULL;
@@ -35,16 +34,22 @@ void *ETPad_LoadBundledModule(const char *name, qboolean gameModule)
             FS_FOpenFileRead_Filtered(entry,&reference,qfalse,FS_EXCLUDE_DIR);
             if(reference)FS_FCloseFile(reference);
         }
-        if(!strcmp(name,"ui"))uiPointer=dlsym(handle,"etpad_module_pointer");
-        if(!strcmp(name,"cgame"))gamePointer=dlsym(handle,"etpad_module_pointer");
     }
     return handle;
 }
 
 void ETPad_SetModulePointer(float x,float y)
 {
-    // Engine key catchers use UI bit 2 and cgame bit 8 (qcommon.h).
     int catcher=Key_GetCatcher();
-    if((catcher & KEYCATCH_UI) && uiPointer)uiPointer(x,y);
-    else if((catcher & KEYCATCH_CGAME) && gamePointer)gamePointer(x,y);
+    int pointerX, pointerY;
+    x = Com_Clamp(0.0f, 1.0f, x);
+    y = Com_Clamp(0.0f, 1.0f, y);
+    pointerX = (int)(x * ETPAD_POINTER_SCALE);
+    pointerY = (int)(y * ETPAD_POINTER_SCALE);
+    // VM_Call installs the module's syscall context before its pointer handler
+    // can invoke traps. Never call a module export directly from the host.
+    if((catcher & KEYCATCH_UI) && uivm)
+        VM_Call(uivm, ETPAD_VM_ABSOLUTE_POINTER, pointerX, pointerY);
+    else if((catcher & KEYCATCH_CGAME) && cgvm)
+        VM_Call(cgvm, ETPAD_VM_ABSOLUTE_POINTER, pointerX, pointerY);
 }

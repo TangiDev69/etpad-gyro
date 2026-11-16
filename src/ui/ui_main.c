@@ -35,6 +35,10 @@
 #include "ui_local.h"
 #include "../qcommon/q_oss.h"
 #include "ui_cvars.h"
+#ifdef ETPAD_IOS
+#include "../../apple/shared/etpad_vm_commands.h"
+extern void etpad_module_pointer(float x, float y);
+#endif
 
 uiInfo_t uiInfo;
 int      dll_com_trapGetValue;
@@ -159,6 +163,11 @@ Q_EXPORT intptr_t vmMain(intptr_t command, intptr_t arg0, intptr_t arg1, intptr_
 {
 	switch (command)
 	{
+#ifdef ETPAD_IOS
+	case ETPAD_VM_ABSOLUTE_POINTER:
+		etpad_module_pointer((float)arg0 / ETPAD_POINTER_SCALE, (float)arg1 / ETPAD_POINTER_SCALE);
+		return 0;
+#endif
 	case UI_KEY_EVENT:
 		UI_KeyEvent(arg0, (qboolean) arg1);
 		return 0;

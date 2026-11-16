@@ -1651,6 +1651,13 @@ static panel_button_t *mapVoteButtons[] =
  */
 void CG_ChatPanel_Setup(void)
 {
+#ifdef ETPAD_IOS
+	static float previousWideXoffset;
+	float offset = cgs.wideXoffset - previousWideXoffset;
+	previousWideXoffset = cgs.wideXoffset;
+#else
+	float offset = cgs.wideXoffset;
+#endif
 	BG_PanelButtonsSetup(buttonsPanel);
 	BG_PanelButtonsSetup(chatPanelButtons);
 	BG_PanelButtonsSetup(teamDebriefPanelButtons);
@@ -1659,14 +1666,14 @@ void CG_ChatPanel_Setup(void)
 	BG_PanelButtonsSetup(mapVoteButtons);
 
 	// convert to possible ws coordinates..
-	C_PanelButtonsSetup(buttonsPanel, cgs.wideXoffset);
-	C_PanelButtonsSetup(chatPanelButtons, cgs.wideXoffset);
-	C_PanelButtonsSetup(teamDebriefPanelButtons, cgs.wideXoffset);
-	C_PanelButtonsSetup(debriefPanelButtons, cgs.wideXoffset);
-	C_PanelButtonsSetup(mapVoteButtons, cgs.wideXoffset);
+	C_PanelButtonsSetup(buttonsPanel, offset);
+	C_PanelButtonsSetup(chatPanelButtons, offset);
+	C_PanelButtonsSetup(teamDebriefPanelButtons, offset);
+	C_PanelButtonsSetup(debriefPanelButtons, offset);
+	C_PanelButtonsSetup(mapVoteButtons, offset);
 	// there is an exception: the same debriefTitleWindow is used in multiple panel_button_t
 	// By now the debriefTitleWindow has been adjusted too much, so we correct for the difference..
-	debriefTitleWindow.rect.x -= 2 * cgs.wideXoffset;
+	debriefTitleWindow.rect.x -= 2 * offset;
 }
 
 /**

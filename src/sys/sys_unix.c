@@ -1184,12 +1184,14 @@ void Sys_PlatformInit(void)
 	const char *term = getenv("TERM");
 
 // don't set signal handlers for anything that will generate coredump (in DEBUG builds)
-#if !defined(ETLEGACY_DEBUG)
+#if !defined(ETLEGACY_DEBUG) && !defined(ETPAD_IOS)
 	signal(SIGTRAP, Sys_SigHandler);
 	signal(SIGBUS, Sys_SigHandler);
 #endif
 	signal(SIGHUP, Sys_SigHandler);
+#ifndef ETPAD_IOS
 	signal(SIGABRT, Sys_SigHandler);
+#endif
 	signal(SIGQUIT, Sys_SigHandler);
 
 	stdinIsATTY = isatty(STDIN_FILENO) &&
