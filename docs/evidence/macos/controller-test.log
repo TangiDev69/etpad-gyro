@@ -1,0 +1,3 @@
+2026-11-16: xcrun clang -isysroot "$(xcrun --sdk macosx --show-sdk-path)" tests/apple/controller_layers.c -I/opt/homebrew/include/SDL2 -L/opt/homebrew/lib -lSDL2 -o build/tests/controller_layers
+PASS: SDL virtual controller, shoulder release ordering, settings change, triggers and unplug cleanup
+Homebrew sdl2-compat was used by this component test; game links bundled SDL2.

@@ -7,6 +7,7 @@ set(ETL_OUTPUT_DIR "")
 if(WIN32)
 	add_executable(etl WIN32 ${COMMON_SRC} ${CLIENT_SRC} ${PLATFORM_SRC} ${PLATFORM_CLIENT_SRC})
 elseif(APPLE)
+	configure_file("${CMAKE_SOURCE_DIR}/apple/shared/etpad-controller.cfg" "${CMAKE_BINARY_DIR}/legacy/etpad-controller.cfg" COPYONLY)
 	# These are vars used in the misc/Info.plist template file
 	# See set_target_properties( ... MACOSX_BUNDLE_INFO_PLIST ...)
 	set(MACOSX_BUNDLE_INFO_STRING            "ET: Legacy")

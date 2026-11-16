@@ -1,0 +1,29 @@
+       0 ]/map oasis
+   41050 ]/team b 2 8
+   80750 ]/exec etpad-smoke.cfg
+   80850 [skipnotify]Server: timelimit changed to 2
+   98350 ETPadTest committed suicide
+  151050 Wrote screenshots/shot0000.png
+  181100 [skipnotify]Timelimit hit.
+  227750 ]/devmap oasis
+  228850 [skipnotify]Server: timelimit changed to 30
+  256500 ]/setviewpos 3736 7352 -460 0
+  280600 Wrote screenshots/shot0001.png
+  305150 ]/setviewpos 3708 7352 -480 0
+  305300 Allies capture the Old City!
+  305550 Wrote screenshots/shot0002.png
+  326050 [skipnotify]Server: timelimit changed to 1
+  326050 [skipnotify]Timelimit hit.
+  327350 Wrote screenshots/oasis-intermission.png
+  354050 ]/devmap goldrush
+  355900 [skipnotify]Server: timelimit changed to 30
+  385550 [skipnotify]Server: timelimit changed to 2
+  385600 ]/setviewpos 2478 -2248 -280 0
+  385950 Allies have stolen The Gold Crate!
+  385950 Picked up an Objective
+  399650 Wrote screenshots/shot0003.png
+  402400 ETPadTest committed suicide
+  461850 Wrote screenshots/shot0004.png
+  463350 Wrote screenshots/goldrush-intermission.png
+  476850 [skipnotify]Timelimit hit.
+  500250 Wrote screenshots/goldrush-final.png

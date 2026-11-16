@@ -822,6 +822,10 @@ void IN_PrintJoystickInfo_f(void)
 	}
 }
 
+#ifdef __APPLE__
+#include "../../apple/shared/etpad_controller.h"
+#endif
+
 /**
  * @brief Inits game controller input devices
  */
@@ -887,7 +891,11 @@ static void IN_InitJoystick(void)
 		Cvar_Set("in_joystickNo", "0");
 	}
 
+	#ifdef __APPLE__
+	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "1", CVAR_ARCHIVE);
+#else
 	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "0", CVAR_ARCHIVE);
+#endif
 
 	stick = SDL_JoystickOpen(in_joystickNo->integer);
 
@@ -911,6 +919,9 @@ static void IN_InitJoystick(void)
  */
 static void IN_ShutdownJoystick(void)
 {
+#ifdef __APPLE__
+	ETPad_ReleaseController();
+#endif
 	Cmd_RemoveCommand("joystickInfo");
 
 	// in_joystick cvar is latched
@@ -997,6 +1008,19 @@ static qboolean IN_KeyToAxisAndSign(int keynum, int *outAxis, int *outSign)
 		*outSign = j_up->value > 0.0f ? -1 : 1;
 	}
 
+#ifdef __APPLE__
+	else if (Q_stricmp(bind, "+lookup") == 0)
+	{
+		*outAxis = j_pitch_axis->integer;
+		*outSign = j_pitch->value > 0.0f ? -1 : 1;
+	}
+	else if (Q_stricmp(bind, "+lookdown") == 0)
+	{
+		*outAxis = j_pitch_axis->integer;
+		*outSign = j_pitch->value > 0.0f ? 1 : -1;
+	}
+#endif
+
 	return *outSign != 0;
 }
 
@@ -1025,7 +1049,15 @@ static void IN_GamepadMove(void)
 			else
 #endif
 			{
+#ifdef __APPLE__
+				int key = ETPad_ControllerKey(i, K_PAD0_A + i, pressed);
+				if (key)
+				{
+					Com_QueueEvent(lasttime, SE_KEY, key, pressed, 0, NULL);
+				}
+#else
 				Com_QueueEvent(lasttime, SE_KEY, K_PAD0_A + i, pressed, 0, NULL);
+#endif
 			}
 			stick_state.buttons[i] = pressed;
 		}
@@ -1109,6 +1141,12 @@ static void IN_GamepadMove(void)
 			// positive to negative/neutral -> keyup
 			if (!posAnalog && posKey && oldAxis > 0 && axis <= 0)
 			{
+				#ifdef __APPLE__
+				if (i >= SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+				{
+					posKey = ETPad_ControllerKey(24 + i - SDL_CONTROLLER_AXIS_TRIGGERLEFT, posKey, qfalse);
+				}
+#endif
 				Com_QueueEvent(lasttime, SE_KEY, posKey, qfalse, 0, NULL);
 			}
 
@@ -1121,6 +1159,12 @@ static void IN_GamepadMove(void)
 			// negative/neutral to positive -> keydown
 			if (!posAnalog && posKey && oldAxis <= 0 && axis > 0)
 			{
+				#ifdef __APPLE__
+				if (i >= SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+				{
+					posKey = ETPad_ControllerKey(24 + i - SDL_CONTROLLER_AXIS_TRIGGERLEFT, posKey, qtrue);
+				}
+#endif
 				Com_QueueEvent(lasttime, SE_KEY, posKey, qtrue, 0, NULL);
 			}
 
@@ -1157,6 +1201,19 @@ static void IN_JoyMove(void)
 	int          total = 0;
 	int          i     = 0;
 
+#ifdef __APPLE__
+	if (in_joystick->integer)
+	{
+		static int deviceCount = -1;
+		int count = SDL_NumJoysticks();
+		if (count != deviceCount || (stick && !SDL_JoystickGetAttached(stick)))
+		{
+			ETPad_ReleaseController();
+			IN_InitJoystick();
+			deviceCount = count;
+		}
+	}
+#endif
 	if (gamepad)
 	{
 		IN_GamepadMove();
@@ -1966,7 +2023,15 @@ void IN_Init(void)
 
 	in_nograb = Cvar_Get("in_nograb", "0", CVAR_ARCHIVE);
 
+#ifdef __APPLE__
+	in_joystick          = Cvar_Get("in_joystick", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
+	if (!Cvar_Get("etpad_bindingsVersion", "0", CVAR_ARCHIVE)->integer)
+	{
+		Cbuf_AddText("exec etpad-controller.cfg\nset etpad_bindingsVersion 1\n");
+	}
+#else
 	in_joystick          = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
+#endif
 	in_joystickThreshold = Cvar_Get("in_joystickThreshold", "0.25", CVAR_ARCHIVE_ND);
 
 	SDL_StartTextInput();

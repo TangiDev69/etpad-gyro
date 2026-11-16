@@ -1,0 +1,9 @@
+2026-11-16
+scripts/build-etpad.sh --platform macos --output build/output --zip build/output/ETPad-mac.zip
+Result: succeeded, four compile jobs.
+ZIP CRC validation: passed.
+Client app, cgame_mac, ui_mac, qagame_mac and librenderer_opengl1_mac present.
+Original pak0.pk3, pak1.pk3, pak2.pk3 and etkey absent.
+otool -L: client and renderer depend on system libraries/frameworks only; no Homebrew library dependency.
+Package runtime without explicit filesystem arguments: pending.
+Device and simulator packaging: not implemented.

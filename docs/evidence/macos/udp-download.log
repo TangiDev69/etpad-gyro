@@ -1,0 +1,7 @@
+Public UDP download retry after unsigned-block fix, 2026-11-16.
+       0 Client downloading: legacy/legacy_v2.84.0.pk3
+       0 Client download complete - restarting ...
+       0 Client download complete
+       0 CL_InitCGame:  1.40 seconds
+       0 Client download complete
+       0 CL_InitCGame:  0.86 seconds
