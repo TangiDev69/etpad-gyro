@@ -105,3 +105,12 @@ gradle/
 
 # Misc
 /misc/changelog-markdown-converter/changelog-markdown-converter
+/build*/
+/DerivedData/
+/game-data/
+/downloads/
+*.pk3
+*.dmg
+*.ipa
+*.save
+.DS_Store
