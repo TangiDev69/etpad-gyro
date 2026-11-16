@@ -1,0 +1,22 @@
+simulator ETPad: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/ETPadGame.framework/ETPadGame: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/libEGL.framework/libEGL: x86_64 arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/ETPadUI.framework/ETPadUI: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/libGLESv2.framework/libGLESv2: x86_64 arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOSSIMULATOR, packaged/system dependencies only
+simulator: one data-only Legacy pack; original media excluded; notices 23
+simulator deep/strict signature verification passed
+device ETPad: arm64 IOS, packaged/system dependencies only
+device Frameworks/ETPadGame.framework/ETPadGame: arm64 IOS, packaged/system dependencies only
+device Frameworks/libEGL.framework/libEGL: arm64 IOS, packaged/system dependencies only
+device Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOS, packaged/system dependencies only
+device Frameworks/ETPadUI.framework/ETPadUI: arm64 IOS, packaged/system dependencies only
+device Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOS, packaged/system dependencies only
+device Frameworks/libGLESv2.framework/libGLESv2: arm64 IOS, packaged/system dependencies only
+device Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOS, packaged/system dependencies only
+device: one data-only Legacy pack; original media excluded; notices 23
+ETPad-mac.zip: ZIP CRCs/layout and original-media exclusion pass; 18839762 bytes
+ETPad-unsigned.ipa: ZIP CRCs/layout and original-media exclusion pass; 19374962 bytes
+Device install not tested: devicectl No devices found; security 0 valid identities found.

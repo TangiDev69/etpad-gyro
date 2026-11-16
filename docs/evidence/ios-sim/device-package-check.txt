@@ -1,0 +1,10 @@
+ETPad: arm64 IOS
+Frameworks/ETPadGame.framework/ETPadGame: arm64 IOS
+Frameworks/libEGL.framework/libEGL: arm64 IOS
+Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOS
+Frameworks/ETPadUI.framework/ETPadUI: arm64 IOS
+Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOS
+Frameworks/libGLESv2.framework/libGLESv2: arm64 IOS
+Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOS
+IPA CRC passed; Payload/ETPad.app; originals excluded
+Unsigned output; no install/device test claim

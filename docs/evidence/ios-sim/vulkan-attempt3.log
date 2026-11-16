@@ -1,0 +1,219 @@
+# Configure/start and final link-failure excerpt. Full log: ignored build/ios-vulkan-attempt3.log
+-- Using CPM cache folder: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_CXX
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_CXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_OBJCXX
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_OBJCXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_CXX
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_CXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_OBJCXX
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_OBJCXX - Success
+-- External: creating target 'SPRIV-Cross::SPRIV-Cross'
+-- Found Git: /opt/homebrew/bin/git (found version "2.41.0")
+-- SPIRV-Cross: Finding Git version for SPIRV-Cross.
+-- SPIRV-Cross: Git hash: vulkan-sdk-1.4.357.0
+-- CPM: Adding package SPIRV-Cross@0 (6c09849fe88c48eaed08413aa022aaa136a3a057 at /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/spirv-cross/c6ffc6b36298d2078136d1db26c60ba75cd31464/SPIRV-Cross)
+-- External: creating target 'cereal::cereal'
+-- Performing Test COMPILER_SUPPORT_M32
+-- Performing Test COMPILER_SUPPORT_M32 - Success
+-- Use libc++
+-- CPM: Adding package cereal@0 (a56bad8bbb770ee266e930c95d37fff2a5be7fea at /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/cereal/aea3a76782c3be677d918e02028e6a68e2697675/cereal)
+-- External: creating target 'Vulkan::Headers'
+-- CPM: Adding package Vulkan-Headers@0 (e3b1eec08173d6b825cd3ac88c885a63b621504a at /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/vulkan-headers/c3cb6a2f44ffdc4d5d0bebd35f7d1dce730008f3/Vulkan-Headers)
+-- Configuring done (1.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-attempt3
+[1/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cfg.cpp.o
+[2/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cross_parsed_ir.cpp.o
+[3/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_parser.cpp.o
+[4/67] Building OBJCXX object Common/CMakeFiles/MoltenVK_Common.dir/MVKOSExtensions.mm.o
+[5/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cross.cpp.o
+[6/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-reflect.dir/spirv_reflect.cpp.o
+[7/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-core.a
+[8/67] Linking OBJCXX static library Common/libMoltenVK_Common.a
+[9/67] Building OBJCXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/FileSupport.mm.o
+[10/67] Building OBJCXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVConversion.mm.o
+[11/67] Building CXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVSupport.cpp.o
+[12/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-reflect.a
+[13/67] Building CXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVToMSLConverter.cpp.o
+[14/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDebug.mm.o
+In file included from /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/Commands/MVKCmdDebug.mm:20:
+In file included from /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/Commands/MVKCommandBuffer.h:21:
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:23: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |                              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:7: note: annotate 'makeResident' with an availability attribute to silence this warning
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:26: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:7: note: annotate 'removeResidency' with an availability attribute to silence this warning
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1115:5: warning: 'MTLResidencySet' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1115 |         id<MTLResidencySet> _residencySet = nil;
+      |            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/CAMetalLayer.h:18:11: note: 'MTLResidencySet' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   18 | @protocol MTLResidencySet;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:654:7: note: annotate 'MVKDevice' with an availability attribute to silence this warning
+
+[repeated compiler warnings omitted]
+
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1004:29: note: enclose 'addResidencySet:' in an @available check to silence this warning
+ 1004 |                 if (_residencySet) [queue addResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: warning: 'removeResidencySet:' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandQueue.h:75:1: note: 'removeResidencySet:' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   75 | - (void)removeResidencySet:(id <MTLResidencySet>)residencySet
+      | ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: note: enclose 'removeResidencySet:' in an @available check to silence this warning
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
+[61/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKWatermark.mm.o
+[62/67] Building CXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKFoundation.cpp.o
+[63/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_api.mm.o
+In file included from /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/Vulkan/mvk_api.mm:23:
+In file included from /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKSwapchain.h:21:
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:23: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |                              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:7: note: annotate 'makeResident' with an availability attribute to silence this warning
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:26: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:7: note: annotate 'removeResidency' with an availability attribute to silence this warning
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1115:5: warning: 'MTLResidencySet' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1115 |         id<MTLResidencySet> _residencySet = nil;
+      |            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/CAMetalLayer.h:18:11: note: 'MTLResidencySet' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   18 | @protocol MTLResidencySet;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:654:7: note: annotate 'MVKDevice' with an availability attribute to silence this warning
+  654 | class MVKDevice : public MVKDispatchableVulkanAPIObject {
+      |       ^
+      |       API_AVAILABLE(ios(18.0))
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1004:29: warning: 'addResidencySet:' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1004 |                 if (_residencySet) [queue addResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandQueue.h:61:1: note: 'addResidencySet:' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   61 | - (void)addResidencySet:(id <MTLResidencySet>)residencySet
+      | ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1004:29: note: enclose 'addResidencySet:' in an @available check to silence this warning
+ 1004 |                 if (_residencySet) [queue addResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: warning: 'removeResidencySet:' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandQueue.h:75:1: note: 'removeResidencySet:' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   75 | - (void)removeResidencySet:(id <MTLResidencySet>)residencySet
+      | ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: note: enclose 'removeResidencySet:' in an @available check to silence this warning
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
+[64/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_datatypes.mm.o
+[65/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/vulkan.mm.o
+In file included from /Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/Vulkan/vulkan.mm:22:
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:23: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |                              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:983:7: note: annotate 'makeResident' with an availability attribute to silence this warning
+  983 |         void makeResident(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:26: warning: 'MTLAllocation' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLResidencySet.h:14:11: note: 'MTLAllocation' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   14 | @protocol MTLAllocation;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:994:7: note: annotate 'removeResidency' with an availability attribute to silence this warning
+  994 |         void removeResidency(id<MTLAllocation> allocation) {
+      |              ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1115:5: warning: 'MTLResidencySet' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1115 |         id<MTLResidencySet> _residencySet = nil;
+      |            ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/CAMetalLayer.h:18:11: note: 'MTLResidencySet' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   18 | @protocol MTLResidencySet;
+      |           ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:654:7: note: annotate 'MVKDevice' with an availability attribute to silence this warning
+  654 | class MVKDevice : public MVKDispatchableVulkanAPIObject {
+      |       ^
+      |       API_AVAILABLE(ios(18.0))
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1004:29: warning: 'addResidencySet:' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1004 |                 if (_residencySet) [queue addResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandQueue.h:61:1: note: 'addResidencySet:' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   61 | - (void)addResidencySet:(id <MTLResidencySet>)residencySet
+      | ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1004:29: note: enclose 'addResidencySet:' in an @available check to silence this warning
+ 1004 |                 if (_residencySet) [queue addResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: warning: 'removeResidencySet:' is only available on iOS 18.0 or newer [-Wunguarded-availability-new]
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandQueue.h:75:1: note: 'removeResidencySet:' has been marked as being introduced in iOS 18.0 here, but the deployment target is iOS 16.0.0
+   75 | - (void)removeResidencySet:(id <MTLResidencySet>)residencySet
+      | ^
+/Users/chrissotraidis/GitHub/etpad/build/mvk-ios-source/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h:1010:29: note: enclose 'removeResidencySet:' in an @available check to silence this warning
+ 1010 |                 if (_residencySet) [queue removeResidencySet:_residencySet];
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
+[66/67] Linking CXX shared library MoltenVK/libMoltenVK.1.4.2.dylib
+FAILED: [code=1] MoltenVK/libMoltenVK.1.4.2.dylib
+: && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -dynamiclib -Wl,-headerpad_max_install_names -compatibility_version 1.0.0 -current_version 1.4.2 -o MoltenVK/libMoltenVK.1.4.2.dylib -install_name @rpath/libMoltenVK.1.dylib MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDebug.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDispatch.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDraw.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdPipeline.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdQueries.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdRendering.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdTransfer.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandBuffer.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandEncoderState.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandEncodingPool.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandPool.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandResourceFactory.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKMTLBufferAllocation.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKBuffer.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDescriptorSet.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDevice.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDeviceMemory.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKFramebuffer.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKImage.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKInstance.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKPipeline.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKPixelFormats.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKQueryPool.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKQueue.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKRenderPass.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKResource.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKShaderModule.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSurface.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSwapchain.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSync.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKVulkanAPIObject.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Layers/MVKExtensions.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Layers/MVKLayers.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/CAMetalLayer+MoltenVK.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MTLRenderPipelineDescriptor+MoltenVK.m.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MTLSamplerDescriptor+MoltenVK.m.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MVKGPUCapture.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/NSString+MoltenVK.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKBaseObject.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKBlockObserver.m.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKCodec.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKEnvironment.cpp.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKFoundation.cpp.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKWatermark.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_api.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_datatypes.mm.o MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/vulkan.mm.o  MoltenVKShaderConverter/MoltenVKShaderConverter/libMoltenVK_ShaderConverter.a  Common/libMoltenVK_Common.a  -Xlinker -framework -Xlinker Foundation  -Xlinker -framework -Xlinker Metal  -Xlinker -framework -Xlinker UIKit  -Xlinker -framework -Xlinker IOSurface  -Xlinker -framework -Xlinker QuartzCore  _deps/spirv-cross-build/libspirv-cross-reflect.a  _deps/spirv-cross-build/libspirv-cross-msl.a  _deps/spirv-cross-build/libspirv-cross-glsl.a  _deps/spirv-cross-build/libspirv-cross-core.a && :
+Undefined symbols for architecture arm64:
+  "_CGColorSpaceCreateWithName", referenced from:
+      -[CAMetalLayer(MoltenVK) setColorspaceNameMVK:] in CAMetalLayer+MoltenVK.mm.o
+  "_CGColorSpaceGetName", referenced from:
+      -[CAMetalLayer(MoltenVK) colorspaceNameMVK] in CAMetalLayer+MoltenVK.mm.o
+  "_CGColorSpaceRelease", referenced from:
+      -[CAMetalLayer(MoltenVK) setColorspaceNameMVK:] in CAMetalLayer+MoltenVK.mm.o
+  "_kCGColorSpaceAdobeRGB1998", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceDCIP3", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceDisplayP3", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceExtendedLinearDisplayP3", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceExtendedLinearITUR_2020", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceExtendedLinearSRGB", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceExtendedSRGB", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceITUR_2100_HLG", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceITUR_2100_PQ", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceITUR_709", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+  "_kCGColorSpaceSRGB", referenced from:
+      MVKSwapchain::initCAMetalLayer(VkSwapchainCreateInfoKHR const*, VkSwapchainPresentScalingCreateInfoKHR*, unsigned int) in MVKSwapchain.mm.o
+ld: symbol(s) not found for architecture arm64
+c++: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.

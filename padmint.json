@@ -83,6 +83,14 @@
         ],
         "player": true,
         "note": "brew install cmake ninja"
+      },
+      {
+        "name": "xcodegen",
+        "version_args": [
+          "--version"
+        ],
+        "player": true,
+        "note": "brew install xcodegen (iOS host project generation)."
       }
     ]
   },

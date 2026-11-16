@@ -1,0 +1,244 @@
+       0 tty console mode disabled
+       0 ^2ET Legacy v2.86.2-179-gdc33a10 MacOS Nov 16 2026
+       0 Zone megs: 64
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/EFF257FB-4357-4F7A-BAB0-8CAF5A6F68AD/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/EFF257FB-4357-4F7A-BAB0-8CAF5A6F68AD/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/EFF257FB-4357-4F7A-BAB0-8CAF5A6F68AD/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0 [0m
+       0 5322 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Creating PID file 'profiles/ETPad/profile.pid'[0m
+       0 ----- Database Initialization --[0m
+       0 SQLite3 libversion 3.36.0 - database URI 'etl.db' - in file[0m
+       0 ... loading existing database '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etl.db'[0m
+       0 ... database file '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etl.db' loaded[0m
+       0 SQLite3 ETL: database init #4 /Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D7F9925A-5E62-42DE-B9FE-A9B17408A44A/Documents/ETPad/etl.db in [1] ms - autocommit 1[0m
+       0 SQLite3 ETL: DB schema version #4 is up to date[0m
+       0 --------------------------------[0m
+       0 execing default.cfg[0m
+       0 execing profiles/ETPad/etconfig.cfg[0m
+       0 couldn't exec autoexec.cfg[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 Not logging server attacks to disk[0m
+       0 logfile opened on Mon Nov 16 13:15:27 2026[0m
+       0 ----- Client Initialization ----[0m
+       0 [1;33mCouldn't read etl-history.[0m
+       0 ETKEY found[0m
+       0 --------------------------------[0m
+       0 [1;33mWARNING: NET_AddLocalAddress - numIP >= MAX_IPS[0m
+       0 IP: 127.0.0.1[0m
+       0 IP6: ::1[0m
+       0 IP6: fe80::1%lo0[0m
+       0 IP: 192.168.1.135[0m
+       0 IP6: fe80::14a1:319c:2e6f:b106%en8[0m
+       0 IP6: 2600:1700:a119:d0:24:18ff:514b:2a0[0m
+       0 IP6: 2600:1700:a119:d0:8919:1112:c973:b537[0m
+       0 IP6: 2600:1700:a119:d0::15[0m
+       0 IP6: 2600:1700:a119:d0:1551:743b:ff98:cf03[0m
+       0 IP6: 2600:1700:a119:d0:8b7:8ade:e674:ae31[0m
+       0 IP6: 2600:1700:a119:d0:70a2:7574:e392:ac64[0m
+       0 IP6: 2600:1700:a119:d0:b0d8:c676:812d:dd81[0m
+       0 IP6: 2600:1700:a119:d0:7931:e905:6d2b:732[0m
+       0 IP6: fe80::c8c:cb8b:5374:3b76%en0[0m
+       0 IP6: 2600:1700:a119:d0:8a9:8d26:5632:cbc0[0m
+       0 IP6: 2600:1700:a119:d0:c977:b92e:463d:12d9[0m
+       0 IP6: 2600:1700:a119:d0::1d[0m
+       0 IP: 192.168.1.190[0m
+       0 IP6: 2600:1700:a119:d0:e538:efca:d142:795d[0m
+       0 IP6: 2600:1700:a119:d0:c819:5240:649d:e9fc[0m
+       0 IP6: 2600:1700:a119:d0:5432:8ff3:236d:d5e0[0m
+       0 IP6: 2600:1700:a119:d0:c1f1:aee9:4a62:fff0[0m
+       0 IP6: 2600:1700:a119:d0:89e4:c7ab:46e5:dc06[0m
+       0 IP6: fe80::8c60:29ff:fe62:871d%awdl0[0m
+       0 IP6: fe80::8c60:29ff:fe62:871d%llw0[0m
+       0 IP6: fe80::1be0:f20d:85fc:ca59%utun0[0m
+       0 IP6: fe80::c5ca:abd6:67c8:8f43%utun1[0m
+       0 IP6: fe80::e074:c17b:8d3d:cb13%utun2[0m
+       0 IP6: fe80::ce81:b1c:bd2c:69e%utun3[0m
+       0 IP6: fe80::8e94:bca2:4aab:5823%utun4[0m
+       0 IP6: fe80::6e1f:f7ff:fec0:247%utun6[0m
+       0 IP: 100.75.55.110[0m
+       0 Opening IP6 socket: [::]:27960[0m
+       0 Opening IP socket: 0.0.0.0:27960[0m
+       0 Network initialized[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 SDL build version 2.30.9 - link version 2.30.9[0m
+       0 SDL initialized driver "uikit"[0m
+       0 Initializing window[0m
+       0 Estimated display aspect: 1.451[0m
+       0 ...setting mode -1: 1280x882[0m
+2026-11-16 13:15:27.192 ETPad[40478:5827740] ETPad renderer attached before Metal: frame={{0, 0}, {1210, 834}} bounds={{0, 0}, {1210, 834}} root={{0, 0}, {1210, 834}} orientation=3
+       0 Using 24 color bits, 24 depth, 0 stencil display[0m
+       0 Available modes [2]: '1210x834 834x1210'[0m
+       0 GL_VENDOR: GL4ES wrapping Google Inc. (Apple)[0m
+       0 GL_RENDERER: GL4ES using ANGLE (Apple, ANGLE Metal Renderer: Apple iOS simulator GPU, Version 26.5 (Build 23F77))[0m
+       0 GL_VERSION: 2.1 gl4es wrapper 1.1.7[0m
+       0 GL_SHADING_LANGUAGE_VERSION: [0m
+       0 Using vanilla renderer[0m
+       0 Initializing OpenGL extensions[0m
+       0 ...using GL_EXT_texture_env_add[0m
+       0 ...using GL_ARB_multitexture (16 texture units)[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 ----- Initializing Sound (1) ---[0m
+       0 SDL_Init( SDL_INIT_AUDIO )... OK[0m
+       0 SDL audio driver is "coreaudio".[0m
+       0 SDL_AudioSpec:[0m
+       0   Format:   AUDIO_S16LSB[0m
+       0   Freq:     44100[0m
+       0   Samples:  1024[0m
+       0   Channels: 2[0m
+       0   Silence:  0[0m
+       0   Size:     4096[0m
+       0 Starting SDL audio callback...[0m
+       0 SDL audio initialized.[0m
+       0 ----- Sound Info -----[0m
+       0 sound system is muted[0m
+       0     2 channels[0m
+       0 32768 samples[0m
+       0    16 samplebits[0m
+       0     1 submission_chunk[0m
+       0 44100 speed[0m
+       0 0x113bb8000 dma buffer[0m
+       0 No background file.[0m
+       0 ----------------------[0m
+       0 Sound initialization successfully done[0m
+s_backend set to SDL2[0m
+       0 --------------------------------[0m
+       0 Sound memory manager started[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-179-gdc33a10[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 ----- Common Initialized -------[0m
+2026-11-16 13:15:28.139 ETPad[40478:5827740] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x11059cf00>.
+2026-11-16 13:15:28.139 ETPad[40478:5827740] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x11059cf00>.
+       0 MOTD: resolving motd.etlegacy.com... resolved to 104.248.140.165:27951[0m
+objc[40478]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x12e2f8310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1385ec398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+2026-11-16 13:15:38.289 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.937 cpu_p95_ms=7.456 interval_avg_ms=16.965
+2026-11-16 13:15:48.289 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.136 cpu_p95_ms=7.604 interval_avg_ms=16.667
+2026-11-16 13:15:58.290 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.748 cpu_p95_ms=6.843 interval_avg_ms=16.667
+2026-11-16 13:16:08.306 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.720 cpu_p95_ms=6.902 interval_avg_ms=16.695
+2026-11-16 13:16:18.605 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.227 cpu_p95_ms=6.234 interval_avg_ms=17.166
+2026-11-16 13:16:28.608 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.745 cpu_p95_ms=6.293 interval_avg_ms=16.667
+2026-11-16 13:16:38.671 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.685 cpu_p95_ms=6.238 interval_avg_ms=16.778
+       0 r_customwidth will be changed upon restarting. New value: '960'[0m
+       0 r_customheight will be changed upon restarting. New value: '662'[0m
+       0 RE_Shutdown( 1 )[0m
+       0 SDL input devices shut down.[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 SDL build version 2.30.9 - link version 2.30.9[0m
+       0 SDL initialized driver "uikit"[0m
+       0 Initializing window[0m
+       0 Estimated display aspect: 1.451[0m
+       0 ...setting mode -1: 960x662[0m
+2026-11-16 13:16:44.761 ETPad[40478:5827740] ETPad renderer attached before Metal: frame={{0, 0}, {1210, 834}} bounds={{0, 0}, {1210, 834}} root={{0, 0}, {1210, 834}} orientation=4
+       0 Using 24 color bits, 24 depth, 0 stencil display[0m
+       0 Available modes [2]: '1210x834 834x1210'[0m
+       0 GL_VENDOR: GL4ES wrapping Google Inc. (Apple)[0m
+       0 GL_RENDERER: GL4ES using ANGLE (Apple, ANGLE Metal Renderer: Apple iOS simulator GPU, Version 26.5 (Build 23F77))[0m
+       0 GL_VERSION: 2.1 gl4es wrapper 1.1.7[0m
+       0 GL_SHADING_LANGUAGE_VERSION: [0m
+       0 Using vanilla renderer[0m
+       0 Initializing OpenGL extensions[0m
+       0 ...using GL_EXT_texture_env_add[0m
+       0 ...using GL_ARB_multitexture (16 texture units)[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 960 x 662 fullscreen (ratio 1.4502) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-179-gdc33a10[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+2026-11-16 13:16:45.495 ETPad[40478:5827740] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x13974cf00>.
+2026-11-16 13:16:45.496 ETPad[40478:5827740] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x13974cf00>.
+2026-11-16 13:16:49.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.242 cpu_p95_ms=6.864 interval_avg_ms=17.972
+2026-11-16 13:16:59.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.687 cpu_p95_ms=6.716 interval_avg_ms=16.667
+2026-11-16 13:17:09.458 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.515 cpu_p95_ms=6.595 interval_avg_ms=16.667
+2026-11-16 13:17:19.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.662 cpu_p95_ms=6.739 interval_avg_ms=16.667
+2026-11-16 13:17:29.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.621 cpu_p95_ms=6.645 interval_avg_ms=16.667
+2026-11-16 13:17:39.456 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.379 cpu_p95_ms=6.626 interval_avg_ms=16.667
+2026-11-16 13:17:49.455 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.646 cpu_p95_ms=6.824 interval_avg_ms=16.667
+2026-11-16 13:17:59.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.613 cpu_p95_ms=6.565 interval_avg_ms=16.667
+2026-11-16 13:18:09.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.695 cpu_p95_ms=6.612 interval_avg_ms=16.667
+2026-11-16 13:18:19.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.650 cpu_p95_ms=6.608 interval_avg_ms=16.667
+2026-11-16 13:18:29.457 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.694 cpu_p95_ms=6.603 interval_avg_ms=16.667
+2026-11-16 13:18:39.624 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.757 cpu_p95_ms=6.423 interval_avg_ms=16.944
+2026-11-16 13:18:49.673 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.513 cpu_p95_ms=5.915 interval_avg_ms=16.750
+2026-11-16 13:18:59.672 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.725 cpu_p95_ms=5.895 interval_avg_ms=16.667
+2026-11-16 13:19:09.673 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.823 cpu_p95_ms=6.035 interval_avg_ms=16.667
+2026-11-16 13:19:19.672 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.886 cpu_p95_ms=6.009 interval_avg_ms=16.667
+2026-11-16 13:19:29.856 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.531 cpu_p95_ms=6.629 interval_avg_ms=16.972
+2026-11-16 13:19:39.938 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.416 cpu_p95_ms=6.599 interval_avg_ms=16.806
+2026-11-16 13:19:40.694 ETPad[40478:5827740] CoreText note: Client requested name ".SFCompact", it will get TimesNewRomanPSMT rather than the intended font. All system UI font access should be through proper APIs such as CTFontCreateUIFontForLanguage() or +[UIFont systemFontOfSize:].
+2026-11-16 13:19:40.695 ETPad[40478:5827740] CoreText note: Set a breakpoint on CTFontLogSystemFontNameRequest to debug.
+       0 185.216.147.189:27960 resolved to 185.216.147.189:27960[0m
+       0 ********************[0m
+ERROR: This server needs a mod ETPad can't run. Only the built-in Legacy mod is supported.[0m
+********************[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-179-gdc33a10[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 960 x 662 fullscreen (ratio 1.4502) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-179-gdc33a10[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+2026-11-16 13:19:51.123 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.698 cpu_p95_ms=6.407 interval_avg_ms=18.639
+2026-11-16 13:20:01.124 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.463 cpu_p95_ms=6.758 interval_avg_ms=16.667
+2026-11-16 13:20:11.124 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.546 cpu_p95_ms=6.546 interval_avg_ms=16.667
+2026-11-16 13:20:21.124 ETPad[40478:5827740] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.529 cpu_p95_ms=6.814 interval_avg_ms=16.667

@@ -1,0 +1,68 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/out
+[1/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/codecvt_error_category.cpp.o
+[2/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/exception.cpp.o
+[3/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp:362:14: warning: 'readdir_r' is deprecated: This function cannot be used safely as it does not take into account the variability of {NAME_MAX}.  It is highly recommended that you use readdir(3) instead. [-Wdeprecated-declarations]
+  362 |     return ::readdir_r
+      |              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/dirent.h:114:1: note: 'readdir_r' has been explicitly marked deprecated here
+  114 | __deprecated_msg("This function cannot be used safely as it does not take into account the variability of {NAME_MAX}.  It is highly recommended that you use readdir(3) instead.")
+      | ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+1 warning generated.
+[4/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o
+[5/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path_traits.cpp.o
+[6/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o
+[7/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/windows_file_codecvt.cpp.o
+[8/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/portability.cpp.o
+[9/25] Building CXX object CMakeFiles/boost_regex.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/regex/src/regex.cpp.o
+[10/25] Building CXX object CMakeFiles/boost_regex.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/regex/src/regex_debug.cpp.o
+[11/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/unique_path.cpp.o
+[12/25] Building CXX object CMakeFiles/boost_regex.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/regex/src/static_mutex.cpp.o
+[13/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/utf8_codecvt_facet.cpp.o
+[14/25] Building CXX object CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_month.cpp.o
+[15/25] Building CXX object CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp.o
+FAILED: [code=1] CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_STATIC_LINK -DBOOST_REGEX_STATIC_LINK -I/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0 -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -MD -MT CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp.o -MF CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp.o.d -o CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp.o -c /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp:23:17: error: redefinition of 'as_short_string'
+   23 |   greg_weekday::as_short_string() const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0/boost/date_time/gregorian/greg_weekday.hpp:52:17: note: previous definition is here
+   52 |     const char* as_short_string() const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp:29:17: error: redefinition of 'as_long_string'
+   29 |   greg_weekday::as_long_string()  const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0/boost/date_time/gregorian/greg_weekday.hpp:61:17: note: previous definition is here
+   61 |     const char* as_long_string() const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp:37:17: error: redefinition of 'as_short_wstring'
+   37 |   greg_weekday::as_short_wstring() const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0/boost/date_time/gregorian/greg_weekday.hpp:73:20: note: previous definition is here
+   73 |     const wchar_t* as_short_wstring() const
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/greg_weekday.cpp:43:17: error: redefinition of 'as_long_wstring'
+   43 |   greg_weekday::as_long_wstring()  const
+      |                 ^
+/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0/boost/date_time/gregorian/greg_weekday.hpp:81:20: note: previous definition is here
+   81 |     const wchar_t* as_long_wstring()  const
+      |                    ^
+4 errors generated.
+[16/25] Building CXX object CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp.o
+FAILED: [code=1] CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_STATIC_LINK -DBOOST_REGEX_STATIC_LINK -I/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0 -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -MD -MT CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp.o -MF CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp.o.d -o CMakeFiles/boost_date_time.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp.o -c /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/date_time/src/gregorian/date_generators.cpp:23:36: error: redefinition of 'nth_as_str'
+   23 |   BOOST_DATE_TIME_DECL const char* nth_as_str(int ele)
+      |                                    ^
+/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0/boost/date_time/date_generators.hpp:157:22: note: previous definition is here
+  157 |   inline const char* nth_as_str(int ele)
+      |                      ^
+1 error generated.
+[17/25] Building CXX object CMakeFiles/boost_regex.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/regex/src/posix_api.cpp.o
+[18/25] Building CXX object CMakeFiles/boost_regex.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/regex/src/wide_posix_api.cpp.o
+ninja: build stopped: subcommand failed.

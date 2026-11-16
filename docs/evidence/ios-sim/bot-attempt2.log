@@ -1,0 +1,125 @@
+-- The CXX compiler identification is AppleClang 21.0.0.21000101
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/out
+[1/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/codecvt_error_category.cpp.o
+[2/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/exception.cpp.o
+[3/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o
+FAILED: [code=1] CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_STATIC_LINK -DBOOST_REGEX_STATIC_LINK -I/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0 -O3 -DNDEBUG -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -MD -MT CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o -MF CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o.d -o CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp.o -c /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp
+In file included from /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp:72:
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:23: error: no member named 'atomic_ref' in namespace 'std'
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                       ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:35: error: 'T' does not refer to a value
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                                   ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:26:20: note: declared here
+   26 | template< typename T >
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:16: error: no member named 'atomic_ref' in namespace 'std'
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:28: error: 'T' does not refer to a value
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                            ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:33:20: note: declared here
+   33 | template< typename T >
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/directory.cpp:362:14: warning: 'readdir_r' is deprecated: This function cannot be used safely as it does not take into account the variability of {NAME_MAX}.  It is highly recommended that you use readdir(3) instead. [-Wdeprecated-declarations]
+  362 |     return ::readdir_r
+      |              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/dirent.h:114:1: note: 'readdir_r' has been explicitly marked deprecated here
+  114 | __deprecated_msg("This function cannot be used safely as it does not take into account the variability of {NAME_MAX}.  It is highly recommended that you use readdir(3) instead.")
+      | ^
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+1 warning and 4 errors generated.
+[4/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o
+FAILED: [code=1] CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_STATIC_LINK -DBOOST_REGEX_STATIC_LINK -I/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0 -O3 -DNDEBUG -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -MD -MT CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o -MF CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o.d -o CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp.o -c /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp
+In file included from /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/operations.cpp:167:
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:23: error: no member named 'atomic_ref' in namespace 'std'
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                       ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:35: error: 'T' does not refer to a value
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                                   ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:26:20: note: declared here
+   26 | template< typename T >
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:16: error: no member named 'atomic_ref' in namespace 'std'
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:28: error: 'T' does not refer to a value
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                            ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:33:20: note: declared here
+   33 | template< typename T >
+      |                    ^
+4 errors generated.
+[5/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o
+FAILED: [code=1] CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_STATIC_LINK -DBOOST_REGEX_STATIC_LINK -I/Users/chrissotraidis/GitHub/etpad/build/boost-ios-probe/../sources/boost_1_85_0 -O3 -DNDEBUG -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -mios-simulator-version-min=16.0 -MD -MT CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o -MF CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o.d -o CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp.o -c /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp
+In file included from /Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:39:
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:23: error: no member named 'atomic_ref' in namespace 'std'
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                       ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:29:35: error: 'T' does not refer to a value
+   29 |     return atomic_ns::atomic_ref< T >(a).load(atomic_ns::memory_order_relaxed);
+      |                                   ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:26:20: note: declared here
+   26 | template< typename T >
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:16: error: no member named 'atomic_ref' in namespace 'std'
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:36:28: error: 'T' does not refer to a value
+   36 |     atomic_ns::atomic_ref< T >(a).store(val, atomic_ns::memory_order_relaxed);
+      |                            ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/atomic_tools.hpp:33:20: note: declared here
+   33 | template< typename T >
+      |                    ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1465:16: error: no member named 'atomic_ref' in namespace 'std'
+ 1465 |     atomic_ns::atomic_ref< std::locale* > a(g_path_locale);
+      |                ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1465:39: error: expected '(' for function-style cast or type construction
+ 1465 |     atomic_ns::atomic_ref< std::locale* > a(g_path_locale);
+      |                            ~~~~~~~~~~~^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1465:41: error: expected expression
+ 1465 |     atomic_ns::atomic_ref< std::locale* > a(g_path_locale);
+      |                                         ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1465:43: error: use of undeclared identifier 'a'
+ 1465 |     atomic_ns::atomic_ref< std::locale* > a(g_path_locale);
+      |                                           ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1466:22: error: use of undeclared identifier 'a'
+ 1466 |     std::locale* p = a.load(atomic_ns::memory_order_acquire);
+      |                      ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1470:13: error: use of undeclared identifier 'a'
+ 1470 |         if (a.compare_exchange_strong(p, new_p, atomic_ns::memory_order_acq_rel, atomic_ns::memory_order_acquire))
+      |             ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1496:33: error: no member named 'atomic_ref' in namespace 'std'
+ 1496 |     std::locale* p = atomic_ns::atomic_ref< std::locale* >(g_path_locale).exchange(new_p, atomic_ns::memory_order_acq_rel);
+      |                                 ^~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1496:56: error: expected '(' for function-style cast or type construction
+ 1496 |     std::locale* p = atomic_ns::atomic_ref< std::locale* >(g_path_locale).exchange(new_p, atomic_ns::memory_order_acq_rel);
+      |                                             ~~~~~~~~~~~^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1496:58: error: expected expression
+ 1496 |     std::locale* p = atomic_ns::atomic_ref< std::locale* >(g_path_locale).exchange(new_p, atomic_ns::memory_order_acq_rel);
+      |                                                          ^
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1496:74: error: member reference type 'std::locale *' is a pointer; did you mean to use '->'?
+ 1496 |     std::locale* p = atomic_ns::atomic_ref< std::locale* >(g_path_locale).exchange(new_p, atomic_ns::memory_order_acq_rel);
+      |                                                           ~~~~~~~~~~~~~~~^
+      |                                                                          ->
+/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path.cpp:1496:75: error: no member named 'exchange' in 'std::locale'
+ 1496 |     std::locale* p = atomic_ns::atomic_ref< std::locale* >(g_path_locale).exchange(new_p, atomic_ns::memory_order_acq_rel);
+      |                                                           ~~~~~~~~~~~~~~~ ^
+15 errors generated.
+[6/25] Building CXX object CMakeFiles/boost_filesystem.dir/Users/chrissotraidis/GitHub/etpad/build/sources/boost_1_85_0/libs/filesystem/src/path_traits.cpp.o
+ninja: build stopped: subcommand failed.

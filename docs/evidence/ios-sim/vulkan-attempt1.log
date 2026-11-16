@@ -1,0 +1,221 @@
+[0/2] Re-checking globbed directories...
+[1/9] Creating directories for 'bundled_moltenvk'
+[2/9] Performing download step (download, verify and extract) for 'bundled_moltenvk'
+-- Downloading...
+   dst='/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/v1.4.2.tar.gz'
+   timeout='none'
+   inactivity timeout='none'
+-- Using src='https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.4.2.tar.gz'
+-- verifying file...
+       file='/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/v1.4.2.tar.gz'
+-- Downloading... done
+-- extracting...
+     src='/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/v1.4.2.tar.gz'
+     dst='/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk'
+-- extracting... [tar xfz]
+-- extracting... [analysis]
+-- extracting... [rename]
+-- extracting... [clean up]
+-- extracting... done
+[3/9] No update step for 'bundled_moltenvk'
+[4/9] No patch step for 'bundled_moltenvk'
+[5/9] Performing configure step for 'bundled_moltenvk'
+-- The C compiler identification is AppleClang 21.0.0.21000101
+-- The CXX compiler identification is AppleClang 21.0.0.21000101
+-- The OBJC compiler identification is AppleClang 21.0.0.21000101
+-- The OBJCXX compiler identification is AppleClang 21.0.0.21000101
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting OBJC compiler ABI info
+-- Detecting OBJC compiler ABI info - done
+-- Check for working OBJC compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
+-- Detecting OBJCXX compiler ABI info
+-- Detecting OBJCXX compiler ABI info - done
+-- Check for working OBJCXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Using CPM cache folder: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_CXX
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_CXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_OBJCXX
+-- Performing Test IS_SUPPORTED_-Wno-deprecated-declarations_OBJCXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_CXX
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_CXX - Success
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_OBJCXX
+-- Performing Test IS_SUPPORTED_-Wno-vla-cxx-extension_OBJCXX - Success
+-- External: creating target 'SPRIV-Cross::SPRIV-Cross'
+-- Downloading CPM.cmake to /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/cpm/CPM_0.40.8.cmake
+-- CPM: Adding package SPIRV-Cross@0 (6c09849fe88c48eaed08413aa022aaa136a3a057 to /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/spirv-cross/c6ffc6b36298d2078136d1db26c60ba75cd31464/SPIRV-Cross)
+-- SPIRV-Cross: Finding Git version for SPIRV-Cross.
+-- Found Git: /opt/homebrew/bin/git (found version "2.41.0")
+-- SPIRV-Cross: Git hash: vulkan-sdk-1.4.357.0
+-- External: creating target 'cereal::cereal'
+-- CPM: Adding package cereal@0 (a56bad8bbb770ee266e930c95d37fff2a5be7fea to /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/cereal/aea3a76782c3be677d918e02028e6a68e2697675/cereal)
+-- Performing Test COMPILER_SUPPORT_M32
+-- Performing Test COMPILER_SUPPORT_M32 - Success
+-- Use libc++
+-- External: creating target 'Vulkan::Headers'
+-- CPM: Adding package Vulkan-Headers@0 (e3b1eec08173d6b825cd3ac88c885a63b621504a to /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/cpm/vulkan-headers/c3cb6a2f44ffdc4d5d0bebd35f7d1dce730008f3/Vulkan-Headers)
+-- Configuring done (15.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk-build
+[6/9] Performing build step for 'bundled_moltenvk'
+[1/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cfg.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[2/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cross_parsed_ir.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[3/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_parser.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[4/67] Building OBJCXX object Common/CMakeFiles/MoltenVK_Common.dir/MVKOSExtensions.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[5/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-core.dir/spirv_cross.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[6/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-reflect.dir/spirv_reflect.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[7/67] Linking OBJCXX static library Common/libMoltenVK_Common.a
+[8/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-core.a
+[9/67] Building OBJCXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/FileSupport.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[10/67] Building OBJCXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVConversion.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[11/67] Building CXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVSupport.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[12/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-reflect.a
+[13/67] Building CXX object MoltenVKShaderConverter/MoltenVKShaderConverter/CMakeFiles/MoltenVK_ShaderConverter.dir/SPIRVToMSLConverter.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[14/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDebug.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[15/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDispatch.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[16/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdDraw.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[17/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdPipeline.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[18/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-glsl.dir/spirv_glsl.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[19/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-glsl.a
+[20/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdQueries.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[21/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdRendering.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[22/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCmdTransfer.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[23/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandBuffer.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[24/67] Building CXX object _deps/spirv-cross-build/CMakeFiles/spirv-cross-msl.dir/spirv_msl.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[25/67] Linking CXX static library _deps/spirv-cross-build/libspirv-cross-msl.a
+[26/67] Linking CXX static library MoltenVKShaderConverter/MoltenVKShaderConverter/libMoltenVK_ShaderConverter.a
+[27/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandEncoderState.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[28/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandEncodingPool.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[29/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandPool.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[30/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKMTLBufferAllocation.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[31/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Commands/MVKCommandResourceFactory.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[32/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKBuffer.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[33/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDeviceMemory.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[34/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDescriptorSet.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[35/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKFramebuffer.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[36/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKDevice.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[37/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKImage.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[38/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKInstance.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[39/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKPixelFormats.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[40/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKQueryPool.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[41/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKPipeline.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[42/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKQueue.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[43/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKResource.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[44/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKRenderPass.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[45/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSurface.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[46/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKShaderModule.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[47/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKVulkanAPIObject.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[48/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSync.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[49/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/GPUObjects/MVKSwapchain.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[50/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Layers/MVKLayers.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[51/67] Building OBJC object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MTLRenderPipelineDescriptor+MoltenVK.m.o
+cc: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[52/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Layers/MVKExtensions.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[53/67] Building OBJC object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MTLSamplerDescriptor+MoltenVK.m.o
+cc: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[54/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/CAMetalLayer+MoltenVK.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[55/67] Building OBJC object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKBlockObserver.m.o
+cc: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[56/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/NSString+MoltenVK.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[57/67] Building CXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKEnvironment.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+In file included from /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk/MoltenVK/MoltenVK/Utility/MVKEnvironment.cpp:116:
+/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk/MoltenVK/MoltenVK/Utility/MVKConfigMembers.def:56:1: warning: implicit conversion from 'long long' to 'double' changes value from 9223372036854775807 to 9223372036854775808 [-Wimplicit-const-int-float-conversion]
+   56 | MVK_CONFIG_MEMBER(metalCompileTimeout,                    uint64_t,                                 METAL_COMPILE_TIMEOUT)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk/MoltenVK/MoltenVK/Utility/MVKEnvironment.cpp:111:69: note: expanded from macro 'MVK_CONFIG_MEMBER'
+  111 |         evCfg.member = (mbrType)mvkGetEnvVarNumber(STR(MVK_CONFIG_##name), MVK_CONFIG_##name);
+      |                                 ~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~~~~~~
+<scratch space>:43:1: note: expanded from here
+   43 | MVK_CONFIG_METAL_COMPILE_TIMEOUT
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/src/bundled_moltenvk/MoltenVK/MoltenVK/Utility/MVKEnvironment.h:141:48: note: expanded from macro 'MVK_CONFIG_METAL_COMPILE_TIMEOUT'
+  141 | #   define MVK_CONFIG_METAL_COMPILE_TIMEOUT    INT64_MAX
+      |                                                ^~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/usr/include/stdint.h:94:26: note: expanded from macro 'INT64_MAX'
+   94 | #define INT64_MAX        9223372036854775807LL
+      |                          ^~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+[58/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKBaseObject.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[59/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKCodec.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[60/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/OS/MVKGPUCapture.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[61/67] Building CXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKFoundation.cpp.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[62/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Utility/MVKWatermark.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[63/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_api.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[64/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/mvk_datatypes.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[65/67] Building OBJCXX object MoltenVK/CMakeFiles/MoltenVK.dir/MoltenVK/Vulkan/vulkan.mm.o
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[66/67] Linking CXX shared library MoltenVK/libMoltenVK.1.4.2.dylib
+c++: warning: overriding deployment version from '16.0' to '26.0' [-Woverriding-deployment-version]
+[67/67] Creating library symlink MoltenVK/libMoltenVK.1.dylib MoltenVK/libMoltenVK.dylib
+[7/9] Performing install step for 'bundled_moltenvk'
+[0/1] Install the project...
+-- Install configuration: "Release"
+-- Installing: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/lib/libMoltenVK.1.4.2.dylib
+-- Installing: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/lib/libMoltenVK.1.dylib
+-- Installing: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/lib/libMoltenVK.dylib
+-- Installing: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/lib/pkgconfig/MoltenVK.pc
+-- Installing: /Users/chrissotraidis/GitHub/etpad/build/ios-vulkan-probe/libs/moltenvk/etc/vulkan/icd.d/MoltenVK_icd.json
+[8/9] Completed 'bundled_moltenvk'

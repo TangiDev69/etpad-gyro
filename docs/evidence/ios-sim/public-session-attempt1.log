@@ -1,0 +1,663 @@
+       0 tty console mode disabled
+       0 ^2ET Legacy v2.86.2-178-g4f71bd8 MacOS Nov 16 2026
+       0 Zone megs: 64
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0 [0m
+       0 5322 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Creating PID file 'profiles/ETPad/profile.pid'[0m
+       0 ----- Database Initialization --[0m
+       0 SQLite3 libversion 3.36.0 - database URI 'etl.db' - in file[0m
+       0 ... loading existing database '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etl.db'[0m
+       0 ... database file '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etl.db' loaded[0m
+       0 SQLite3 ETL: database init #4 /Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etl.db in [0] ms - autocommit 1[0m
+       0 SQLite3 ETL: DB schema version #4 is up to date[0m
+       0 --------------------------------[0m
+       0 execing default.cfg[0m
+       0 execing profiles/ETPad/etconfig.cfg[0m
+       0 couldn't exec autoexec.cfg[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 Not logging server attacks to disk[0m
+       0 logfile opened on Mon Nov 16 12:44:18 2026[0m
+       0 ----- Client Initialization ----[0m
+       0 [1;33mCouldn't read etl-history.[0m
+       0 ETKEY found[0m
+       0 --------------------------------[0m
+       0 [1;33mWARNING: NET_AddLocalAddress - numIP >= MAX_IPS[0m
+       0 IP: 127.0.0.1[0m
+       0 IP6: ::1[0m
+       0 IP6: fe80::1%lo0[0m
+       0 IP: 192.168.1.135[0m
+       0 IP6: fe80::14a1:319c:2e6f:b106%en8[0m
+       0 IP6: 2600:1700:a119:d0:24:18ff:514b:2a0[0m
+       0 IP6: 2600:1700:a119:d0:8919:1112:c973:b537[0m
+       0 IP6: 2600:1700:a119:d0::15[0m
+       0 IP6: 2600:1700:a119:d0:1551:743b:ff98:cf03[0m
+       0 IP6: 2600:1700:a119:d0:8b7:8ade:e674:ae31[0m
+       0 IP6: 2600:1700:a119:d0:70a2:7574:e392:ac64[0m
+       0 IP6: 2600:1700:a119:d0:b0d8:c676:812d:dd81[0m
+       0 IP6: 2600:1700:a119:d0:7931:e905:6d2b:732[0m
+       0 IP6: fe80::c8c:cb8b:5374:3b76%en0[0m
+       0 IP6: 2600:1700:a119:d0:8a9:8d26:5632:cbc0[0m
+       0 IP6: 2600:1700:a119:d0:c977:b92e:463d:12d9[0m
+       0 IP6: 2600:1700:a119:d0::1d[0m
+       0 IP: 192.168.1.190[0m
+       0 IP6: 2600:1700:a119:d0:e538:efca:d142:795d[0m
+       0 IP6: 2600:1700:a119:d0:c819:5240:649d:e9fc[0m
+       0 IP6: 2600:1700:a119:d0:5432:8ff3:236d:d5e0[0m
+       0 IP6: 2600:1700:a119:d0:c1f1:aee9:4a62:fff0[0m
+       0 IP6: 2600:1700:a119:d0:89e4:c7ab:46e5:dc06[0m
+       0 IP6: fe80::8c60:29ff:fe62:871d%awdl0[0m
+       0 IP6: fe80::8c60:29ff:fe62:871d%llw0[0m
+       0 IP6: fe80::1be0:f20d:85fc:ca59%utun0[0m
+       0 IP6: fe80::c5ca:abd6:67c8:8f43%utun1[0m
+       0 IP6: fe80::e074:c17b:8d3d:cb13%utun2[0m
+       0 IP6: fe80::ce81:b1c:bd2c:69e%utun3[0m
+       0 IP6: fe80::8e94:bca2:4aab:5823%utun4[0m
+       0 IP6: fe80::6e1f:f7ff:fec0:247%utun6[0m
+       0 IP: 100.75.55.110[0m
+       0 Opening IP6 socket: [::]:27960[0m
+       0 Opening IP socket: 0.0.0.0:27960[0m
+       0 Network initialized[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 SDL build version 2.30.9 - link version 2.30.9[0m
+       0 SDL initialized driver "uikit"[0m
+       0 Initializing window[0m
+       0 Estimated display aspect: 1.451[0m
+       0 ...setting mode -1: 1280x882[0m
+2026-11-16 12:44:18.695 ETPad[25455:5741721] ETPad renderer attached before Metal: frame={{0, 0}, {1210, 834}} bounds={{0, 0}, {1210, 834}} root={{0, 0}, {1210, 834}} orientation=3
+       0 Using 24 color bits, 24 depth, 0 stencil display[0m
+       0 Available modes [2]: '1210x834 834x1210'[0m
+       0 GL_VENDOR: GL4ES wrapping Google Inc. (Apple)[0m
+       0 GL_RENDERER: GL4ES using ANGLE (Apple, ANGLE Metal Renderer: Apple iOS simulator GPU, Version 26.5 (Build 23F77))[0m
+       0 GL_VERSION: 2.1 gl4es wrapper 1.1.7[0m
+       0 GL_SHADING_LANGUAGE_VERSION: [0m
+       0 Using vanilla renderer[0m
+       0 Initializing OpenGL extensions[0m
+       0 ...using GL_EXT_texture_env_add[0m
+       0 ...using GL_ARB_multitexture (16 texture units)[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 ----- Initializing Sound (1) ---[0m
+       0 SDL_Init( SDL_INIT_AUDIO )... OK[0m
+       0 SDL audio driver is "coreaudio".[0m
+       0 SDL_AudioSpec:[0m
+       0   Format:   AUDIO_S16LSB[0m
+       0   Freq:     44100[0m
+       0   Samples:  1024[0m
+       0   Channels: 2[0m
+       0   Silence:  0[0m
+       0   Size:     4096[0m
+       0 Starting SDL audio callback...[0m
+       0 SDL audio initialized.[0m
+       0 ----- Sound Info -----[0m
+       0 sound system is muted[0m
+       0     2 channels[0m
+       0 32768 samples[0m
+       0    16 samplebits[0m
+       0     1 submission_chunk[0m
+       0 44100 speed[0m
+       0 0x1153b8000 dma buffer[0m
+       0 No background file.[0m
+       0 ----------------------[0m
+       0 Sound initialization successfully done[0m
+s_backend set to SDL2[0m
+       0 --------------------------------[0m
+       0 Sound memory manager started[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 ----- Common Initialized -------[0m
+2026-11-16 12:44:19.563 ETPad[25455:5741721] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x111da5400>.
+2026-11-16 12:44:19.563 ETPad[25455:5741721] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x111da5400>.
+       0 MOTD: resolving motd.etlegacy.com... objc[25455]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x139968310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1399bc398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+resolved to 104.248.140.165:27951[0m
+2026-11-16 12:44:29.733 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=7.011 cpu_p95_ms=8.163 interval_avg_ms=16.985
+2026-11-16 12:44:39.733 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.961 cpu_p95_ms=8.315 interval_avg_ms=16.667
+2026-11-16 12:44:49.735 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.923 cpu_p95_ms=8.531 interval_avg_ms=16.667
+2026-11-16 12:44:59.735 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=7.543 cpu_p95_ms=8.850 interval_avg_ms=16.667
+2026-11-16 12:45:09.733 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=7.402 cpu_p95_ms=8.840 interval_avg_ms=16.667
+2026-11-16 12:45:19.733 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=7.405 cpu_p95_ms=8.734 interval_avg_ms=16.667
+2026-11-16 12:45:29.735 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=7.410 cpu_p95_ms=8.683 interval_avg_ms=16.667
+2026-11-16 12:45:39.734 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.795 cpu_p95_ms=8.640 interval_avg_ms=16.667
+2026-11-16 12:45:49.982 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.061 cpu_p95_ms=7.652 interval_avg_ms=17.083
+2026-11-16 12:46:00.047 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.804 cpu_p95_ms=7.296 interval_avg_ms=16.778
+2026-11-16 12:46:10.049 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.677 cpu_p95_ms=6.974 interval_avg_ms=16.667
+2026-11-16 12:46:20.199 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.715 cpu_p95_ms=8.301 interval_avg_ms=16.917
+       0 87.116.30.113:27960 resolved to 87.116.30.113:27960[0m
+       0 Connected to a pure server.[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 5322 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Need paks: legacy/legacy_v2.84.0.pk3[0m
+[0m
+       0 Need paks: @legacy/legacy_v2.84.0.pk3@legacy/legacy_v2.84.0.pk3[0m
+       0 Client downloading: legacy/legacy_v2.84.0.pk3[0m
+2026-11-16 12:46:30.283 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.682 cpu_p95_ms=7.548 interval_avg_ms=16.807
+2026-11-16 12:46:40.283 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.698 cpu_p95_ms=6.651 interval_avg_ms=16.666
+2026-11-16 12:46:50.282 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.773 cpu_p95_ms=6.639 interval_avg_ms=16.667
+2026-11-16 12:47:00.282 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.521 cpu_p95_ms=6.614 interval_avg_ms=16.667
+2026-11-16 12:47:10.283 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.726 cpu_p95_ms=6.678 interval_avg_ms=16.667
+2026-11-16 12:47:20.282 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.034 cpu_p95_ms=6.391 interval_avg_ms=16.667
+2026-11-16 12:47:30.281 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.569 cpu_p95_ms=5.404 interval_avg_ms=16.667
+       0 CL_ParseDownload: Expected block 7375, got 7376[0m
+       0 CL_ParseDownload: Expected block 7375, got 7377[0m
+       0 CL_ParseDownload: Expected block 7375, got 7378[0m
+       0 CL_ParseDownload: Expected block 7375, got 7379[0m
+       0 CL_ParseDownload: Expected block 7375, got 7380[0m
+       0 CL_ParseDownload: Expected block 7375, got 7381[0m
+       0 CL_ParseDownload: Expected block 7375, got 7382[0m
+2026-11-16 12:47:40.282 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.566 cpu_p95_ms=5.457 interval_avg_ms=16.667
+       0 CL_ParseDownload: Expected block 7375, got 7383[0m
+       0 CL_ParseDownload: Expected block 7375, got 7384[0m
+       0 CL_ParseDownload: Expected block 7375, got 7385[0m
+       0 CL_ParseDownload: Expected block 7375, got 7386[0m
+       0 CL_ParseDownload: Expected block 7375, got 7387[0m
+       0 CL_ParseDownload: Expected block 7375, got 7388[0m
+       0 CL_ParseDownload: Expected block 7375, got 7389[0m
+       0 CL_ParseDownload: Expected block 7375, got 7390[0m
+       0 CL_ParseDownload: Expected block 7375, got 7391[0m
+       0 CL_ParseDownload: Expected block 7375, got 7392[0m
+       0 CL_ParseDownload: Expected block 7375, got 7393[0m
+       0 CL_ParseDownload: Expected block 7375, got 7394[0m
+       0 CL_ParseDownload: Expected block 7375, got 7395[0m
+       0 CL_ParseDownload: Expected block 7375, got 7396[0m
+       0 CL_ParseDownload: Expected block 7375, got 7397[0m
+       0 CL_ParseDownload: Expected block 7375, got 7398[0m
+       0 CL_ParseDownload: Expected block 7375, got 7399[0m
+       0 CL_ParseDownload: Expected block 7375, got 7400[0m
+       0 CL_ParseDownload: Expected block 7375, got 7401[0m
+       0 CL_ParseDownload: Expected block 7375, got 7402[0m
+       0 CL_ParseDownload: Expected block 7375, got 7403[0m
+       0 CL_ParseDownload: Expected block 7375, got 7404[0m
+       0 CL_ParseDownload: Expected block 7375, got 7405[0m
+       0 CL_ParseDownload: Expected block 7375, got 7406[0m
+       0 CL_ParseDownload: Expected block 7375, got 7407[0m
+       0 CL_ParseDownload: Expected block 7375, got 7408[0m
+       0 CL_ParseDownload: Expected block 7375, got 7409[0m
+       0 CL_ParseDownload: Expected block 7375, got 7410[0m
+       0 CL_ParseDownload: Expected block 7375, got 7411[0m
+       0 CL_ParseDownload: Expected block 7375, got 7412[0m
+       0 CL_ParseDownload: Expected block 7375, got 7413[0m
+       0 CL_ParseDownload: Expected block 7375, got 7414[0m
+       0 CL_ParseDownload: Expected block 7375, got 7415[0m
+       0 CL_ParseDownload: Expected block 7375, got 7416[0m
+       0 CL_ParseDownload: Expected block 7375, got 7417[0m
+       0 CL_ParseDownload: Expected block 7375, got 7418[0m
+       0 CL_ParseDownload: Expected block 7375, got 7419[0m
+       0 CL_ParseDownload: Expected block 7375, got 7420[0m
+       0 CL_ParseDownload: Expected block 7375, got 7421[0m
+       0 CL_ParseDownload: Expected block 7375, got 7422[0m
+2026-11-16 12:47:50.284 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.510 cpu_p95_ms=6.536 interval_avg_ms=16.667
+2026-11-16 12:48:00.283 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.552 cpu_p95_ms=6.507 interval_avg_ms=16.667
+2026-11-16 12:48:10.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.520 cpu_p95_ms=6.524 interval_avg_ms=16.693
+2026-11-16 12:48:20.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.498 cpu_p95_ms=6.518 interval_avg_ms=16.667
+2026-11-16 12:48:30.300 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.617 cpu_p95_ms=6.664 interval_avg_ms=16.667
+2026-11-16 12:48:40.300 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.688 cpu_p95_ms=6.602 interval_avg_ms=16.667
+2026-11-16 12:48:50.300 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.312 cpu_p95_ms=6.501 interval_avg_ms=16.667
+2026-11-16 12:49:00.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.432 cpu_p95_ms=6.411 interval_avg_ms=16.667
+2026-11-16 12:49:10.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.380 cpu_p95_ms=6.383 interval_avg_ms=16.667
+2026-11-16 12:49:20.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.304 cpu_p95_ms=6.284 interval_avg_ms=16.666
+2026-11-16 12:49:30.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.285 cpu_p95_ms=6.365 interval_avg_ms=16.667
+2026-11-16 12:49:40.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.153 cpu_p95_ms=6.285 interval_avg_ms=16.667
+2026-11-16 12:49:50.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.777 cpu_p95_ms=5.920 interval_avg_ms=16.667
+2026-11-16 12:50:00.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.314 cpu_p95_ms=6.177 interval_avg_ms=16.667
+2026-11-16 12:50:10.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.168 cpu_p95_ms=6.060 interval_avg_ms=16.667
+2026-11-16 12:50:20.301 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.229 cpu_p95_ms=6.142 interval_avg_ms=16.667
+2026-11-16 12:50:30.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.140 cpu_p95_ms=6.110 interval_avg_ms=16.667
+2026-11-16 12:50:40.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.038 cpu_p95_ms=6.082 interval_avg_ms=16.667
+2026-11-16 12:50:50.298 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.739 cpu_p95_ms=5.833 interval_avg_ms=16.667
+2026-11-16 12:51:00.298 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.222 cpu_p95_ms=4.991 interval_avg_ms=16.667
+2026-11-16 12:51:10.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.116 cpu_p95_ms=4.838 interval_avg_ms=16.667
+2026-11-16 12:51:20.298 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.185 cpu_p95_ms=4.785 interval_avg_ms=16.667
+2026-11-16 12:51:30.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.170 cpu_p95_ms=4.917 interval_avg_ms=16.667
+2026-11-16 12:51:40.298 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.127 cpu_p95_ms=4.797 interval_avg_ms=16.667
+2026-11-16 12:51:50.299 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.181 cpu_p95_ms=4.849 interval_avg_ms=16.667
+2026-11-16 12:52:00.298 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.174 cpu_p95_ms=4.886 interval_avg_ms=16.667
+       0 Copying /Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy/legacy_v2.84.0.pk3.tmp to /Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3[0m
+       0 Client download complete - restarting ...[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3 (1545 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 6867 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Connected to a pure server.[0m
+       0 Client download complete[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;30mInitializing legacy cgame [1;32mv2.86.2-178-g4f71bd8[0m
+       0 234 client cvars in use[0m
+       0 Not logging client output to disk.[0m
+       0 LOADING...  - collision map -[0m
+       0 Loaded entities from maps/goldrush.bsp[0m
+       0 LOADING...  - sounds -[0m
+       0 Initializing Sound Scripts[0m
+       0 ...loading 'sound/scripts/vo_allies.sounds'[0m
+       0 ...'sound/scripts/vo_allies.sounds' parsed - total script sounds: 48[0m
+       0 ...loading 'sound/scripts/vo_axis.sounds'[0m
+       0 ...'sound/scripts/vo_axis.sounds' parsed - total script sounds: 96[0m
+       0 ...loading 'sound/scripts/goldrush.sounds'[0m
+       0 ...'sound/scripts/goldrush.sounds' parsed - total script sounds: 148[0m
+       0 ...3 of 3 sound scripts files loaded. Total sounds: 148[0m
+       0 done.[0m
+       0 LOADING...  - graphics -[0m
+       0 LOADING...  - maps/goldrush.bsp -[0m
+       0 stitched 16 LoD cracks[0m
+       0 ...loaded 25320 faces, 573 meshes, 257 trisurfs, 0 flares, 0 foliages[0m
+       0 LOADING...  - entities -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - textures -[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 LOADING...  - models -[0m
+       0 LOADING...  - heads-up display -[0m
+       0 ...properties for hud Alternate Hud 1 have been read.[0m
+       0 ...properties for hud Alternate Hud 2 have been read.[0m
+       0 ...properties for hud Alternate Hud 3 have been read.[0m
+       0 ...properties for hud Competitor Hud have been read.[0m
+       0 ...properties for hud Shoutcaster have been read.[0m
+       0 ...hud count: 6[0m
+       0 Setting hud to: 'ETmain'[0m
+       0 LOADING...  - weapons -[0m
+       0 LOADING...  - items -[0m
+       0 LOADING...  - inline models -[0m
+       0 LOADING...  - server models -[0m
+       0 LOADING...  - particles -[0m
+       0 LOADING...  - classes -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - flamechunks -[0m
+       0 LOADING...  - clients -[0m
+       0 [38;5;33mLoadLocations: [1;30mlocation data for map [1;32mgoldrush [1;30mloaded[0m
+       0 [1;32m89 [1;30mlocations loaded.[0m
+       0 CL_InitCGame:  5.80 seconds[0m
+       0 Com_TouchMemory: 1 msec -2092276788 [0m
+1429731350 Axis team has destroyed the Allied Command Post![0m
+1429731350 Allied Command Post constructed. Charge speed increased![0m
+1429731350 Allied team has dropped the first Gold Crate![0m
+1429731350 Axis team has destroyed the Allied Command Post![0m
+1429731350 Allied Command Post constructed. Charge speed increased![0m
+1429731350 Axis team has destroyed the Allied Command Post![0m
+1429731350 Allied Command Post constructed. Charge speed increased![0m
+1429731350 Axis team has destroyed the Allied Command Post![0m
+1429731350 Allied Command Post constructed. Charge speed increased![0m
+1429731350 Axis team has destroyed the Allied Command Post![0m
+1429731350 Allied Command Post constructed. Charge speed increased![0m
+1429731350 Allied team has secured the first Gold Crate![0m
+1429732750 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's MP 40[0m
+LIBGL: Initialising gl4es
+LIBGL: v1.1.7 built on Nov 16 2026 11:06:49
+LIBGL: Using GLES 2.0 backend
+LIBGL: Hardware test on current Context...
+LIBGL: Hardware Full NPOT detected and used
+LIBGL: Extension GL_EXT_blend_minmax  detected and used
+LIBGL: Extension GL_EXT_draw_buffers  detected and used
+LIBGL: FBO are in core, and so used
+LIBGL: PointSprite are in core, and so used
+LIBGL: CubeMap are in core, and so used
+LIBGL: BlendColor is in core, and so used
+LIBGL: Blend Subtract is in core, and so used
+LIBGL: Blend Function and Equation Separation is in core, and so used
+LIBGL: Texture Mirrored Repeat is in core, and so used
+LIBGL: Extension GL_OES_mapbuffer  detected
+LIBGL: Extension GL_OES_element_index_uint  detected and used
+LIBGL: Extension GL_OES_packed_depth_stencil  detected and used
+LIBGL: Extension GL_OES_depth24  detected and used
+LIBGL: Extension GL_OES_rgb8_rgba8  detected and used
+LIBGL: Extension GL_EXT_texture_format_BGRA8888  detected and used
+LIBGL: Extension GL_OES_depth_texture  detected and used
+LIBGL: Extension GL_OES_texture_stencil8  detected and used
+LIBGL: Extension GL_EXT_texture_rg  detected and used
+LIBGL: Extension GL_OES_texture_float  detected and used
+LIBGL: Extension GL_OES_texture_half_float  detected and used
+LIBGL: Extension GL_EXT_color_buffer_float  detected and used
+LIBGL: Extension GL_EXT_color_buffer_half_float  detected and used
+LIBGL: high precision float in fragment shader available and used
+LIBGL: Extension GL_EXT_shader_texture_lod detected and used
+LIBGL: Extension GL_EXT_frag_depth  detected and used
+LIBGL: Max vertex attrib: 16
+LIBGL: Extension GL_OES_standard_derivatives  detected and used
+LIBGL: Extension GL_OES_get_program_binary  detected and used
+LIBGL: Number of supported Program Binary Format: 1
+LIBGL: Max texture size: 8192
+LIBGL: Max Varying Vector: 30
+LIBGL: Texture Units: 16/16 (hardware: 16), Max lights: 8, Max planes: 6
+LIBGL: Extension GL_EXT_texture_filter_anisotropic  detected and used
+LIBGL: Max Anisotropic filtering: 16
+LIBGL: Max Color Attachments: 8 / Draw buffers: 8
+LIBGL: Hardware vendor is Google Inc. (Apple)
+LIBGL: Targeting OpenGL 2.1
+LIBGL: Not trying to batch small subsequent glDrawXXXX
+LIBGL: Trying to use VBO
+LIBGL: Hack to trigger a SwapBuffers when a Full Framebuffer Blit on default FBO is done
+LIBGL: Current folder is:/
+2026-11-16 12:52:17.982 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=17.142 cpu_p95_ms=5.948 interval_avg_ms=29.472
+1429735650 Unknown client game command: pr [27008][0m
+1429736050 Allied team has dropped the second Gold Crate![0m
+1429736050 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1429739950 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mChan[1;37m[0m's Thompson[0m
+1429740050 Axis have returned The Gold Crate![0m
+1429740400 [1;37m[38;5;228m[BOT][1;37mChan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1429740700 Unknown client game command: pr [27008][0m
+1429741250 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was cooked by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's flamethrower[0m
+1429742150 [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;31m was cooked by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;31m's flamethrower[0m
+1429742700 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m played with fire[0m
+2026-11-16 12:52:27.984 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=6.146 cpu_p95_ms=7.210 interval_avg_ms=16.668
+1429745750 Unknown client game command: pr [27008][0m
+1429750200 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1429750800 Unknown client game command: pr [27008][0m
+2026-11-16 12:52:38.066 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.792 cpu_p95_ms=6.970 interval_avg_ms=16.805
+1429755850 Unknown client game command: pr [27008][0m
+1429760900 Unknown client game command: pr [27008][0m
+1429765100 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 34[0m
+2026-11-16 12:52:48.154 ETPad[25455:5741721] CoreText note: Client requested name ".SFCompact", it will get TimesNewRomanPSMT rather than the intended font. All system UI font access should be through proper APIs such as CTFontCreateUIFontForLanguage() or +[UIFont systemFontOfSize:].
+2026-11-16 12:52:48.154 ETPad[25455:5741721] CoreText note: Set a breakpoint on CTFontLogSystemFontNameRequest to debug.
+2026-11-16 12:52:48.382 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.927 cpu_p95_ms=6.217 interval_avg_ms=17.194
+1429772850 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mChan[1;37m[0m's FG 42[0m
+1429773150 [1;37m[38;5;228m[BOT][1;37mChan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 12:52:58.382 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.379 cpu_p95_ms=6.285 interval_avg_ms=16.667
+1429776050 Unknown client game command: pr [27008][0m
+1429779500 [skipnotify][1;37mETPadTest[1;37m entered the game[0m
+1429779500 ETPadTest[1;37m has joined the Allied team[1;37m![0m
+1429781100 Unknown client game command: pr [27008][0m
+1429781950 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m failed to spot [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's Landmine[0m
+1429784950 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mBank Courtyard[1;33m): [1;36mNeed a Medic![0m
+2026-11-16 12:53:08.448 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=5.371 cpu_p95_ms=6.741 interval_avg_ms=16.778
+1429791150 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1429791250 Axis team has destroyed the Allied Command Post![0m
+1429793700 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 12:53:18.448 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.562 cpu_p95_ms=5.643 interval_avg_ms=16.667
+2026-11-16 12:53:28.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.349 cpu_p95_ms=5.520 interval_avg_ms=16.667
+1429813750 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+2026-11-16 12:53:38.450 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.113 cpu_p95_ms=5.375 interval_avg_ms=16.667
+1429819100 Allied Command Post constructed. Charge speed increased![0m
+1429822550 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m failed to spot [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's Landmine[0m
+1429823150 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+2026-11-16 12:53:48.448 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.344 cpu_p95_ms=5.438 interval_avg_ms=16.667
+1429830950 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's rifle grenade[0m
+1429832200 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's rifle grenade[0m
+1429833650 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+2026-11-16 12:53:58.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.335 cpu_p95_ms=5.458 interval_avg_ms=16.667
+1429843250 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+2026-11-16 12:54:08.448 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.197 cpu_p95_ms=5.314 interval_avg_ms=16.667
+1429851800 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1429852850 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's FG 42[0m
+1429853350 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m failed to spot [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's Landmine[0m
+2026-11-16 12:54:18.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.171 cpu_p95_ms=5.227 interval_avg_ms=16.667
+2026-11-16 12:54:28.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.075 cpu_p95_ms=5.161 interval_avg_ms=16.667
+1429866300 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1429866400 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 12:54:38.448 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.313 cpu_p95_ms=5.401 interval_avg_ms=16.667
+1429884050 Axis team has destroyed the Allied Command Post![0m
+2026-11-16 12:54:48.450 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.263 cpu_p95_ms=5.241 interval_avg_ms=16.667
+1429886650 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1429887650 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 12:54:58.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.004 cpu_p95_ms=5.176 interval_avg_ms=16.667
+1429896300 Allied Command Post constructed. Charge speed increased![0m
+2026-11-16 12:55:08.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.243 cpu_p95_ms=5.421 interval_avg_ms=16.667
+1429905950 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Thompson[0m
+1429913400 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1429915450 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m failed to spot [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's Landmine[0m
+2026-11-16 12:55:18.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.375 cpu_p95_ms=5.399 interval_avg_ms=16.667
+1429916050 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfbaked[1;33m: [1;32mWunderbar![0m
+1429920750 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 12:55:28.450 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.286 cpu_p95_ms=5.353 interval_avg_ms=16.667
+1429929950 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's Panzerfaust[0m
+2026-11-16 12:55:38.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.189 cpu_p95_ms=5.345 interval_avg_ms=16.667
+1429943450 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's K43[0m
+2026-11-16 12:55:48.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.271 cpu_p95_ms=5.340 interval_avg_ms=16.667
+1429950650 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;31m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;31m's artillery support[0m
+1429951000 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+2026-11-16 12:55:58.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.467 cpu_p95_ms=5.555 interval_avg_ms=16.667
+2026-11-16 12:56:08.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.280 cpu_p95_ms=5.251 interval_avg_ms=16.667
+1429967650 [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's rifle grenade[0m
+1429968550 [skipnotify][1;37m[38;5;228m[BOT][1;37mBeelz[1;33m: [1;32mYeah![0m
+1429968800 Allies have stolen The Gold Crate![0m
+1429969300 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1429972650 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+1429974850 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+2026-11-16 12:56:18.450 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.377 cpu_p95_ms=5.372 interval_avg_ms=16.667
+1429976450 Allied team has dropped the second Gold Crate![0m
+1429976450 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1429980850 Axis have returned The Gold Crate![0m
+2026-11-16 12:56:28.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.418 cpu_p95_ms=5.441 interval_avg_ms=16.667
+1429986500 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1429991350 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mTank Depot Road[1;33m): [1;36mThank you![0m
+2026-11-16 12:56:38.449 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=4.131 cpu_p95_ms=5.263 interval_avg_ms=16.667
+1430005700 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Thompson[0m
+2026-11-16 12:56:48.565 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=3.585 cpu_p95_ms=4.655 interval_avg_ms=16.861
+1430006750 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's Akimbo Luger 9mms[0m
+2026-11-16 12:56:58.782 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=3.858 cpu_p95_ms=4.719 interval_avg_ms=17.028
+1430016300 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+1430017000 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Thompson[0m
+1430017100 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1430018450 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's rifle grenade[0m
+1430020450 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 12:57:08.781 ETPad[25455:5741721] ETPad TIMING ANGLE_GL4ES frames=600 cpu_avg_ms=3.670 cpu_p95_ms=4.401 interval_avg_ms=16.667
+1430028500 ----- Initializing Filesystem --[0m
+1430028500 Current working directory:[0m
+1430028500     /[0m
+1430028500 Current search path:[0m
+1430028500     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+1430028500     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+1430028500     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+1430028500     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+1430028500     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+1430028500     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+1430028500     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+1430028500     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+1430028500 [0m
+1430028500 handle 1: etconsole.log[0m
+1430028500 5322 files in pk3 files[0m
+1430028500 --------------------------------[0m
+1430028500 ********************[0m
+ERROR: Disconnected from server[0m
+********************[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 87.116.30.113:27960 resolved to 87.116.30.113:27960[0m
+       0 Connected to a pure server.[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3 (1545 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 6867 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Client download complete[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;30mInitializing legacy cgame [1;32mv2.86.2-178-g4f71bd8[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 ----- Client Shutdown ----------[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/FD698486-9A28-4DD7-8B77-FEBC2E301D1B/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/5F7B81EC-6D94-47FC-A55B-9C32A834A2FB/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 5322 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-178-g4f71bd8[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 Closing SDL audio device...[0m
+       0 SDL audio device shut down.[0m
+       0 RE_Shutdown( 1 )[0m
+       0 SDL input devices shut down.[0m
+       0 --------------------------------[0m
+       0 PID file removed.[0m
+       0 Network shutdown[0m
+com.etpad.ETPad: 25455

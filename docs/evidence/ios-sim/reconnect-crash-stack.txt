@@ -1,0 +1,23 @@
+Pre-fix reconnect failure: {'codes': '0x0000000000000001, 0x0000000000000000', 'rawCodes': [1, 0], 'type': 'EXC_BAD_ACCESS', 'signal': 'SIGSEGV', 'subtype': 'KERN_INVALID_ADDRESS at 0x0000000000000000'}
+unknown +0x0 NULL +0
+ETPadCGame +0x1d00c CG_Text_Width_Ext_Float +232
+ETPadCGame +0x1cf18 CG_Text_Width_Ext +12
+ETPadCGame +0xe7b10 BG_PanelButtonsRender_TextExt +116
+ETPadCGame +0xe7a8c BG_PanelButtonsRender +52
+ETPadCGame +0x67538 CG_DrawConnectScreen +484
+ETPadCGame +0x9f9c4 trap_R_RegisterShader +28
+ETPadCGame +0x6c5b0 CG_Init +1136
+ETPadCGame +0x6be90 vmMain +80
+ETPadEngine +0x455bc VM_CallFunc +768
+ETPadEngine +0x512f8 CL_InitCGame +324
+ETPadEngine +0x62eb4 CL_DownloadsComplete +140
+ETPadEngine +0x1dc6c Com_InitDownloads +268
+ETPadEngine +0x6cb2c CL_ParseGamestate +508
+ETPadEngine +0x6d4a4 CL_ParseServerMessage +388
+ETPadEngine +0x64c70 CL_PacketEvent +268
+ETPadEngine +0x3858c NET_Event +148
+ETPadEngine +0x38784 NET_Sleep +324
+ETPadEngine +0x18e70 Com_Frame +384
+ETPad +0xc998 GameViewController.frame() +136
+ETPad +0xcf1c @objc GameViewController.frame() +32
+QuartzCore +0x18df8 CA::Display::DisplayLinkItem::dispatch_(CA::SignPost::Interval<(CA::SignPost::CAEventCode)835322056>&) +56
