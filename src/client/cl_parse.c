@@ -883,6 +883,10 @@ void CL_ParseDownload(msg_t *msg)
 
 	// read the data
 	block = MSG_ReadShort(msg);
+	if (msg->readcount > msg->cursize)
+	{
+		Com_Error(ERR_DROP, "CL_ParseDownload: Truncated block header");
+	}
 
 	// unfortunately DLTYPE_WWW is -1 FIXME: change this someday!
 	//if (block < 0)
@@ -891,7 +895,7 @@ void CL_ParseDownload(msg_t *msg)
 	//}
 
 	// www dl, if we haven't acknowledged the download redirect yet
-	if (block == DLTYPE_WWW)
+	if (block == DLTYPE_WWW && cls.download.downloadBlock == 0)
 	{
 		if (!cls.download.bWWWDl)
 		{
@@ -954,7 +958,7 @@ void CL_ParseDownload(msg_t *msg)
 			return;
 		}
 	}
-	else if (!block)
+	else if (!block && cls.download.downloadBlock < 0x10000)
 	{
 		// block zero is special, contains file size
 		cls.download.downloadSize = MSG_ReadLong(msg);
@@ -975,7 +979,9 @@ void CL_ParseDownload(msg_t *msg)
 
 	MSG_ReadData(msg, data, size);
 
-	if (cls.download.downloadBlock != block)
+	// The wire counter is 16 bits; MSG_ReadShort sign-extends it.
+	// Keep the full local counter for acknowledgements and compare its low bits.
+	if ((cls.download.downloadBlock & 0xffff) != (block & 0xffff))
 	{
 		Com_Printf("CL_ParseDownload: Expected block %d, got %d\n", cls.download.downloadBlock, block);
 		return;
