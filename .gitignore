@@ -114,3 +114,6 @@ gradle/
 *.ipa
 *.save
 .DS_Store
+
+# ETPad build and simulator entry points
+!/scripts/*.sh
