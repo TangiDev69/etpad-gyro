@@ -1,3 +1,5 @@
+User amendment, 2026-11-16: continue in parallel, improve README to Kartpad quality, and push changes to the existing GitHub repository. This supersedes the original no-push restriction below for origin/etpad only. No release, tag, new repository, post or PadMint catalog edit is authorized. Parallel source/docs work is allowed; builds remain serial.
+
 GOAL: ETPad (working name). Wolfenstein: Enemy Territory through ET: Legacy, native on macOS and iPad.
 Controller first, touch second. Able to join existing PC ET: Legacy servers. Ready for PadMint later.
 Work autonomously until every acceptance item below is either done with evidence or documented as

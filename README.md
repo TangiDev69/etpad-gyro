@@ -1,384 +1,214 @@
-ET: Legacy [![CI](https://github.com/etlegacy/etlegacy/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/etlegacy/etlegacy/actions/workflows/ci.yml?query=branch%3Amaster) [![ETLBuild](https://github.com/etlegacy/etlegacy/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/etlegacy/etlegacy/actions/workflows/build.yml) [![etlegacy](https://snapcraft.io/etlegacy/badge.svg)](https://snapcraft.io/etlegacy)  [![Analysis status](https://scan.coverity.com/projects/1160/badge.svg)](https://scan.coverity.com/projects/1160)  
-[![chat](https://img.shields.io/discord/260750790203932672.svg?logo=discord)](https://discord.gg/UBAZFys)
-==========
+# ETPad
 
-*A second breath of life for Wolfenstein: Enemy Territory*
+**Wolfenstein: Enemy Territory on Apple silicon Mac and iPad, built on ET: Legacy.**
 
-* Website: [https://www.etlegacy.com](https://www.etlegacy.com)
-* Downloads: [https://www.etlegacy.com/download](https://www.etlegacy.com/download)
-* Wiki/FAQ: [https://github.com/etlegacy/etlegacy/wiki](https://github.com/etlegacy/etlegacy/wiki)
-* Development: [https://github.com/etlegacy/etlegacy](https://github.com/etlegacy/etlegacy)
-* Assets Repository: [https://drive.google.com](https://drive.google.com/drive/folders/0Bw7Yu-pqzcSaLXEtVEVjZF82UEU?resourcekey=0-QYA6QCoHTcUQdnDm8-z0AQ&usp=sharing)
-* Documentation: [https://etlegacy.readthedocs.io/](https://etlegacy.readthedocs.io/)
-* Lua API: [https://etlegacy-lua-docs.readthedocs.io](https://etlegacy-lua-docs.readthedocs.io)
-* Translation: [https://app.transifex.com/etlegacy/etlegacy](https://app.transifex.com/etlegacy/etlegacy)
-* Contact: [#etlegacy](https://web.libera.chat/?channels=#etlegacy) on irc.libera.chat and [etlegacy/#etlegacy](https://discordapp.com/channels/260750790203932672/346956915814957067) on Discord.
-* SignPath: [etlegacy](https://signpath.org/projects/etlegacy/) on SignPath
+Controller first, with a native iPad touch overlay, native settings, and separately acquired original game data. ETPad preserves the upstream engine and Legacy mod history while adding Apple integration under [`apple/`](apple/).
 
-## INTRODUCTION
+[Build](#build-from-source) · [Game data](#get-the-original-game-data) · [Controls](#play-with-a-controller-or-touch) · [Status](#what-is-verified) · [Developer guide](docs/BUILDING.md)
 
-ET: Legacy is an open source project based on the code of [Wolfenstein: Enemy Territory](https://www.splashdamage.com/games/wolfenstein-enemy-territory/) which [was released](https://www.splashdamage.com/news/wolfenstein-enemy-territory-goes-open-source/) in 2010 under the terms of the GPLv3.
+![Oasis running in ETPad's native arm64 macOS build](docs/evidence/macos/final-regression-respawn.png)
 
-There are two aspects to this project:
+*Actual macOS Oasis gameplay after a respawn regression check. Original game media is used locally and is not included in the repository or exported apps.*
 
-* An updated game engine, **ET: Legacy**, which aims to fix bugs and security exploits, remove old dependencies, add useful features and modernize its graphics while still remaining compatible with ET 2.60b and as many of its mods as possible.
-* A new mod, **Legacy**, which aims to add many useful features and improvements while staying close to the original gameplay, as well as being lightweight and extensible through Lua scripts.
+> **Development preview — experimental.** macOS has verified local bot rounds and a sustained public Legacy session. iPad Simulator runs real local and public gameplay, including touch-driven team/class selection, local map reload and public-server reconnect. An assisted Oasis bot round now passes through death, respawn, objective capture and timed intermission, with first-tap team/class selection. Physical iPad play and physical controller feel are unverified. The device IPA is unsigned. See the [acceptance record](docs/HANDOFF.md) before treating a build as ready to play.
 
-For more information consult our [wiki](https://github.com/etlegacy/etlegacy/wiki).
+## What is verified
 
-## CONTRIBUTING
+Build success, simulator behavior, and physical-device play are tracked separately.
 
-See [CONTRIBUTING](CONTRIBUTING.md).
+| Target | Recorded evidence | Remaining limits |
+| --- | --- | --- |
+| **macOS · arm64** | Source-built engine, renderer and Legacy modules; Oasis and Goldrush bot rounds through intermission; public Legacy session exceeding ten minutes, including map change and reconnect | Gameplay input was injected. Physical controller play has not been tested. Optional Omni-bot core is a separate, prebuilt macOS dependency. |
+| **iPad Simulator · arm64** | Native data acquisition; signed embedded frameworks; real local/public gameplay; first-tap Allies → engineer → OK → spawn; source-built Omni-bot 0.93 with four active Oasis bots, touch fire/reload, death/respawn, assisted objective capture and timed intermission; Oasis → Goldrush local reload; public Radar disconnect/reconnect in the same process; landscape and suspend/resume | Bot-round input and objective travel were assisted, including developer positioning and god mode. Multi-touch feel, physical controllers and physical keyboard/trackpad use remain unverified. |
+| **Physical iPad** | Earlier unsigned arm64 iOS app/IPA passed architecture, dependency and package checks | The bot-enabled device build needs a fresh check. No device or signing identity was available; no installation, performance, bot or public-server acceptance is claimed. |
+| **PadMint** | Build interface and manifest validation against a read-only snapshot of PadMint main | Targets remain `experimental`, manifest status `draft-untested`; no catalog listing or release acceptance. |
 
-## SECURITY POLICY
+The [handoff](docs/HANDOFF.md) contains exact checkpoints, assisted test procedures, failure logs and remaining gates. The [earlier artifact audit](docs/evidence/package-final.txt) records the pre-bot package checks; the new bot-enabled packages need a fresh audit. The accepted iPad bot round used assisted input, developer positioning and god mode for objective interaction; it does not establish unassisted play.
 
-See [SECURITY](SECURITY.md).
+### What the Apple port adds
 
-## CERTIFICATE SIGNING
+- **Shared controller layout:** analog movement/look, trigger actions, utility and weapon layers, persistent remapping, and held-input cleanup on disconnect.
+- **Native iPad controls:** a left movement area, right look area, action buttons, utility diamond, and separate menu button. Black translucent resting buttons gain color only while pressed; movement/look guides appear during use or arrangement.
+- **Native three-dot menu:** controller mappings, touch visibility/size/opacity/handedness/layouts, render resolution, FOV and FPS settings, player name, favorites, game data, Console, Game Keyboard, and report preview.
+- **Original-data acquisition:** official download or Files import, with SHA-256 verification before installation. The app package carries no original `pak0.pk3`, `pak1.pk3` or `pak2.pk3`.
+- **iPad rendering through Metal:** the source-built GL4ES adapter feeds ANGLE's Metal backend. UIKit owns presentation and lifecycle; embedded frameworks provide the engine and built-in Legacy modules.
 
-ET: Legacy Windows installers are now signed thanks to [SignPath Foundation](https://signpath.org/)
+Touch layout settings and named presets persist. Arrange mode opens and closes, but the current automated drag check did not establish position changes; physical usability remains a testing gate.
 
-## GENERAL NOTES
+## Get the original game data
 
-### Game data
+ETPad's engine code and Wolfenstein: Enemy Territory's original media have different licenses. You need all three original files: `pak0.pk3`, `pak1.pk3`, and `pak2.pk3`. They are acquired separately and never included in exports.
 
-Wolfenstein: Enemy Territory is a free release, and can be downloaded from [Splash Damage](https://www.splashdamage.com/games/wolfenstein-enemy-territory/).
+### On iPad
 
-This source release contains only the engine and mod code but not any game data,
-which is still covered by the original EULA and must be obeyed as usual.
+1. Open ETPad. Missing data opens the native setup screen.
+2. Choose the official download, or import the three original files using Files.
+3. Wait for verification to complete, then choose **Play**.
 
-In order to run ET: Legacy you will need to copy the original *pak0.pk3* assets file
-to the etmain folder. In addition, third party mods might also require the *pak1.pk3*
-and *pak2.pk3* assets files.
+The downloader uses the [official Splash Damage archive](https://www.splashdamage.com/games/wolfenstein-enemy-territory/). It verifies the archive and each original pak, reads only the fixed data payload, and never runs the bundled installer, setup or key programs. Import verifies the complete set before replacing installed data and retains unrelated files such as `etkey`.
 
+The three-dot menu provides data download, import and confirmed removal. If the engine has already started, removal is scheduled for the next launch. Saves and downloaded maps remain separate.
 
-### Compatibility with Enemy Territory 2.60b
+### On Mac or for local development
 
-ET: Legacy remains compatible with the ET 2.60b version as much as possible.
-
-Please note that ET: Legacy is *not* compatible with PunkBuster enabled servers.
-ET: Legacy clients also cannot connect to servers running the ETPro mod.
-
-
-### Linux 64 bit
-
-Please remember that 64 bit ET: Legacy clients can only connect to servers running
-mods providing a 64 bit version. You will be able to play 32 bit-only mods only if
-you compile ET: Legacy on a 32 bit system or cross-compile it for 32 bit architecture
-on a 64 bit system.
-
-At the moment, only the ETrun, ETJump, N!tmod and Legacy mods are available in 64 bit version, while all other
-existing mods are available in 32 bit only version. Read more on the [Compatible mods](https://github.com/etlegacy/etlegacy/wiki/Compatible-Mods) wiki page.
-
-In case you are a running a 64 bit system, you probably might want to use the
-**bundled libraries** which are located in a separate *etlegacy-libs* repository and
-can be automatically downloaded using the `git submodule` command. See the next
-section for more details.
-
-
-## DEPENDENCIES
-
-Required:
-* **CMake** (compile-time only)
-* **OpenGL**
-* **GLEW**
-* **SDL**
-* **ZLib**
-* **MiniZip**
-* **libjpeg-turbo** or **libjpeg**
-
-Optional, enabled by default:
-* **libcurl**
-* **WolfSSL** or **OpenSSL**
-* **Lua**
-* **Ogg Vorbis**
-* **Theora**
-* **Freetype**
-* **libpng**
-* **SQLite**
-* **OpenAL**
-
-Grab info about current lib versions from our [Libs Changelog](https://github.com/etlegacy/etlegacy/wiki/Libs-Changelog) wiki page.
-
-To get the latest source code install [git](https://git-scm.com/) and
-clone our repository hosted at [Github.com](https://github.com/etlegacy/etlegacy):
+From the repository root:
 
 ```sh
-$ git clone git@github.com:etlegacy/etlegacy.git
+/usr/bin/python3 scripts/prepare-game-data.py --download
 ```
 
-If the required dependencies are not installed on your system run:
+Or import existing originals:
 
 ```sh
-$ git submodule init
-$ git submodule update
+/usr/bin/python3 scripts/prepare-game-data.py --import-from /path/to/etmain
 ```
 
-This downloads the essential dependencies into the `libs/`directory. You can choose
-whether to use bundled libraries instead of the system ones by changing the
-`BUNDLED_LIBS` variable in the CMakeList.txt configuration file. You can then select
-which bundled libraries to use by toggling the respective `BUNDLED_XXX` variable.
+The helper writes to ignored `game-data/etmain`. It does not add media to an app. Follow the [Mac launch instructions](docs/BUILDING.md#current-entry-points) to supply a separate local data directory.
 
+See [game-data provenance, SHA-256 values and EULA notes](docs/GAME_DATA.md). Original media is governed by its original EULA, separately from the GPL engine.
 
-## COMPILE AND INSTALL
+## Play with a controller or touch
 
-To install the binaries system-wide, you need to compile ET: Legacy with hardcoded
-`fs_basepath`.
+Apple builds enable the default controller layout once per profile. Xbox labels below describe physical positions; PlayStation and MFi equivalents use the same actions. iPad prompts distinguish controller families, and touch controls can hide when a controller is connected.
 
-The following variables can be adjusted in CMake:
+| Input | Action |
+| --- | --- |
+| Left / right stick | Analog movement / look |
+| RT / LT | Fire / alternate weapon |
+| A / B / X / Y | Jump / crouch / reload / use |
+| L3 / R3 | Sprint / prone |
+| Back / Start | Scoreboard / game menu |
+| D-pad up / down / left / right | Map / limbo / previous / next weapon |
+| Hold **LB** | Utilities: lean, vote, console, team/class menus and team quick chat |
+| Hold **RB** | Weapon banks 1–10 |
 
-  * **`INSTALL_DEFAULT_BASEDIR`**: sets default `fs_basepath`, i.e. where etl and etlded
-    executables look for data files. In most cases it is `CMAKE_INSTALL_PREFIX`+`INSTALL_DEFAULT_MODDIR`.
-    Defaults to empty value, because we want `fs_basepath` to be the current working directory
-    when not installing the game system-wide.
+Triggers remain usable while a shoulder layer is held. Releasing a layer does not strand an action held in that layer; detaching the controller clears held inputs and movement axes. The [full binding table](docs/CONTROLS.md) explains every combination and how to restore defaults. iPad exposes native remapping; Mac bindings are editable through the ET console.
 
-  * (optional) **`INSTALL_DEFAULT_BINDIR`**: Location for executables. Appended to `CMAKE_INSTALL_PREFIX`.
-    Defaults to `bin`.
+On iPad, use the three-dot menu to show touch controls, change opacity/size/handedness, enable controller auto-hide, and manage layouts. Native **Game Menu**, **Console**, and **Game Keyboard** are available there. Touch selection inside ET's rendered menus now has a verified Limbo → Allies → engineer → OK → spawn flow without a crash. An initial one-event pointer lag was corrected; the subsequent Allies → engineer → OK selection worked on the first tap.
 
-  * (optional) **`INSTALL_DEFAULT_SHAREDIR`**: Location for shared data. Appended to `CMAKE_INSTALL_PREFIX`.
-    Defaults to `share`.
+Controller evidence currently comes from SDL virtual-controller component tests and Simulator virtual-Gamepad prompts. Neither establishes physical controller play. Touch fire and reload were exercised in actual simulator gameplay; multi-finger feel needs a physical iPad.
 
-  * (optional) **`INSTALL_DEFAULT_MODDIR`**: Location for libraries and paks. Appended to `CMAKE_INSTALL_PREFIX`.
-    Defaults to `lib/etlegacy` and then `legacy` is appended to it.
+## Online play and compatibility
 
-  * (optional) **`DOCDIR`**: Location for documentation. Defaults to `INSTALL_DEFAULT_SHAREDIR/doc/etlegacy`.
+The goal is interoperability with existing PC ET: Legacy servers. macOS completed a public Legacy session through a map change and reconnect. iPad Simulator completed fresh joins and gameplay on a pure Legacy server, including normal data-pack downloads. A resumed test also passed an Oasis → Goldrush local map reload, a public Radar join, and disconnect/wait/reconnect in the same process. Automatic public-server map rotation remains a separate acceptance check.
 
-### Linux
+**iPad supports only the built-in Legacy mod.** Executable engine, renderer, cgame, UI and game modules are embedded with the app. Downloaded PK3 files can supply data; downloaded native modules are never extracted or loaded. Unsupported native mods are rejected with a clear message. A Jaymod rejection was verified in the simulator.
 
-Install required dependencies.
+Use the native Online settings for player name and favorites. Current compatibility evidence is specific to the sessions recorded in [the handoff](docs/HANDOFF.md); it does not establish compatibility with every server, mod or anti-cheat system.
 
-* option A: **easybuild**
+## Build from source
 
-In terminal, run one of the following:
+The recorded build environment is Apple silicon with full Xcode 26.6, CMake, Ninja and XcodeGen. Python helpers support Apple's Python 3.9. Build targets use macOS 12.0 and iPadOS 16.0 deployment settings; those minimum OS versions have not been validated on physical hardware.
+
+With Xcode installed and selected, install the command-line build tools if needed:
 
 ```sh
-$ ./easybuild.sh        # for compiling a 32 bit version or
-$ ./easybuild.sh -64    # for compiling a 64 bit version
+brew install cmake ninja xcodegen
 ```
 
-ET: Legacy will be installed in `~/etlegacy`.
-
-* option B: **command line**
-
-In terminal, run:
+Clone the ETPad branch, keeping the upstream history:
 
 ```sh
-$ mkdir build && cd build && cmake ..
+git clone --branch etpad https://github.com/chrissotraidis/etpad.git
+cd etpad
 ```
 
-To compile, run:
+The public build script initializes and checks the pinned, unmodified `libs` submodule. If the shallow dependency fetch fails, use the [explicit pinned-fetch fallback](docs/BUILDING.md). Dependency sources and intermediate files stay under ignored `build/`.
+
+### macOS app and ZIP
 
 ```sh
-$ make
+scripts/build-etpad.sh --platform macos \
+  --output build/output \
+  --zip build/output/ETPad-mac.zip
 ```
 
-If you wish to install ET: Legacy system-wide, run:
+Output: `build/output/ETPad-mac/ET Legacy.app`, its renderer/modules, GPL Legacy data and dependency notices. Original game media is excluded. See [BUILDING.md](docs/BUILDING.md) for the exact local launch and optional macOS bot setup. The optional Omni-bot 0.93 core is an official prebuilt macOS runtime downloaded separately; it is not part of exported packages.
+
+### iPad Simulator app
 
 ```sh
-$ make install
+scripts/build-etpad.sh --platform simulator --output build/output
+
+ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 \
+  scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" \
+  com.etpad.ETPad --etpad-oasis
 ```
 
-Be sure to set the CMake variables (see above) beforehand.
+Use `--etpad-host-only` instead of `--etpad-oasis` to start with native data/settings UI. With no launch argument, verified installed data opens the engine's main menu. End a bounded simulator session early from a second terminal with `touch build/simulator-stop`.
 
+All simulator operations go through [`scripts/sim.sh`](scripts/sim.sh) and its single reserved device. Follow [SIMULATOR.md](docs/SIMULATOR.md); never run the Mac game and Simulator together, and keep builds serial. Set landscape through **Device → Orientation → Landscape Left/Right**: rotating the bezel alone may not update the simulated sensor.
 
-**NOTES:**
-
-  * Even if you have a 64 bit linux distribution which provides 32 bit versions of all
-  the required libraries, you might also need the development libraries (-devel packages)
-  installed on your system.
-
-  * In order to compile the jpeg-turbo library properly you will need the **nasm** assembler.
-
-  * On some systems, CMake might have trouble locating 32-bit libraries and tries to use 64-bit ones when building 32-bit. This can be fixed by setting the following enviromental variables before running CMake (note: running easybuild takes care of this for you)
+### Unsigned iPad device app and IPA
 
 ```sh
-$ export CC="gcc -m32"
-$ export CXX="g++ -m32"
-
-# or simply run cmake with
-$ CC="gcc -m32" CXX="g++ -m32" cmake ..
+scripts/build-etpad.sh --platform device \
+  --output build/output \
+  --ipa build/output/ETPad-unsigned.ipa
 ```
 
-  * If you are using X11 and experience:
-    * missing sound ( `SDL_Init( SDL_INIT_AUDIO )... FAILED (dsp: No such audio device)` in console):
-      * install  `libpulse-dev` (PulseAudio) or `libasound2-dev` (ALSA) package and rebuild the project.
-    * weird mouse acceleration input: 
-      * install `libxi-dev` package and rebuild the project.
+This produces an **unsigned development artifact**, requiring valid signing before installation. Packaging success is separate from device runtime acceptance. There is no physical-device acceptance record yet.
 
+The [PadMint manifest](padmint.json) uses this same build interface for experimental macOS ZIP and iOS IPA targets. No PadMint catalog change is included.
 
-### Crosscompiling on Linux with MinGW-w64
+## Rendering and performance
 
-In terminal, run:
+The current iPad path is **Legacy GLES → GL4ES → ANGLE → Metal**. The default app embeds five native engine/module frameworks plus the source-built `ETPadOmnibot.framework`, signed together for the simulator; ANGLE is a pinned, hash-verified distributor dependency, while GL4ES and ETPad's engine/modules are built from source. Notices accompany exports.
 
-```sh
-$ mkdir build && cd build
-$ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-cross-mingw-linux.cmake ..
-$ make
-```
+The simulator has verified full-screen Oasis rendering at 960×662 and a live main-menu resolution change to 1280×882. Steady 600-frame Oasis windows at 1280×882 recorded CPU frame means of **4.4–5.6 ms** and p95 of **5.8–6.9 ms**, with a display interval near 16.67 ms. These are simulator CPU measurements, not physical iPad GPU or frame-rate guarantees.
 
-By default, MinGW name is set to **`i686-w64-mingw32`**. You may have to change it in
-`cmake/Toolchain-cross-mingw-linux.cmake` depending on how it is called on your system.
+A Vulkan/MoltenVK comparison is still pending; no second-backend gameplay or comparative frame times have been accepted. Renderer experiments and their exact failures are retained in [HANDOFF.md](docs/HANDOFF.md).
 
+## Common questions
 
-### Windows
+**Where is the ready-to-install app?** This is a source development preview. Build outputs are local artifacts, not published release downloads. In particular, generating an unsigned IPA does not make it installable without signing.
 
-Install:
+**Do I need to own another Wolfenstein game?** ETPad uses Wolfenstein: Enemy Territory's original data, available through the official free download. It does not use Return to Castle Wolfenstein data. The original Enemy Territory media remains subject to its own EULA.
 
-  1. [Visual Studio Community](https://visualstudio.microsoft.com/) with the _Desktop Development with C++_ workload
-  2. [CMake](https://cmake.org/) and make sure it is added to your system PATH
+**Can I play offline with bots?** macOS has verified Oasis and Goldrush rounds using the separately prepared Omni-bot runtime. iPad Simulator now loads its bundled source-built Omni-bot 0.93 core and runs four active Oasis bots. An assisted engineer round passed touch fire/reload, death/tapout/respawn, Old City capture and timed intermission. Objective travel used developer positioning and god mode; physical play remains unverified. See the [Mac setup](docs/BUILDING.md#local-native-bots-macos) or [iPad bot setup](docs/BUILDING.md#local-native-bots-ipad).
 
-* option A: **easybuild**
+## Evidence and diagnostics
 
-    1. run easybuild.bat
+| Check | Recorded artifact |
+| --- | --- |
+| Mac bot objective interaction | [Goldrush objective screenshot](docs/evidence/macos/bots-goldrush-objective.png) · [bot-round log](docs/evidence/macos/bot-rounds.log) |
+| Mac public play and reconnect | [Public-session log](docs/evidence/macos/public-session.log) |
+| iPad local gameplay and resume | [Oasis screenshot](docs/evidence/ios-sim/oasis-resumed.png) · [gameplay log](docs/evidence/ios-sim/oasis-gameplay.log) |
+| iPad verified data acquisition | [Files import screenshot](docs/evidence/ios-sim/data-import.png) · [native download log](docs/evidence/ios-sim/native-download.log) |
+| iPad rendering | [960-pixel render screenshot](docs/evidence/ios-sim/resolution-fixed-960.png) · [resolution log](docs/evidence/ios-sim/resolution-final.log) |
+| iPad assisted local bot round | [Bot-round log](docs/evidence/ios-sim/bots-resumed.log) · [respawn/objective screenshot](docs/evidence/ios-sim/bots-respawn-objective.png) · [timed intermission screenshot](docs/evidence/ios-sim/bots-intermission.png) |
+| iPad resumed menu / map / reconnect checks | [Resumed-session log](docs/evidence/ios-sim/reconnect-resumed.log) · [reconnected Radar screenshot](docs/evidence/ios-sim/reconnect-resumed.png) |
+| Earlier package boundaries | [Pre-bot architecture, signatures, dependencies and media audit](docs/evidence/package-final.txt) |
 
-ET: Legacy will be installed in `My Documents\ETLegacy-Build`.
+Some raw simulator screenshots have portrait framebuffers containing rotated landscape content. They are simulator captures, not photographs or physical-device evidence.
 
-* option B: **Visual Studio**
+On iPad, **Report Problem** asks three questions, previews a bounded text log of up to 64 KiB plus device information and user answers, then opens a share sheet for review. It does not post or send a report automatically. No report was sent during validation.
 
-    1. create a `build` directory inside the directory which contains ET: Legacy sources
-    2. open *Visual Studio Command Prompt* in the Start menu
-    3. change directory with `cd` to the newly created build directory
+For a useful bug report, include the commit, target/OS, controller model if relevant, settings, exact steps, expected result and observed result. Share the smallest relevant text log. Keep original paks, installers, saves, signing material and credentials out of issues and commits. Follow the upstream [security policy](SECURITY.md) for security-sensitive reports.
 
-In the command prompt, run:
+## Project map
 
-```sh
-$ cmake -G "NMake Makefiles" -DBUNDLED_LIBS=YES .. && nmake
-```
+| Path | Purpose |
+| --- | --- |
+| [`apple/`](apple/) | Native iPad host, rendering integration and shared Apple controls |
+| [`scripts/build-etpad.sh`](scripts/build-etpad.sh) | Public macOS / simulator / device export interface |
+| [`docs/BUILDING.md`](docs/BUILDING.md) | Reproducible builds, launch commands and optional Mac bots |
+| [`docs/GAME_DATA.md`](docs/GAME_DATA.md) | Official data source, hash pins and licensing boundary |
+| [`docs/CONTROLS.md`](docs/CONTROLS.md) | Complete controller mapping and input validation limits |
+| [`docs/SIMULATOR.md`](docs/SIMULATOR.md) | Reserved simulator and lifecycle safeguards |
+| [`docs/HANDOFF.md`](docs/HANDOFF.md) | Current acceptance, evidence and blockers |
+| [`docs/DECISIONS.md`](docs/DECISIONS.md) | Technical choices, dependency pins and adaptation provenance |
+| [`docs/GOAL.md`](docs/GOAL.md) | Full project objective and acceptance requirements |
 
-or
+## Credits and licensing
 
-```sh
-$ cmake -G "Visual Studio 16" -A Win32 -DBUNDLED_LIBS=YES .. # Visual Studio 2019
-# or "Visual Studio 17" for Visual Studio 2022
-```
+ETPad builds on [ET: Legacy](https://github.com/etlegacy/etlegacy), the open-source engine and Legacy mod derived from id Software and Splash Damage's Wolfenstein: Enemy Territory. Upstream history and notices are retained. The Apple work starts from upstream commit `f49e6db1e54eb292b4abe9e761210bf98522672f`, with the pristine `etlegacy-libs` pin recorded in the repository.
 
-and open the resulting project in Visual Studio.
+Apple integration uses SDL, GL4ES, ANGLE and Omni-bot. The iPad bot core is built from pinned source with pinned GameMonkey/Boost inputs; script/navigation data comes from a hash-verified official distribution, excluding its downloaded native executable. Adapted Apple host, rendering and control components credit UTP, TribesPad and GoldenPad; the report flow also draws on SunPad. [DECISIONS.md](docs/DECISIONS.md) records exact reference commits and copied/adapted components. Dependency license notices ship with exported artifacts.
 
+ET: Legacy engine/mod source is GPLv3-or-later, subject to the additional terms and exclusions below; see [COPYING.txt](COPYING.txt). This does not relicense the original game media. Source control excludes original media, installers, saves, downloaded bot distributions, signing material and generated builds. Exported apps exclude original media, installers, saves, the prebuilt macOS bot runtime and signing material. iPad apps include the source-built bot framework and verified script/navigation data. Packages include the GPL Legacy mod-data pack, not the original Wolfenstein: Enemy Territory media.
 
-**NOTES:**
-
-  * If compilation of bundled libraries is aborted for any reason, you will probably need to clean the
-  libs directory and start over. This can be done by executing `git clean -df && git reset --hard HEAD`
-  inside `libs/` directory.
-
-  * If the build fails during libcurl compilation because of missing *sed* utility, download it from
-  [GnuWin](http://gnuwin32.sourceforge.net/packages/sed.htm) and place it into your system path or
-  copy it into `MSVC/VC/bin`. It also comes with Git and can be placed into your system path
-  automatically if you select that option during Git installation.
-
-
-### macOS
-
-Install:
-
-1. Xcode:
- * At least a recent Version of Xcode Command Line Tools (Terminal -> `xcode-select --install`)
- * or a complete Xcode IDE (through App Store or https://developer.apple.com/xcode/downloads/)
-2. Homebrew (https://brew.sh/)
-
-Then brew the following packages in the terminal app:
-
-```sh
-# all compilation tools needed
-$ brew install cmake autoconf nasm automake libtool
-
-# Libraries if you do not wish to compile and use the provided sources (BUNDLED_LIBS)
-$ brew install glew sdl2 minizip jpeg-turbo curl lua libogg libvorbis theora freetype libpng sqlite openal-soft
-```
-
-Alternative way to install the dependencies is to run
-```sh
-$ brew bundle
-$ brew bundle --file=misc/macos/libs.Brewfile
-```
-
-Depending on what brew version you're using (mostly older ones), you have to specify `brew install --universal` to get both 32bit and 64bit libs. If it throws an error, just use the command listed above. Although your system curl library supports both architectures, you also need to install its headers.
-
-* option A: **easybuild**
-
-There are many flags and options provided by easybuild.sh. The ET: Legacy version you can compile depends on the used macOS version.
-
-If you're running **up to macOS 10.14 (Mojave)**, use one the following flags in Terminal.app:
-
-```sh
-$ ./easybuild.sh        # for compiling a 32 bit version or
-$ ./easybuild.sh -64    # for compiling a 64 bit version
-```
-
-This will put an 'etlegacy' folder with the selected arch into your user folder.
-
-With **macOS 10.15 (Catalina) and above**, your only option is to compile and run a 64 bit client. Therefore you need to use the following flags:
-
-```sh
-$ ./easybuild.sh -64 --osx=10.15    #watch out for the double dash at --osx !
-```
-
-Take a look into easybuild.sh for more information and further options/flags.
-
-* option B: **command line**
-
-In terminal, run:
-
-```sh
-$ mkdir build && cd build && cmake ..
-```
-
-Look into easybuild.sh for all available CMake options.
-
-To compile, run:
-
-```sh
-$ make
-```
-
-If you wish to install ET: Legacy system-wide, run:
-
-```sh
-$ make install
-```
-
-Be sure to set the CMake variables (see above) beforehand.
-
-
-**NOTES**:
-
-  * In the legacy mod folder, the cgame_mac and ui_mac files are redundant since they are in the 
-  mod .pk3 and will be extracted at runtime, so you can delete those. The client is named "ET Legacy.app"
-  (and can safely be renamed), while the dedicated server is just a command-line binary named "etlded".
-
-
-### Raspberry Pi / Others that run on aarch64 architecture
-
-ET: Legacy supports both OpenGL and OpenGL ES.
-
-**Required Devices**
-
-RPI 4+ (64bit Operating System) or any that runs aarch64 arch
-
-**Required dependencies**
-
-```sh
-$ sudo apt-get install build-essential libfreeimage-dev libopenal-dev libpango1.0-dev libsndfile-dev libudev-dev \
-libasound2-dev libjpeg8-dev libwebp-dev automake libgl1-mesa-glx libjpeg62-turbo libogg0 libopenal1 libvorbis0a \
-libvorbisfile3 zlib1g libraspberrypi0 libraspberrypi-bin libraspberrypi-dev libx11-dev libglew-dev libegl1-mesa-dev \
-nasm autoconf git cmake zip gcc g++ libtool libxrandr-dev x11proto-randr-dev
-```
-
-**Pi 4+ install instructions**
-
-The OpenGL driver used is the Fake KMS driver and currently both OpenGL and GLES are ran within an X11 session.
-If you want to switch between OpenGL and GLES when installing ET: Legacy on the Pi 4, simply set the `FEATURE_RENDERER_GLES` flag to 0
-or 1 under the `RPI` section within the `easybuild.sh` script and run `./easybuild.sh -RPI -j4`.
-
-**Others**
-
-If you want to switch between OpenGL and GLES when installing ET: Legacy, simply set the `FEATURE_RENDERER_GLES` flag to 0
-or 1 under the `RPI` section within the `easybuild.sh` script and run `./easybuild.sh -RPI -j4`.
-
-### Snap Store/Snapcraft
-
-To install ET Legacy using Snap Store/Snapcraft follow instructions in: 
-[etlegacy-snap repo](https://github.com/etlegacy/etlegacy-snap)
+For upstream development guidance, see [CONTRIBUTING.md](CONTRIBUTING.md) and the [ET: Legacy project](https://github.com/etlegacy/etlegacy).
 
 ## LICENSE
 
