@@ -1,3 +1,7 @@
+set(ETPAD_MOD_TYPE MODULE)
+if(ETPAD_IOS)
+	set(ETPAD_MOD_TYPE SHARED)
+endif()
 #-----------------------------------------------------------------
 # Build mod pack
 #-----------------------------------------------------------------
@@ -24,7 +28,7 @@ endfunction()
 # cgame
 #
 if(BUILD_CLIENT_MOD)
-	add_library(cgame MODULE ${CGAME_SRC})
+	add_library(cgame ${ETPAD_MOD_TYPE} ${CGAME_SRC})
 	target_link_libraries(cgame cgame_libraries mod_libraries)
 	etl_enforce_linux_mod_no_undefined(cgame)
 
@@ -45,7 +49,7 @@ endif()
 # ui
 #
 if(BUILD_CLIENT_MOD)
-	add_library(ui MODULE ${UI_SRC})
+	add_library(ui ${ETPAD_MOD_TYPE} ${UI_SRC})
 	target_link_libraries(ui ui_libraries mod_libraries)
 	etl_enforce_linux_mod_no_undefined(ui)
 
@@ -66,7 +70,7 @@ endif()
 # qagame
 #
 if(BUILD_SERVER_MOD)
-	add_library(qagame MODULE ${QAGAME_SRC})
+	add_library(qagame ${ETPAD_MOD_TYPE} ${QAGAME_SRC})
 	target_link_libraries(qagame qagame_libraries mod_libraries)
 	etl_enforce_linux_mod_no_undefined(qagame)
 
@@ -118,7 +122,7 @@ endif()
 # tvgame
 #
 if(BUILD_SERVER_MOD)
-	add_library(tvgame MODULE ${TVGAME_SRC})
+	add_library(tvgame ${ETPAD_MOD_TYPE} ${TVGAME_SRC})
 	target_link_libraries(tvgame tvgame_libraries mod_libraries)
 	etl_enforce_linux_mod_no_undefined(tvgame)
 
@@ -278,6 +282,10 @@ if(BUILD_MOD_PK3)
 		VERBATIM
 	)
 
+    set(ETPAD_PACK_MODULES $<TARGET_FILE_NAME:cgame> $<TARGET_FILE_NAME:ui>)
+    if(ETPAD_IOS)
+        set(ETPAD_PACK_MODULES "")
+    endif()
 	add_custom_command(
 		OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}/${MODNAME}_${ETL_CMAKE_VERSION_SHORT}.pk3
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/etmain ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}
@@ -285,7 +293,7 @@ if(BUILD_MOD_PK3)
 		# It is packed via the ui/ directory entry in ETMAIN_FILES_SHALLOW_REL below, so it
 		# must not be listed explicitly again (that would create a duplicate zip entry).
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/etmain/ui/version_generated.h ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}/ui/version_generated.h
-		COMMAND ${CMAKE_COMMAND} -E tar c ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}/${MODNAME}_${ETL_CMAKE_VERSION_SHORT}.pk3 --format=zip $<TARGET_FILE_NAME:cgame> $<TARGET_FILE_NAME:ui> ${ETMAIN_FILES_SHALLOW_REL}
+		COMMAND ${CMAKE_COMMAND} -E tar c ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}/${MODNAME}_${ETL_CMAKE_VERSION_SHORT}.pk3 --format=zip ${ETPAD_PACK_MODULES} ${ETMAIN_FILES_SHALLOW_REL}
 		DEPENDS cgame ui ${ETMAIN_FILES} ${CMAKE_CURRENT_BINARY_DIR}/etmain/ui/version_generated.h remove_old_pk3_files "${ETMAIN_STAGE_STAMP}"
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MODNAME}/
 		VERBATIM

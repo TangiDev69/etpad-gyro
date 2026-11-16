@@ -6,7 +6,11 @@
 # or error out the build
 if(EXISTS "${CMAKE_SOURCE_DIR}/libs/CMakeLists.txt")
 	message(STATUS "Using bundled libraries located at ${CMAKE_SOURCE_DIR}/libs")
-    include(libs/CMakeLists.txt)
+	if(ETPAD_IOS)
+		include("${CMAKE_SOURCE_DIR}/apple/ios/bundled.cmake")
+	else()
+		include(libs/CMakeLists.txt)
+	endif()
 else()
 	message(STATUS "======================================================")
 	message(STATUS "Bundled libraries were not found on your system!")

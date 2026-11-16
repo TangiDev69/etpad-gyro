@@ -35,3 +35,21 @@ Context: Public Legacy server 144.76.234.9:27980 sends legacy_v2.84.0.pk3 via UD
 ## 2026-11-16 — Enable native macOS Omni-bot integration
 
 Context: Upstream macOS defaults disable the Omni-bot interface even though the official runtime includes arm64. Decision: force the source-built Legacy server module's existing Omni-bot interface on macOS. Keep official Omni-bot 0.93 optional and local under build/omnibot-runtime, with archive SHA-256 7c4a3c1b6f185e48267764b3fc5ffcee6c7b61cec2505d5b6b38847f92502313. Download URL: https://mirror.etlegacy.com/omnibot/omnibot-macos-0.93.tar.gz (latest archive was initially inspected, then version pin verified). No bot core or assets are committed or included in the app package. Evidence: source-built qagame loads native arm64 bot core, initializes Omni-bot 0.93 and fills local Oasis with three bots plus player. Bot core itself is prebuilt; engine, renderer and Legacy modules are source-built. Reversal: upstream default enables equivalent integration, or source-built/static bot core is required on iOS.
+
+## 2026-11-16 — iOS engine frameworks and Metal translation
+
+Context: upstream's Apple path assumes macOS/Cocoa; the GLES renderer uses ES 1.x, while ANGLE exposes ES 2/3. Static linking all Legacy modules also collides on common VM symbols.
+
+Decision: isolate iOS CMake additions in apple/ios, build the client/renderer/cgame/ui/qagame as embedded frameworks with separate symbol namespaces, and whitelist their bundle paths in the iOS loader. Use GL4ES before ANGLE's Metal backend. Module extraction from downloaded pk3 files is bypassed on iOS. The host must embed/sign these frameworks. No launch acceptance is claimed from compilation alone.
+
+Copied/adapted components from read-only TribesPad commit `3f033e4c4b6a620e8a3cd905565b087adbd2bd0a`:
+- `scripts/build-gl4es-mobile.py` → `scripts/build-gl4es.py`: same pinned GL4ES source and Darwin alias/client-active-texture patches; ETPad build paths, SDK selection and half-core job limit.
+- `scripts/angle_backend_inputs.py` → same ETPad script name: pinned download/hash/source receipt, own build dependency directory. ANGLE license downloaded alongside the inputs.
+- `port/apple/angle_sdl.c` and `.h` → `apple/ios/angle_sdl.c` and `.h`: SDL2 conventions, one engine context, native Metal view.
+- `port/apple/gl4es_context.c` → minimal lifecycle in `apple/ios/gl4es_context.c`; streaming optimizations deferred until measured.
+
+GL4ES source pin: `ec16bedd8819c475326f4f1a3063772c6d986e06`; its license remains in the ignored source/build artifacts and must ship with the app. ANGLE distributor/zip/hash/reported source commit are recorded by the dependency helper; this is a hash-verified distributor binary, not a local ANGLE source build. Framework signatures will be validated at app packaging.
+
+Evidence: simulator GL4ES archive built, root iOS configure passed, all five engine/Legacy frameworks linked (`build/ios-engine-sim/build-angle2.log`). Fixes needed: Cocoa→UIKit platform split; forward SDK/system/CPU to dependency builds; clean only stale JPEG CMake cache; allow dependency discovery of the locally installed Ogg prefix; link SDL's required iOS system frameworks. Pristine libs gitlink retained. External process launching is disabled on iOS. macOS shared-code regression check is still due before accepting these changes.
+
+Reversal condition: failed simulator rendering or unacceptable measured frame times; evaluate Vulkan/MoltenVK next. Native loader and host changes remain experimental until actual app launch and gameplay.

@@ -109,6 +109,8 @@ if(UNIX)
     elseif(ANDROID)
 		target_link_libraries(os_libraries INTERFACE android log OpenSLES)
 		set(LIB_SUFFIX ".mp.android.")
+	elseif(ETPAD_IOS)
+		include("${CMAKE_SOURCE_DIR}/apple/ios/platform.cmake")
 	elseif(APPLE)
 		# TODO: use find package with the MacOs frameworks instead of direct linker flags..
 		target_link_libraries(os_libraries INTERFACE dl m objc)

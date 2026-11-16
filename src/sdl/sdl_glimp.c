@@ -33,6 +33,9 @@
  */
 
 #include "sdl_defs.h"
+#ifdef ETPAD_IOS
+#include "../../apple/ios/angle_sdl.h"
+#endif
 
 #ifdef FEATURE_RENDERER_VULKAN
 #include <SDL2/SDL_vulkan.h>

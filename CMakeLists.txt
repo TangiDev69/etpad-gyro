@@ -9,6 +9,11 @@ cmake_minimum_required(VERSION 3.10.3 FATAL_ERROR)
 
 project(ETLEGACY C CXX)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+	set(ETPAD_IOS ON)
+	add_compile_definitions(ETPAD_IOS SDL_MAIN_HANDLED)
+endif()
+
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.21")
     cmake_policy(SET CMP0121 NEW)
 endif()
@@ -224,6 +229,10 @@ endif(BUILD_SERVER)
 if(BUILD_MOD)
 	include(cmake/ETLBuildMod.cmake)
 endif(BUILD_MOD)
+
+if(ETPAD_IOS)
+	include(apple/ios/targets.cmake)
+endif()
 
 #-----------------------------------------------------------------
 # Post build

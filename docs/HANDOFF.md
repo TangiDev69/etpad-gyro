@@ -2,7 +2,7 @@
 
 ## Read first
 
-Phase 1 source/gameplay gates are complete; physical-controller play is blocked by absent hardware and menu-click automation remains experimental. Phase 2 is next. Native arm64 macOS client, Legacy modules and renderer build and run from upstream f49e6db1e54eb292b4abe9e761210bf98522672f. iOS implementation has not started. Full objective: GOAL.md. No simulator has booted. One device was reserved through scripts/sim.sh (SIMULATOR.md). No other reference checkout was modified. No push, release, tag or catalog edit occurred.
+Phase 1 source/gameplay gates are complete; physical-controller play is blocked by absent hardware and menu-click automation remains experimental. Phase 2 is next. Native arm64 macOS client, Legacy modules and renderer build and run from upstream f49e6db1e54eb292b4abe9e761210bf98522672f. iOS framework compilation is experimental and now passes; host integration/launch is next. Full objective: GOAL.md. No simulator has booted. One device was reserved through scripts/sim.sh (SIMULATOR.md). No other reference checkout was modified. No push, release, tag or catalog edit occurred.
 
 ## Acceptance
 
@@ -43,3 +43,9 @@ Local native bots: scripts/prepare-bots.sh checks official 0.93 archive/hash/arm
 Original Splash Damage paks and installer remain ignored/local. SHA-256 pins and provenance: GAME_DATA.md. Data-only helper passes Apple Python 3.9.6. Exact build/launch/component-test commands: BUILDING.md. Controller map: CONTROLS.md. Decisions include reference commits; no port component has been copied yet.
 
 Last committed checkpoint: 4444d8988 (controller, UDP, package/simulator hardening). Current Omni-bot, package selection and documentation/evidence updates are uncommitted; commit after final ZIP check. Do not commit original data, saves or builds. Build output remains under build/, at half the eight CPU cores. Never build twice in parallel or run simulator alongside game.
+
+## Phase 2 compilation checkpoint
+
+GL4ES simulator archive and five native frameworks now compile/link using ANGLE Metal inputs. No simulator launch yet. Source changes are iOS guarded, but a macOS bot regression check is still due. New apple/ios CMake glue, platform functions, SDL2 ANGLE adapter, GL4ES lifecycle and framework-only module loader are experimental. Do not claim signed app packaging until the host embeds/signs them.
+
+Logs: build/ios-engine-sim/configure-attempt1..3.log, build-attempt1..3.log, build-dependencies4.log and build-angle1..2.log. Initial failures were different dependency/platform issues, repaired as documented in DECISIONS.md. Final build-angle2 succeeds. No simulator was booted and no device/signing became available. Next: native host and actual engine launch, then data acquisition, controls/menu/lifecycle.

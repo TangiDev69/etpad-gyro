@@ -1072,6 +1072,9 @@ dialogResult_t Sys_Dialog(dialogType_t type, const char *message, const char *ti
  */
 void Sys_DoStartProcess(char *cmdline)
 {
+#ifdef ETPAD_IOS
+    Com_Printf("ETPad does not launch external processes.\n");
+#else
 	switch (fork())
 	{
 	case -1:
@@ -1101,6 +1104,7 @@ void Sys_DoStartProcess(char *cmdline)
 		_exit(0);
 		break;
 	}
+#endif
 }
 
 /**

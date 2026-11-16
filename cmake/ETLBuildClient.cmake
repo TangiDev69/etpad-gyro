@@ -4,7 +4,9 @@
 
 set(ETL_OUTPUT_DIR "")
 
-if(WIN32)
+if(ETPAD_IOS)
+	add_library(etl SHARED ${COMMON_SRC} ${CLIENT_SRC} ${PLATFORM_SRC} ${PLATFORM_CLIENT_SRC})
+elseif(WIN32)
 	add_executable(etl WIN32 ${COMMON_SRC} ${CLIENT_SRC} ${PLATFORM_SRC} ${PLATFORM_CLIENT_SRC})
 elseif(APPLE)
 	file(WRITE "${CMAKE_BINARY_DIR}/etpad-mod-pack.txt" "${MODNAME}/${MODNAME}_${ETL_CMAKE_VERSION_SHORT}.pk3\n")

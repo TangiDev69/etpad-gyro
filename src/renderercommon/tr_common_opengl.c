@@ -533,6 +533,10 @@ void Glimp_ClearScreen(void)
  */
 int RE_InitOpenGlSubsystems(void)
 {
+#ifdef ETPAD_IOS
+    extern void ETPad_GL4ESInitialize(void);
+    ETPad_GL4ESInitialize();
+#endif
 #ifndef FEATURE_RENDERER_GLES
 	GLenum glewResult;
 
@@ -610,6 +614,10 @@ void RE_InitOpenGl(void)
  */
 void R_DoGLimpShutdown(void)
 {
+#ifdef ETPAD_IOS
+    extern void ETPad_GL4ESShutdown(void);
+    ETPad_GL4ESShutdown();
+#endif
 	ri.GLimp_Shutdown();
 	Com_Memset(&glConfig, 0, sizeof(glConfig));
 #ifdef FEATURE_RENDERER2

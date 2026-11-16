@@ -680,8 +680,14 @@ void Sys_UnloadDll(void *dllHandle)
  * @param[in] useSystemLib
  * @return
  */
+#ifdef ETPAD_IOS
+extern void *ETPad_LoadBundledModule(const char *, qboolean);
+#endif
 void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 {
+#ifdef ETPAD_IOS
+    return ETPad_LoadBundledModule(name, qfalse);
+#else
 	void *dllhandle;
 
 	// Don't load any DLLs that end with the pk3 extension or try to traverse directories
@@ -737,6 +743,7 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 	}
 
 	return dllhandle;
+#endif
 }
 
 /**
@@ -887,6 +894,16 @@ void *Sys_LoadGameDll(const char *name, qboolean extract,
                       VM_EntryPoint_t *entryPoint,
                       intptr_t (*systemcalls)(intptr_t, ...))
 {
+#ifdef ETPAD_IOS
+    void *handle = ETPad_LoadBundledModule(name, qtrue);
+    void (*entry)(intptr_t (*)(intptr_t, ...));
+    if (!handle) return NULL;
+    entry = (void (*)(intptr_t (*)(intptr_t, ...)))Sys_LoadFunction(handle, "dllEntry");
+    *entryPoint = (VM_EntryPoint_t)Sys_LoadFunction(handle, "vmMain");
+    if (!entry || !*entryPoint) { Sys_UnloadLibrary(handle); return NULL; }
+    entry(systemcalls);
+    return handle;
+#else
 	void *libHandle;
 	void (*dllEntry)(intptr_t (*syscallptr)(intptr_t, ...));
 	char fname[MAX_OSPATH];
@@ -1008,6 +1025,7 @@ void *Sys_LoadGameDll(const char *name, qboolean extract,
 	dllEntry(systemcalls);
 
 	return libHandle;
+#endif
 }
 
 void Sys_ParseArgsDrawBanner(FILE *stream)
@@ -1351,7 +1369,11 @@ static int Sys_GameLoop(void)
  * @param[in] argv
  * @return
  */
+#ifdef ETPAD_IOS
+__attribute__((visibility("default"))) int etpad_engine_main(int argc, char **argv)
+#else
 int main(int argc, char **argv)
+#endif
 {
 	char commandLine[MAX_STRING_CHARS] = { 0 };
 
@@ -1382,7 +1404,7 @@ int main(int argc, char **argv)
 	// the Android target
 	Sys_ParseArgs(argc, argv);
 
-#if defined(__APPLE__) && !defined(DEDICATED)
+#if defined(__APPLE__) && !defined(ETPAD_IOS) && !defined(DEDICATED)
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 	// argv[0] would be /Users/seth/etlegacy/ET Legacy.app/Contents/MacOS
 	// But on OS X we want to pretend the binary path is the .app's parent
