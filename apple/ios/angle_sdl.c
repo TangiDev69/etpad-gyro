@@ -4,6 +4,7 @@
 #define EGL_EGLEXT_PROTOTYPES
 #include "angle_sdl.h"
 #include <SDL2/SDL_metal.h>
+#include <SDL2/SDL_syswm.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <EGL/eglext_angle.h>
@@ -14,10 +15,17 @@ static EGLSurface surface = EGL_NO_SURFACE;
 static EGLContext context = EGL_NO_CONTEXT;
 static SDL_MetalView view;
 static SDL_Window *window;
+static int renderWidth,renderHeight;
+extern void ETPad_AttachRenderWindow(void *);
+extern void ETPad_MetalDrawable(void *,int,int);
 static int failure(const char *operation) { return SDL_SetError("ANGLE %s: EGL 0x%x", operation, eglGetError()); }
 SDL_Window *ETPad_CreateWindow(const char *title,int x,int y,int w,int h,Uint32 flags)
 {
-    return SDL_CreateWindow(title,x,y,w,h,(flags & ~SDL_WINDOW_OPENGL) | SDL_WINDOW_METAL);
+    renderWidth=w;renderHeight=h;
+    SDL_Window *created=SDL_CreateWindow(title,x,y,w,h,(flags & ~SDL_WINDOW_OPENGL) | SDL_WINDOW_METAL);
+    SDL_SysWMinfo info;SDL_VERSION(&info.version);
+    if(created && SDL_GetWindowWMInfo(created,&info))ETPad_AttachRenderWindow(info.info.uikit.window);
+    return created;
 }
 SDL_GLContext ETPad_CreateContext(SDL_Window *target)
 {
@@ -30,6 +38,7 @@ SDL_GLContext ETPad_CreateContext(SDL_Window *target)
     if(display==EGL_NO_DISPLAY || !eglInitialize(display,NULL,NULL))goto fail;
     if(!eglChooseConfig(display,attributes,&config,1,&count) || count!=1)goto fail;
     view=SDL_Metal_CreateView(target); if(!view)goto fail;
+    ETPad_MetalDrawable(SDL_Metal_GetLayer(view),renderWidth,renderHeight);
     surface=eglCreateWindowSurface(display,config,(EGLNativeWindowType)SDL_Metal_GetLayer(view),NULL);
     if(surface==EGL_NO_SURFACE)goto fail;
     context=eglCreateContext(display,config,EGL_NO_CONTEXT,version);
@@ -57,7 +66,14 @@ int ETPad_MakeCurrent(SDL_Window *target,SDL_GLContext token)
 }
 void ETPad_SwapWindow(SDL_Window *target)
 {
+    if(view)ETPad_MetalDrawable(SDL_Metal_GetLayer(view),renderWidth,renderHeight);
     if(target==window && !eglSwapBuffers(display,surface))failure("swap buffers");
 }
 int ETPad_SetSwapInterval(int interval){return eglSwapInterval(display,interval)?0:failure("swap interval");}
 void *ETPad_GetProcAddress(const char *name){return (void *)eglGetProcAddress(name);}
+
+__attribute__((visibility("default"))) void *etpad_render_window(void)
+{
+    SDL_SysWMinfo info; SDL_VERSION(&info.version);
+    return window && SDL_GetWindowWMInfo(window,&info) ? info.info.uikit.window : NULL;
+}

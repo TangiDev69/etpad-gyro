@@ -53,3 +53,15 @@ GL4ES source pin: `ec16bedd8819c475326f4f1a3063772c6d986e06`; its license remain
 Evidence: simulator GL4ES archive built, root iOS configure passed, all five engine/Legacy frameworks linked (`build/ios-engine-sim/build-angle2.log`). Fixes needed: Cocoa→UIKit platform split; forward SDK/system/CPU to dependency builds; clean only stale JPEG CMake cache; allow dependency discovery of the locally installed Ogg prefix; link SDL's required iOS system frameworks. Pristine libs gitlink retained. External process launching is disabled on iOS. macOS shared-code regression check is still due before accepting these changes.
 
 Reversal condition: failed simulator rendering or unacceptable measured frame times; evaluate Vulkan/MoltenVK next. Native loader and host changes remain experimental until actual app launch and gameplay.
+
+## 2026-11-16 — UIKit frame ownership and native data acquisition
+
+Context: a non-returning engine main loop prevents UIKit transactions/menu animations from completing reliably. Darwin GL4ES lacks public GNU symbol aliases, so ordinary GLES symbols resolve to ANGLE and fail ES1 drawing.
+
+Decision: iOS engine entry initializes and returns; CADisplayLink runs Com_Frame on the main thread, pausing on system inactivity. Redirect the GLES renderer's direct calls to GL4ES's private exported entry points. The initial Legacy main menu now renders via GL4ES on ANGLE Metal and the native menu opens. Landscape alignment remains blocked after three attempts, recorded with screenshots/errors in HANDOFF.md. macOS entry/loop remain unchanged behind ETPAD_IOS guards; current source build plus Oasis native-bot gameplay/respawn/intermission regression pass (ios-regression.log/png).
+
+Native host AppDelegate/SceneDelegate and window ownership adapt UTP `Sources/UT99Host/AppDelegate.swift`, `SceneDelegate.swift`, and `GameViewController.swift` at `a9313911efcf044fd66f9a679af53e55e255a8b4`. Acquisition architecture is informed by `UT99GameDataAcquisition.swift` at that commit, but the official ZIP/Makeself/gzip-tar reader is ETPad-specific. It extracts only fixed pak names without running installer code; standalone extraction verifies all three SHA-256 values. The Swift acquisition UI remains untested/unwired at this checkpoint.
+
+Build driver uses only Apple Python 3.9, serial external dependency builds and half-core inner build limits. Simulator app packaging deeply verifies ad hoc signatures, includes GPL/GL4ES/ANGLE notices and excludes original media. Device packaging is unsigned until a signing identity is available; no install claim.
+
+Reversal condition: native frame scheduling breaks network/engine timing or measured performance requires a different cadence. Keep UIKit ownership and framework loader restrictions in any replacement.

@@ -2035,7 +2035,10 @@ void IN_Init(void)
 #endif
 	in_joystickThreshold = Cvar_Get("in_joystickThreshold", "0.25", CVAR_ARCHIVE_ND);
 
+#ifndef ETPAD_IOS
+    // The native iPad host owns software text entry.
 	SDL_StartTextInput();
+#endif
 
 	mouseAvailable = (in_mouse->value != 0.f);
 	IN_DeactivateMouse();

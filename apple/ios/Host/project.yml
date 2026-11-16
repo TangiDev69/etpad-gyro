@@ -1,0 +1,60 @@
+name: ETPad
+options:
+  bundleIdPrefix: com.etpad
+  deploymentTarget:
+    iOS: '16.0'
+settings:
+  base:
+    ARCHS: arm64
+    SWIFT_VERSION: '5.0'
+    TARGETED_DEVICE_FAMILY: '2'
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_OBJC_BRIDGING_HEADER: ${ETPAD_ROOT}/apple/ios/Host/ETPad-Bridging-Header.h
+    LD_RUNPATH_SEARCH_PATHS: ['$(inherited)', '@executable_path/Frameworks']
+targets:
+  ETPad:
+    type: application
+    platform: iOS
+    sources:
+      - path: ${ETPAD_ROOT}/apple/ios/Host
+        excludes: [project.yml]
+      - path: ${ETPAD_ROOT}/build/ios-host-content/GameContent
+        type: folder
+        buildPhase: resources
+      - path: ${ETPAD_ROOT}/build/ios-host-content/Notices
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - framework: ${ETPAD_ENGINE_DIR}/frameworks/ETPadEngine.framework
+        embed: true
+      - framework: ${ETPAD_ENGINE_DIR}/frameworks/ETPadRenderer.framework
+        embed: true
+      - framework: ${ETPAD_ENGINE_DIR}/frameworks/ETPadCGame.framework
+        embed: true
+      - framework: ${ETPAD_ENGINE_DIR}/frameworks/ETPadUI.framework
+        embed: true
+      - framework: ${ETPAD_ENGINE_DIR}/frameworks/ETPadGame.framework
+        embed: true
+      - framework: ${ETPAD_ROOT}/build/dependencies/angle-prebuilt/ios/libEGL.xcframework
+        embed: true
+      - framework: ${ETPAD_ROOT}/build/dependencies/angle-prebuilt/ios/libGLESv2.xcframework
+        embed: true
+    info:
+      path: ${ETPAD_ROOT}/build/ios-host-content/Info.plist
+      properties:
+        CFBundleDisplayName: ETPad
+        CFBundleShortVersionString: '0.1'
+        CFBundleVersion: '1'
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        UIRequiresFullScreen: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        NSLocalNetworkUsageDescription: ETPad connects to Enemy Territory game servers and finds LAN games.
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: ETPad
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate

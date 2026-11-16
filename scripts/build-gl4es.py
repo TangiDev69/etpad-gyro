@@ -28,7 +28,12 @@ def build(platform):
     source = ROOT / 'build/gl4es/source'
     # Keep upstream untouched. These two GNU aliases need private C forwarding
     # functions on Darwin; no rendering behavior is changed.
-    shutil.copytree(ref, source, dirs_exist_ok=True,
+    def copy_input(src, dst):
+        destination=Path(dst)
+        if destination.exists() and (Path(src).name in ('directstate.c','getter.c') or Path(src).read_bytes()==destination.read_bytes()):
+            return str(destination)
+        return shutil.copy2(src,dst)
+    shutil.copytree(ref, source, dirs_exist_ok=True, copy_function=copy_input,
                     ignore=shutil.ignore_patterns('.git', 'lib', 'bin'))
     original = (ref / 'src/gl/directstate.c').read_text()
     patched = original

@@ -34,8 +34,28 @@ case "${1:-}" in
   xcrun simctl bootstatus "$udid" -b
   xcrun simctl install "$udid" "$2"
   bundle=$3; shift 3
-  xcrun simctl launch "$udid" "$bundle" "$@"
-  sleep 10
-  xcrun simctl io "$udid" screenshot docs/evidence/ios-sim/latest.png;;
+  container=$(xcrun simctl get_app_container "$udid" "$bundle" data)
+  if [[ -n "${ETPAD_SIM_DATA_DIR:-}" ]]; then
+   # Local test fixture only: never becomes part of an app/package export.
+   /usr/bin/python3 scripts/prepare-game-data.py --import-from "$ETPAD_SIM_DATA_DIR"
+   mkdir -p "$container/Documents/ETPad/etmain"
+   cp game-data/etmain/pak[012].pk3 "$container/Documents/ETPad/etmain/"
+  fi
+  if [[ "${ETPAD_SIM_VISIBLE:-0}" = 1 ]]; then open -a Simulator --args -CurrentDeviceUDID "$udid"; fi
+  xcrun simctl launch --terminate-running-process --console "$udid" "$bundle" "$@" > build/ios-engine-sim/runtime-console.log 2>&1 &
+  console_pid=$!
+  duration=${ETPAD_SIM_HOLD_SECONDS:-10}
+  [[ "$duration" =~ ^[0-9]+$ && "$duration" -ge 10 && "$duration" -le 1800 ]] || { echo 'Hold must be 10–1800 seconds.' >&2; exit 2; }
+  for ((elapsed=0; elapsed<duration; elapsed++)); do
+   sleep 1
+   if [[ "$elapsed" = 9 ]]; then xcrun simctl io "$udid" screenshot docs/evidence/ios-sim/latest.png; fi
+   if [[ -f build/simulator-stop ]]; then python3 -c 'from pathlib import Path;Path("build/simulator-stop").unlink()'; break; fi
+  done
+  if [[ -f "$container/Documents/ETPad/legacy/etconsole.log" ]]; then cp "$container/Documents/ETPad/legacy/etconsole.log" build/ios-engine-sim/runtime.log; fi
+  xcrun simctl io "$udid" screenshot docs/evidence/ios-sim/final.png;;
+ capture)
+  [[ -n "$udid" && -d build/ios-engine-sim ]] || exit 1
+  [[ "${2:-latest}" =~ ^[a-zA-Z0-9_-]+$ ]] || exit 2
+  xcrun simctl io "$udid" screenshot "docs/evidence/ios-sim/${2:-latest}.png";;
  *) echo 'Usage: scripts/sim.sh init | test APP BUNDLE_ID [arguments...]' >&2; exit 2;;
 esac

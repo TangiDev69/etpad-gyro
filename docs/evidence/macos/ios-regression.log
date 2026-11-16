@@ -1,0 +1,24 @@
+macOS bot regression after iOS-guarded engine changes. Injected input: move, fire, reload, kill/tapout, respawn and intermission.
+       0 Omni-bot 0.93 initialized in 0.05 seconds.
+       0 Omni-bot: Omni-bot Loaded Successfully
+       0 Initializing legacy cgame v2.86.2-177-gd4e4fc2
+   19150 ]/team b 2 8; bot maxbots 4; set g_warmup 5; map_restart 0
+   19150 ==== ShutdownGame (1 - oasis) ====
+   19150 Omni-bot 0.93 initialized in 0.05 seconds.
+   19150 Omni-bot: Omni-bot Loaded Successfully
+   19850 [skipnotify]FIGHT!
+   31150 ]/set timelimit 1
+   31250 [skipnotify]Server: timelimit changed to 1
+   48050 ]/kill; forcetapout
+  139200 ==== ShutdownGame (1 - oasis) ====
+  139200 Omni-bot 0.93 initialized in 0.05 seconds.
+  139200 Omni-bot: Omni-bot Loaded Successfully
+  140000 [skipnotify]Server: timelimit changed to 30
+  145250 ==== ShutdownGame (1 - oasis) ====
+  145250 Omni-bot 0.93 initialized in 0.05 seconds.
+  145250 Omni-bot: Omni-bot Loaded Successfully
+  146050 [skipnotify]FIGHT!
+  157050 ]/set timelimit 0.1; wait 300; screenshot ios-regression-final
+  157150 [skipnotify]Server: timelimit changed to 0.1
+  158250 Wrote screenshots/ios-regression-final.png
+       0 ==== ShutdownGame (0 - oasis) ====

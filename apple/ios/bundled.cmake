@@ -8,3 +8,13 @@ string(REPLACE "-DSDL_METAL=OFF -DSDL_COCOA=ON" "-DSDL_METAL=ON -DSDL_COCOA=OFF 
 string(REPLACE "\${CMAKE_CURRENT_LIST_DIR}" "${CMAKE_SOURCE_DIR}/libs" ETPAD_LIBS_CMAKE "${ETPAD_LIBS_CMAKE}")
 file(WRITE "${CMAKE_BINARY_DIR}/etpad-bundled-libs.cmake" "${ETPAD_LIBS_CMAKE}")
 include("${CMAKE_BINARY_DIR}/etpad-bundled-libs.cmake")
+
+# The driver builds external projects serially, each with half the CPU cores.
+get_property(ETPAD_TARGETS DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+file(WRITE "${CMAKE_BINARY_DIR}/etpad-external-targets.txt" "")
+foreach(target ${ETPAD_TARGETS})
+    get_property(external TARGET ${target} PROPERTY _EP_IS_EXTERNAL_PROJECT)
+    if(external)
+        file(APPEND "${CMAKE_BINARY_DIR}/etpad-external-targets.txt" "${target}\n")
+    endif()
+endforeach()

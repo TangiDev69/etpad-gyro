@@ -27,3 +27,12 @@ foreach(target etl renderer_es)
     target_include_directories(${target} PRIVATE "${ETPAD_ANGLE_ROOT}/include")
     target_link_libraries(${target} "${ETPAD_EGL}" "${ETPAD_GLES2}")
 endforeach()
+target_sources(etl PRIVATE apple/ios/host_bridge.c)
+
+file(WRITE "${CMAKE_BINARY_DIR}/etpad-mod-pack.txt" "${MODNAME}/${MODNAME}_${ETL_CMAKE_VERSION_SHORT}.pk3\n")
+target_compile_options(renderer_es PRIVATE "-include" "${CMAKE_SOURCE_DIR}/apple/ios/gl4es_redirect.h")
+
+target_sources(etl PRIVATE apple/ios/data_extract.c)
+# Upstream trims gzip file I/O; the data-only original installer reader needs it.
+target_sources(bundled_zlib PRIVATE libs/zlib/gzclose.c libs/zlib/gzlib.c libs/zlib/gzread.c libs/zlib/gzwrite.c)
+target_compile_definitions(bundled_zlib PRIVATE Z_HAVE_UNISTD_H)

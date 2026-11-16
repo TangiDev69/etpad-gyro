@@ -1,5 +1,7 @@
 // ETPad iOS platform glue. GPL-3.0-or-later; see COPYING.txt.
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <QuartzCore/CAMetalLayer.h>
 #include "../../src/qcommon/q_shared.h"
 #include "../../src/qcommon/qcommon.h"
 #include "../../src/sys/sys_local.h"
@@ -18,3 +20,26 @@ const char *OSX_ApplicationSupportPath(void)
     return path;
 }
 int OSX_NeedsQuarantineFix(void) { return 0; }
+
+void ETPad_MetalDrawable(void *pointer,int width,int height)
+{
+    CAMetalLayer *layer=(CAMetalLayer *)pointer;
+    CGSize size=CGSizeMake(width,height);
+    if(!CGSizeEqualToSize(layer.drawableSize,size))layer.drawableSize=size;
+}
+
+void ETPad_AttachRenderWindow(void *pointer)
+{
+    UIWindow *window=(UIWindow *)pointer;
+    for(UIScene *candidate in UIApplication.sharedApplication.connectedScenes){
+        if(![candidate isKindOfClass:UIWindowScene.class] || candidate.activationState!=UISceneActivationStateForegroundActive)continue;
+        UIWindowScene *scene=(UIWindowScene *)candidate;
+        window.windowScene=scene;
+        window.frame=scene.coordinateSpace.bounds;
+        window.userInteractionEnabled=NO;
+        [window.rootViewController setNeedsUpdateOfSupportedInterfaceOrientations];
+        [window layoutIfNeeded];
+        NSLog(@"ETPad renderer attached before Metal: frame=%@ bounds=%@ root=%@ orientation=%ld",NSStringFromCGRect(window.frame),NSStringFromCGRect(window.bounds),NSStringFromCGRect(window.rootViewController.view.frame),(long)scene.interfaceOrientation);
+        break;
+    }
+}

@@ -17,10 +17,6 @@ while [[ $# -gt 0 ]]; do
  esac
 done
 case "$platform" in device|simulator|macos) ;; *) echo 'Invalid platform' >&2; exit 2;; esac
-if [[ "$platform" != macos ]]; then
- echo 'ETPad iOS engine integration is not implemented. See docs/HANDOFF.md.' >&2; exit 1
-fi
-[[ -z "$ipa" ]] || { echo '--ipa requires device platform' >&2; exit 2; }
 cd "$repo"
 mkdir -p build/macos "$output"
 output=$(cd "$output" && pwd)
@@ -39,6 +35,15 @@ if [[ ! -f libs/CMakeLists.txt ]]; then
 fi
 [[ "$(git -C libs rev-parse HEAD)" = "$(git rev-parse HEAD:libs)" ]] || { echo 'libs must match the pinned upstream submodule commit' >&2; exit 1; }
 [[ -z "$(git -C libs status --porcelain)" ]] || { echo 'libs has local changes; preserve them and use a clean dependency checkout' >&2; exit 1; }
+if [[ "$platform" != macos ]]; then
+ ios_args=(--platform "$platform" --output "$output")
+ [[ -z "$ipa" ]] || ios_args+=(--ipa "$ipa")
+ [[ -z "$zip" ]] || ios_args+=(--zip "$zip")
+ /usr/bin/python3 scripts/build-ios.py "${ios_args[@]}"
+ exit
+fi
+[[ -z "$ipa" ]] || { echo '--ipa requires device platform' >&2; exit 2; }
+export CMAKE_BUILD_PARALLEL_LEVEL=$(( $(sysctl -n hw.ncpu) / 2 ))
 sdk=$(xcrun --sdk macosx --show-sdk-path)
 export SDKROOT="$sdk"
 cmake -S . -B build/macos -G Ninja -DCMAKE_BUILD_TYPE=Release \

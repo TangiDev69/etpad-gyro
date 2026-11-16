@@ -1376,6 +1376,10 @@ int main(int argc, char **argv)
 #endif
 {
 	char commandLine[MAX_STRING_CHARS] = { 0 };
+#ifdef ETPAD_IOS
+	SDL_SetMainReady();
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
 
 #ifdef MAIN_MUST_RETURN
 	// if we have not yet hit the main loop then we exit here on error
@@ -1496,5 +1500,10 @@ int main(int argc, char **argv)
 
 #endif
 
+#ifdef ETPAD_IOS
+    // UIKit owns the main run loop. The host ticks Com_Frame with CADisplayLink.
+    return 0;
+#else
 	return Sys_GameLoop();
+#endif
 }
