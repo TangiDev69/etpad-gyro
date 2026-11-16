@@ -2,7 +2,7 @@
 
 ## Read first
 
-Phase 1 source/gameplay gates are complete; physical-controller play is blocked by absent hardware and menu-click automation remains experimental. Phase 2 is next. Native arm64 macOS client, Legacy modules and renderer build and run from upstream f49e6db1e54eb292b4abe9e761210bf98522672f. iOS framework compilation is experimental and now passes; host integration/launch is next. Full objective: GOAL.md. No simulator has booted. One device was reserved through scripts/sim.sh (SIMULATOR.md). No other reference checkout was modified. No push, release, tag or catalog edit occurred.
+Phase 1 source/gameplay gates are complete; physical-controller play is blocked by absent hardware and menu-click automation remains experimental. Phase 2 is active. Native arm64 macOS client, Legacy modules and renderer build and run from upstream f49e6db1e54eb292b4abe9e761210bf98522672f. The iOS host, five embedded frameworks and ANGLE/GL4ES now run a real local Oasis round. Full objective: GOAL.md. Only the reserved simulator has booted. One device was reserved through scripts/sim.sh (SIMULATOR.md). No other reference checkout was modified. No push, release, tag or catalog edit occurred.
 
 ## Acceptance
 
@@ -12,17 +12,17 @@ Phase 1 source/gameplay gates are complete; physical-controller play is blocked 
 | macOS main menu | **verified** — main-menu.png and exported package runtime reaches main menu with locally supplied data. Test profile was prepared on disk; profile/menu-click automation is separately blocked under CUA after three attempts |
 | macOS local bot rounds | **verified with injected input** — source-built client/renderer/Legacy game module, native arm64 Omni-bot 0.93, three bots + player. Both Oasis and Goldrush: Allies engineer spawn, move/fire/reload, objective, death/tapout/respawn, timed intermission. Objective travel used devmap/setviewpos, then real triggers. bot-rounds.log, bots-oasis-capture.png, bots-oasis-final.png, bots-goldrush-objective.png, bots-goldrush-final.png. Earlier listen-server evidence retained |
 | macOS public session | **verified** — ten-minute Oasis -> Battery session and disconnect/reconnect on 87.116.30.113:27960, public-session.log and screenshots |
-| macOS controller | **experimental; physical play blocked: no controller** — shared SDL mapping, analog pitch/movement, utility/weapon layers and reconnect cleanup compile. Real SDL virtual-controller test passes. Runtime reports no joystick available. No native mapping UI or family prompts yet |
-| iPad simulator | **not yet done** — launch, download/import, bot game, complete ellipsis menu, touch layout, prompts, suspend/resume all await engine/host integration |
+| macOS controller | **experimental; physical play blocked: no controller** — shared SDL mapping, analog pitch/movement, utility/weapon layers and reconnect cleanup compile. Real SDL virtual-controller test passes. Runtime reports no joystick available. Native iOS mapping UI and family prompts now exist; macOS uses console bindings |
+| iPad simulator | **experimental** — real Oasis listen round: Allied engineer, touch fire/reload, Old City capture, suicide/tapout/respawn, timed intermission; both landscapes and engine suspend/resume verified. Official native download, Files import and confirmed removal/redownload verified. Native settings, presets, remapping, prompts and report preview tested. Bot core and remaining gameplay menu checks pending. Evidence ios-sim/oasis-gameplay.log, oasis-intermission.png, oasis-resumed.png, data-import.png, native-download.log |
 | iPad device | **not tested: no device or signing** — devicectl finds no physical device; security reports zero valid signing identities |
-| PadMint | **experimental** — manifest passes current local main snapshot 816820206336aefde6de1ada951ff2e0dc438976; macOS script/ZIP passes package integrity/media exclusion checks. Device/simulator interface fails explicitly pending iOS implementation. No catalog change |
+| PadMint | **experimental** — manifest passes current local main snapshot 816820206336aefde6de1ada951ff2e0dc438976; macOS script/ZIP passes package integrity/media exclusion checks. Simulator build exports a runnable signed app; device export implementation awaits build verification. No catalog change |
 | Physical iPad feel and networking | **unconfirmed until Chris tests** |
 
 ## Current process and first next step
 
-No game or simulator is running. Final macOS package rebuild succeeded (build/macos/build-package-final.log); one generated mod pack, ZIP CRCs and original-media exclusion verified. No build is running. It selects the exact generated Legacy pack and removes stale generated pack copies from package staging/exports. Prior exported package launched with its own renderer and modules, with paks supplied by a separate ignored profile (not embedded in package).
+Latest simulator build passes (build/ios-engine-sim/build-controller-startup.log). Simulator test block ended and shut down the one saved device, quitting Simulator. Native UI/shared-code macOS regression build passes (build/macos/build-native-ui-regression.log); macOS Oasis bot regression passed with source-built modules, native bots, engineer move/fire/reload/suicide and intermission; togglemenu opened ET menu. Client quit normally (exit 0). Evidence native-ui-regression.log/png. No build is running. The menu-selection test ended; the reserved simulator is shut down.
 
-Next: begin Phase 2 with the reusable native host plus real engine/renderer feasibility, preserving macOS. Re-read GOAL.md and this handoff each loop. Do not call unfinished iOS shells accepted games.
+Next: simulator rebuilt with the newly registered togglemenu command; verify Game Menu + absolute UI touch/keyboard. Then attempt iOS bot integration, public interoperability, unsigned device build and final packaging/manifest checks. Record all limitations explicitly. Latest committed checkpoint is 4f71bd816; native UI/data/settings work is uncommitted pending this regression.
 
 Public acceptance: 87.116.30.113:27960 (/GS/Veterans, Legacy v2.84.0), joined by 16:01:15 UTC, stayed past 16:11:21 through Oasis -> Battery, explicit disconnect/reconnect by 16:12:15. CUA drove gameplay; bot kill/revive/respawn observed. public-session.log and screenshots saved. No chat or admin commands sent. One intermission composer held unsent input; it was never submitted.
 
@@ -40,9 +40,9 @@ Local native bots: scripts/prepare-bots.sh checks official 0.93 archive/hash/arm
 
 ## Data, commands and last commit
 
-Original Splash Damage paks and installer remain ignored/local. SHA-256 pins and provenance: GAME_DATA.md. Data-only helper passes Apple Python 3.9.6. Exact build/launch/component-test commands: BUILDING.md. Controller map: CONTROLS.md. Decisions include reference commits; no port component has been copied yet.
+Original Splash Damage paks and installer remain ignored/local. SHA-256 pins and provenance: GAME_DATA.md. Data-only helper passes Apple Python 3.9.6. Exact build/launch/component-test commands: BUILDING.md. Controller map: CONTROLS.md. Decisions include all adapted reference components and commits.
 
-Last committed checkpoint: 4444d8988 (controller, UDP, package/simulator hardening). Current Omni-bot, package selection and documentation/evidence updates are uncommitted; commit after final ZIP check. Do not commit original data, saves or builds. Build output remains under build/, at half the eight CPU cores. Never build twice in parallel or run simulator alongside game.
+Last committed checkpoint: 4f71bd816 (UIKit engine host plus macOS bot regression). Current native UI/input/data changes await the next verified checkpoint. Do not commit original data, saves or builds. Build output remains under build/, at half the eight CPU cores. Never build twice in parallel or run simulator alongside game.
 
 ## Phase 2 compilation checkpoint
 
@@ -63,3 +63,21 @@ Only simulator UDID 672DC5A6-8C79-465E-8ABC-50E57C8F7B80 was booted, always thro
 One stale-app launch was stopped after a Swift recovery-check compile error; it is not counted as validation. Fixed the Swift error and verified build before subsequent launch. Native data download/import still awaits UI wiring and simulator testing. A macOS regression build/test is next before committing shared-code changes.
 
 Mac regression now passes: current source built through the public script; native Omni-bot Oasis round, injected move/fire/reload/death/tapout/respawn and intermission. Evidence ios-regression.log/png. Client stopped after capture; no game/simulator/build is running. Next independent work: wire native acquisition, implement full native menu and touch/controller UI; use a host-only simulator mode while landscape rendering is blocked.
+
+## Native acquisition, controls and gameplay checkpoint
+
+Earlier compilation/host sections above are historical. Native Download Free Game Data completed through URLSession against the official pinned ZIP; all three installed SHA-256 values match. Files picker selected only pak0/1/2, preserved etkey, and verified them (12:04:29). Confirmed Remove Game Data returned to missing-data onboarding; in-app redownload restored all three (12:06:37). Engine-started removal is deferred to next launch. Transaction recovery protects the previous data set. No original data is bundled/committed.
+
+Native menu tests: Show Touch Controls; Auto-Hide; controller mapping A/Cross Jump→Reload, persisted readback, restored defaults; opacity/size sliders and left-hand/Hide with controller toggles; saved/reloaded “ETPad Smoke” layout; Arrange/Done; restore layout; 1280 render preference; FOV page; FPS; player name ETPadTest; favorite 87.116.30.113:27960. Report questions generated a bounded local text report and share-sheet preview, never sent. Slider accessibility needed a value-observing subclass; switch duplicate accessibility entries were removed. Simulator advertises a virtual “Gamepad”, so its prompt screenshot is simulated connection evidence, not a physical-controller test.
+
+**Layout blocker resolved by new simulator-state evidence:** Device→Orientation→Landscape Right actually updates the simulated sensor. Toolbar Rotate had only rotated the displayed frame, including SpringBoard. Both landscape orientations now fill the viewport correctly; raw simctl screenshots can retain a portrait framebuffer with rotated contents. No fourth speculative app-layout change was needed. Earlier blocked screenshots are retained as failure evidence.
+
+**Engine UI timeout resolved:** com_maxfps=0 clamps to 20 and caused ~50 ms NET_Sleep inside every main-thread frame, starving UIKit accessibility. Set 250 while CADisplayLink paces at 60. Real Oasis steady 600-frame windows: CPU average 4.4–5.6 ms, p95 5.8–6.9 ms, display interval ~16.67 ms (simulator, 1280×882, not physical GPU/device measurements). Initial loading window excluded. MoltenVK comparison still pending.
+
+Real signed-framework Oasis session: native Console ran team b 2; forcetapout. Touch FIRE consumed 5 rounds (30→25), RELOAD animation observed and returned to 30. Jump/move smoke taps issued. Assisted setviewpos 3708 7352 -480 0 and forward triggered “Allies capture the Old City!” at game time 121100 (+3 XP). Home background logged lifecycle paused at 12:30:34.950; same PID 21813 resumed and rendered. Both sensor landscapes verified. kill; forcetapout produced suicide at 198300 and respawned engineer; timelimit 3 reached AXIS WIN intermission. This is a listen-server round without bots, not bot-game acceptance. Evidence oasis-gameplay.log, oasis-resumed.png, oasis-intermission.png.
+
+Found unknown cmd togglemenu during touch MENU test. Added Apple-only command under apple/shared that queues the engine Escape down/up path, shared with controller Start and native Game Menu. Build/runtime verification is next. Other gameplay/menu commands were checked against cgame registration. Further shared-code changes include iOS MAX_OSPATH=1024, OS string ios, and early unsupported-mod rejection; all require the current macOS regression before committing.
+
+## Menu selection blocker (three attempts)
+
+Updated togglemenu opens the real ET game menu on both macOS and simulator; native ellipsis remains reachable. Absolute ET menu selection is **blocked/experimental**: (1) touch Limbo at screenshot coordinate 293,252 moved the drawn cursor with an offset but did not activate; (2) 250 ms hold at 305,272 still did not activate; (3) 500 ms Options-area touch at 293,460 ended with `Server Shutdown (Received signal 11)`, black screen and process exit. No OS crash report because upstream handles SIGSEGV and exits. Exact log: ios-sim/menu-pointer-failure.log. Do not claim ET menu touch/trackpad acceptance. Follow user three-attempt rule; move to independent public connection/device packaging. Native controls/settings and direct Console remain usable. Physical-controller menu navigation is untested.

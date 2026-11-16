@@ -1,6 +1,6 @@
 # Building ETPad
 
-Experimental macOS baseline; iOS not yet implemented. Xcode 26.6, Apple arm64, CMake and Ninja. All commands run from this repository.
+Experimental macOS and iOS builds. Xcode 26.6, Apple arm64, CMake and Ninja. All commands run from this repository.
 
 ```sh
 git config submodule.libs.url https://github.com/etlegacy/etlegacy-libs.git
@@ -31,7 +31,7 @@ The one reserved simulator is documented in SIMULATOR.md. Every simulator operat
 scripts/build-etpad.sh --platform macos --output build/output --zip build/output/ETPad-mac.zip
 ```
 
-The macOS package contains the source-built app, renderer, Legacy native modules and GPL mod-data pack. It excludes original pak0/1/2. iOS platforms currently fail explicitly instead of producing a nonfunctional package.
+The macOS package contains the source-built app, renderer, Legacy native modules and GPL mod-data pack. It excludes original pak0/1/2. The simulator app embeds five ad hoc signed native frameworks and ANGLE. The device output is unsigned until a signing identity is available.
 
 Local baseline launch (after copying owned paks into build/macos/etmain):
 
@@ -72,3 +72,18 @@ Launch with the baseline command above plus:
 ```
 
 Console: `bot maxbots 4` (three bots plus the player), `team b 2 8`. After the warmup restart announces FIGHT, set `timelimit 2` again because the map script resets its time limit at round start. Use Goldrush in the same way. Objective positioning remains an explicitly assisted developer test. Gameplay input was driven through CUA, not a physical controller.
+
+## iOS host and simulator
+
+```sh
+scripts/build-etpad.sh --platform simulator --output build/output
+ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.etpad.ETPad --etpad-oasis
+# In a second terminal, end the bounded block early:
+touch build/simulator-stop
+# Device build (unsigned; not an installable signed release):
+scripts/build-etpad.sh --platform device --output build/output --ipa build/output/ETPad-unsigned.ipa
+```
+
+XcodeGen is required. Driver pins ANGLE binary inputs and builds GL4ES plus native engine/modules. All Python helpers support Apple Python 3.9. Logs and dependency sources remain under build/. Use `--etpad-host-only` instead of `--etpad-oasis` for acquisition/settings tests; the Play button still starts the engine. With no argument, verified installed data auto-starts the main menu. Native Console accepts the local assisted commands above. Bot integration on iOS is pending.
+
+Simulator Device → Orientation → Landscape Right/Left sets the sensor; the toolbar Rotate alone can rotate the bezel without updating it. Screenshot raw framebuffers may be portrait with rotated content. Only the documented saved UDID is used. Data can be acquired in the actual app, or optionally staged as a hash-checked local fixture with ETPAD_SIM_DATA_DIR=/path/to/etmain. It is never staged into exported apps.

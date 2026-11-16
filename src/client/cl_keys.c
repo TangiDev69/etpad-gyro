@@ -1521,11 +1521,18 @@ static void Key_CompleteBind(char *args, int argNum)
 	}
 }
 
+#ifdef __APPLE__
+#include "../../apple/shared/etpad_menu.h"
+#endif
+
 /**
  * @brief CL_InitKeyCommands
  */
 void CL_InitKeyCommands(void)
 {
+#ifdef __APPLE__
+	Cmd_AddCommand("togglemenu", ETPad_ToggleMenu_f, "Opens or closes the game menu.");
+#endif
 	// register our functions
 	Cmd_AddCommand("bind", Key_Bind_f, "Binds a key.");
 	Cmd_SetCommandCompletionFunc("bind", Key_CompleteBind);

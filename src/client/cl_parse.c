@@ -627,6 +627,14 @@ void CL_SystemInfoChanged(void)
 	char       value[BIG_INFO_VALUE];
 	qboolean   gameSet;
 
+#ifdef ETPAD_IOS
+    // Reject incompatible native mods before mutating fs_game or pure pak state.
+    if (Q_stricmp(Info_ValueForKey(systemInfo, "fs_game"), "legacy"))
+    {
+        Com_Error(ERR_DROP, "This server needs a mod ETPad can't run. Only the built-in Legacy mod is supported.");
+    }
+#endif
+
 	// NOTE: when the serverId changes, any further messages we send to the server will use this new serverId
 	// in some cases, outdated cp commands might get sent with this news serverId
 	cl.serverId = Q_atoi(Info_ValueForKey(systemInfo, "sv_serverid"));

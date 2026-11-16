@@ -1,6 +1,6 @@
 # Controller defaults (experimental)
 
-SDL GameController supplies family-independent physical positions for supported MFi, Xbox and PlayStation controllers. Apple builds enable this by default and execute `etpad-controller.cfg` once per profile (versioned preference). To restore the defaults, execute that file again. Bindings remain editable through ET's console; native mapping UI and family prompts are pending.
+SDL GameController supplies family-independent physical positions for supported MFi, Xbox and PlayStation controllers. Apple builds enable this by default and execute `etpad-controller.cfg` once per profile (versioned preference). To restore the defaults, execute that file again. Bindings remain editable through ET's console; iOS offers native Controller Button Mapping and family prompts; macOS bindings use the console.
 
 | Input | Action |
 | --- | --- |
@@ -18,6 +18,8 @@ SDL GameController supplies family-independent physical positions for supported 
 | Hold RB + L3 / R3 / D-pad up / down | Weapon banks 1 / 2 / 3 / 4 |
 | Hold RB + A / B / X / Y / Back / Start | Weapon banks 5 / 6 / 7 / 8 / 9 / 10 |
 
-Letters describe Xbox positions; PlayStation bottom/right/left/top and MFi equivalents use the same actions. Family-specific on-screen prompts are not implemented. Trigger actions remain available while holding a shoulder. A held action releases using its original binding even when the shoulder is released first. Detachment releases held actions and clears movement axes.
+Letters describe Xbox positions; PlayStation bottom/right/left/top and MFi equivalents use the same actions. iOS prompts distinguish Xbox, PlayStation and generic MFi-style labels. Trigger actions remain available while holding a shoulder. A held action releases using its original binding even when the shoulder is released first. Detachment releases held actions and clears movement axes.
 
-Validation: real SDL virtual-controller test passes bank changes, release ordering, disabling the option while held, trigger routing and disconnect cleanup. This is component evidence, not physical-controller play. No controller-connected game screenshot or physical-controller session exists yet.
+Validation: real SDL virtual-controller test passes bank changes, release ordering, disabling the option while held, trigger routing and disconnect cleanup. This is component evidence, not physical-controller play. Simulator virtual-Gamepad prompts are captured in ios-sim/oasis-resumed.png. Physical-controller play is blocked by missing hardware.
+
+The iOS touch overlay uses black translucent resting buttons and per-action pressed tints. Move/look guides appear only during a gesture or Arrange Controls. Settings persist opacity, size, handedness, controller hiding and named layouts. A persistent native ellipsis opens settings, Game Menu, Console and Game Keyboard. ET menus receive normalized absolute touch/hover pointers through the built-in UI/cgame frameworks. SDL handles GameController keyboard/mouse devices; UIKit hardware-key fallback avoids duplicate delivery when GCKeyboard is present. Physical keyboard/trackpad feel remains unverified without an iPad.

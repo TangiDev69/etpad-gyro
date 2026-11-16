@@ -47,8 +47,7 @@ def main():
     shutil.copy2(engine/(engine/'etpad-mod-pack.txt').read_text().strip(),legacy)
     shutil.copy2(ROOT/'apple/shared/etpad-controller.cfg',legacy)
     notices=content/'Notices';notices.mkdir(exist_ok=True)
-    for source,name in [(ROOT/'COPYING.txt','COPYING.txt'),(ANGLE_ROOT/'LICENSE.ANGLE','LICENSE.ANGLE'),(ROOT/'build/sources/gl4es/LICENSE','LICENSE.GL4ES')]:
-        shutil.copy2(source,notices/name)
+    run('/usr/bin/python3','scripts/prepare-notices.py','--build-dir',engine,'--platform',args.platform,'--output',notices)
     project=ROOT/'build/ios-host-project';project.mkdir(exist_ok=True)
     env.update(ETPAD_ROOT=str(ROOT),ETPAD_ENGINE_DIR=str(engine))
     run('xcodegen','generate','--spec','apple/ios/Host/project.yml','--project',project,'--project-root',project,env=env)

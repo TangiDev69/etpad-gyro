@@ -501,7 +501,11 @@ typedef float net_float;
 #define BIG_INFO_VALUE      8192
 
 #define MAX_QPATH           64      ///< max length of a quake game pathname
+#ifdef ETPAD_IOS
+#define MAX_OSPATH          1024    ///< iOS sandbox/bundle prefixes exceed desktop path limits
+#else
 #define MAX_OSPATH          256     ///< max length of a filesystem pathname
+#endif
 #define MAX_CMD             1024    ///< max length of a command line
 
 #define MAX_IP4_LENGTH      16      ///< 15 + 1 (string terminator)

@@ -35,6 +35,7 @@ case "${1:-}" in
   xcrun simctl install "$udid" "$2"
   bundle=$3; shift 3
   container=$(xcrun simctl get_app_container "$udid" "$bundle" data)
+  printf '%s\n' "$container" > build/simulator-container
   if [[ -n "${ETPAD_SIM_DATA_DIR:-}" ]]; then
    # Local test fixture only: never becomes part of an app/package export.
    /usr/bin/python3 scripts/prepare-game-data.py --import-from "$ETPAD_SIM_DATA_DIR"

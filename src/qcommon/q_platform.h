@@ -155,7 +155,11 @@
 
 #if defined(__APPLE__) || defined(__APPLE_CC__)
 
+#ifdef ETPAD_IOS
+#define OS_STRING "ios"
+#else
 #define OS_STRING "macos"
+#endif
 #define ID_INLINE __inline
 #define PATH_SEP '/'
 

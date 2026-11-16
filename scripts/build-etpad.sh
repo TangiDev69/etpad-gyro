@@ -65,6 +65,7 @@ mod_pack=$(cat build/macos/etpad-mod-pack.txt)
 cp "build/macos/$mod_pack" "$stage/legacy/"
 cp build/macos/librenderer_opengl1_mac "$stage/"
 cp COPYING.txt "$stage/" 2>/dev/null || cp COPYING "$stage/"
+/usr/bin/python3 scripts/prepare-notices.py --build-dir build/macos --platform macos --output "$stage/Notices"
 # Original pak0/1/2 and saved profiles are deliberately excluded.
 if [[ -n "$zip" ]]; then
  mkdir -p "$(dirname "$zip")"

@@ -9,3 +9,9 @@ void etpad_release_inputs(void);
 void etpad_frame(void);
 void *etpad_render_window(void);
 int etpad_extract_official(const char *archive, const char *directory);
+int etpad_gameplay(void);
+void etpad_touch_move(float side, float forward);
+void etpad_pointer(float x, float y, int edge);
+void etpad_hardware_key(int usage, int down);
+
+void etpad_character(int codepoint);

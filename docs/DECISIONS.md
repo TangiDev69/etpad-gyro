@@ -65,3 +65,13 @@ Native host AppDelegate/SceneDelegate and window ownership adapt UTP `Sources/UT
 Build driver uses only Apple Python 3.9, serial external dependency builds and half-core inner build limits. Simulator app packaging deeply verifies ad hoc signatures, includes GPL/GL4ES/ANGLE notices and excludes original media. Device packaging is unsigned until a signing identity is available; no install claim.
 
 Reversal condition: native frame scheduling breaks network/engine timing or measured performance requires a different cadence. Keep UIKit ownership and framework loader restrictions in any replacement.
+
+## 2026-11-16 — Native controls, reports and pure-server metadata
+
+Context: the host must own touch and preserve native menus while the engine renders. Decision: adapt UTP `Sources/UT99Host/GoldenPadTouchOverlay.swift`, `UT99TouchConfiguration.swift` and `GameViewController.swift` at a9313911efcf044fd66f9a679af53e55e255a8b4 into ETPad's overlay/configuration, surface-pointer and keyboard fallback. Tablet thumb-arc geometry follows GoldenPad `Sources/TouchLayout.swift` at 54474a40e93b77259d10c7594919e6a05f5e276d. Report question/preview flow follows SunPad `SunPadGameOverlay.mm` at e43f0ea6b797e5110787171957c9dc3c6213269c. GPL notices remain in adapted source. ETPad's menu/settings/remapping code is native UIKit; reports include only bounded text logs/device info and user answers, with explicit share-sheet review. No automatic posting.
+
+Evidence: actual native acquisition/import/removal; settings persistence/readback, report preview and real Oasis round in HANDOFF.md. Sensor orientation corrected the earlier layout blocker. com_maxfps 250 avoids upstream's 20 FPS clamp for zero; 60 Hz display link paces frames. Measured steady simulator CPU frame averages 4.4–5.6 ms, p95 5.8–6.9 ms at 1280×882; not physical device performance.
+
+Pure-server accounting: embedded frameworks provide all executable code; opening/closing a matching PK3 native entry only marks its containing archive as referenced, without reading/extracting/loading that entry. This preserves ET's cross-platform cgame/ui pure checksum accounting. Public interoperability with this path is still pending. Reject non-Legacy fs_game before server-state mutation. Reversal: upstream exposes a metadata-only reference API or wire compatibility requires a reviewed change. Never load downloaded native code.
+
+Packaging now collects upstream and bundled dependency notices, including GL4ES, ANGLE, SDL, IJG JPEG acknowledgment and MiniZip. No original media ships. Reversal: replace adapted UI only for a measured usability issue, preserving the user's explicit vocabulary/style and native ownership.

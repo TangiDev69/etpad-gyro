@@ -112,6 +112,7 @@ final class GameDataManager: NSObject, URLSessionDownloadDelegate {
     }
     func urlSession(_ session:URLSession,task:URLSessionTask,didCompleteWithError error:Error?) { if let error=error { finish(.failure(error)) } }
     func removeInstalled()throws {
+        try recover()
         for name in Self.hashes.keys {
             let file=home.appendingPathComponent("etmain/\(name)")
             if FileManager.default.fileExists(atPath:file.path) { try FileManager.default.removeItem(at:file) }

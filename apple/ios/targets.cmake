@@ -36,3 +36,5 @@ target_sources(etl PRIVATE apple/ios/data_extract.c)
 # Upstream trims gzip file I/O; the data-only original installer reader needs it.
 target_sources(bundled_zlib PRIVATE libs/zlib/gzclose.c libs/zlib/gzlib.c libs/zlib/gzread.c libs/zlib/gzwrite.c)
 target_compile_definitions(bundled_zlib PRIVATE Z_HAVE_UNISTD_H)
+target_sources(ui PRIVATE apple/ios/ui_pointer.c)
+target_sources(cgame PRIVATE apple/ios/cgame_pointer.c)
