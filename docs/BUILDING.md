@@ -15,7 +15,7 @@ git -C libs checkout 6bf44adf4781a49713a1c81ba5de3bd0165339c5
 ```
 
 ```sh
-cmake -S . -B build/macos -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DINSTALL_EXTRA=OFF -DFEATURE_AUTOUPDATE=OFF
+cmake -S . -B build/macos -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DCMAKE_OSX_SYSROOT="$(xcrun --sdk macosx --show-sdk-path)" -DXCODE_SDK_PATH="$(xcrun --sdk macosx --show-sdk-path)" -DINSTALL_EXTRA=OFF -DFEATURE_AUTOUPDATE=OFF
 cmake --build build/macos -j$(( $(sysctl -n hw.ncpu) / 2 ))
 ```
 

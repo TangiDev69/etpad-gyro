@@ -1,0 +1,15 @@
+[467/478] Building C object CMakeFiles/renderer1.dir/src/renderercommon/tr_common_opengl.c.o
+[468/478] Generating CMakeFiles/etl_etmain_stage.stamp
+[469/478] Building C object CMakeFiles/renderer1.dir/src/qcommon/q_shared.c.o
+[470/478] Linking C shared module legacy/qagame_mac
+ld: warning: reducing alignment of section __DATA,__common from 0x8000 to 0x4000 because it exceeds segment maximum alignment
+[471/478] Linking C shared module legacy/tvgame_mac
+ld: warning: reducing alignment of section __DATA,__common from 0x8000 to 0x4000 because it exceeds segment maximum alignment
+[472/478] Linking C executable etlded
+ld: warning: reducing alignment of section __DATA,__common from 0x8000 to 0x4000 because it exceeds segment maximum alignment
+[473/478] Linking C executable "ET Legacy.app/Contents/MacOS/ET Legacy"
+ld: warning: reducing alignment of section __DATA,__common from 0x8000 to 0x4000 because it exceeds segment maximum alignment
+[474/478] Generating legacy/legacy_2.86-dirty.pk3
+[475/478] Building C object CMakeFiles/bundled_glew.dir/libs/glew/src/glew.c.o
+[476/478] Linking C static library libbundled_glew.a
+[477/478] Linking C shared module librenderer_opengl1_mac

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "etpad",
+  "name": "ETPad",
+  "game": "Wolfenstein: Enemy Territory through ET: Legacy",
+  "kind": "upstream-engine",
+  "status": "draft-untested",
+  "inputs": [
+    {
+      "type": "official-download",
+      "formats": [],
+      "when": "in-app",
+      "description": "Download free original game data in the app from Splash Damage with SHA-256 verification, or import owned pak files. Game media is never included in builds."
+    }
+  ],
+  "targets": {
+    "ios": {
+      "hosts": {
+        "macos-arm64": "experimental"
+      },
+      "output": "ipa",
+      "check": "ipa",
+      "steps": [
+        {
+          "stage": "build",
+          "command": [
+            "{repo}/scripts/build-etpad.sh",
+            "--platform",
+            "device",
+            "--output",
+            "{work}",
+            "--ipa",
+            "{output}"
+          ]
+        }
+      ]
+    },
+    "macos": {
+      "hosts": {
+        "macos-arm64": "experimental"
+      },
+      "output": "zip",
+      "check": "none",
+      "steps": [
+        {
+          "stage": "build",
+          "command": [
+            "{repo}/scripts/build-etpad.sh",
+            "--platform",
+            "macos",
+            "--output",
+            "{work}",
+            "--zip",
+            "{output}"
+          ]
+        }
+      ]
+    }
+  },
+  "requirements": {
+    "disk_gb": 8,
+    "tools": [
+      {
+        "name": "xcodebuild",
+        "version_args": [
+          "-version"
+        ],
+        "player": true,
+        "note": "Install Xcode with iOS platform."
+      },
+      {
+        "name": "cmake",
+        "version_args": [
+          "--version"
+        ],
+        "player": true,
+        "note": "brew install cmake ninja"
+      },
+      {
+        "name": "ninja",
+        "version_args": [
+          "--version"
+        ],
+        "player": true,
+        "note": "brew install cmake ninja"
+      }
+    ]
+  },
+  "publication": {
+    "public_binaries": false,
+    "reason": "Experimental port; device and gameplay acceptance pending. Original game media excluded."
+  }
+}

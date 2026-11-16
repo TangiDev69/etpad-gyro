@@ -1,0 +1,47 @@
+[31m[m
+[31m  ███████╗████████╗   ██╗     ███████╗ ██████╗  █████╗  ██████╗██╗   ██╗[m
+[31m  ██╔════╝╚══██╔══╝██╗██║     ██╔════╝██╔════╝ ██╔══██╗██╔════╝╚██╗ ██╔╝[m
+[31m  █████╗     ██║   ╚═╝██║     █████╗  ██║  ███╗███████║██║      ╚████╔╝[m
+[31m  ██╔══╝     ██║   ██╗██║     ██╔══╝  ██║   ██║██╔══██║██║       ╚██╔╝[m
+[31m  ███████╗   ██║   ╚═╝███████╗███████╗╚██████╔╝██║  ██║╚██████╗   ██║[m
+[31m  ╚══════╝   ╚═╝      ╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝   ╚═╝[m
+[31m[m
+-- 64 bits target architecture detected
+-- ARM architecture detected
+-- Using custom SDK path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk
+2026-11-16 09:32:45.503 xcodebuild[87963:5443999] Writing error result bundle to /var/folders/px/95pn2y3n77xb97y8k2fpmd2m0000gp/T/ResultBundle_2026-16-11_09-32-0045.xcresult
+xcodebuild: error: SDK "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk" cannot be located.
+xcrun: error: unable to lookup item 'SDKVersion' in SDK '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+-- Using SDK version: 
+-- System: Darwin-27.2.0 (arm64)
+-- Lib arch: 
+-- Build type:      Release
+-- Install path:    /usr/local
+-- Compiler flags:
+-- - C              -Werror=implicit-function-declaration
+-- - C++           -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk 
+-- - PIC           ON
+-- Linker flags:
+-- - Executable    
+-- - Module        
+-- - Shared        
+-- File version: 2.86.2.0
+fatal: No names found, cannot describe anything.
+fatal: No names found, cannot describe anything.
+-- Not using source from git repo, using default version
+-- Version: 2.86.2.0 and int version: 286020000
+-- Using bundled libraries located at /Users/chrissotraidis/GitHub/etpad/libs
+SQLite3 version = 3.36.0
+SQLite3 threadsafe is disabled
+-- Disabling theora ASM
+Looking for bcm_host.h
+bcm_host.h not found
+-- Using legacy OpenGL instead of GLVND
+-- Using system provided SSL
+-- Building renderers: opengl1
+Only one renderer is being built, dynamic libraries is not necessary
+-- Will build dynamic renderer libraries
+-- Using the user provided osx architectures: arm64
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/chrissotraidis/GitHub/etpad/build/macos
