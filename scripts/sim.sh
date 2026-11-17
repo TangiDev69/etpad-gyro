@@ -46,7 +46,7 @@ case "${1:-}" in
   xcrun simctl launch --terminate-running-process --console "$udid" "$bundle" "$@" > build/ios-engine-sim/runtime-console.log 2>&1 &
   console_pid=$!
   duration=${ETPAD_SIM_HOLD_SECONDS:-10}
-  [[ "$duration" =~ ^[0-9]+$ && "$duration" -ge 10 && "$duration" -le 1800 ]] || { echo 'Hold must be 10–1800 seconds.' >&2; exit 2; }
+  [[ "$duration" =~ ^[0-9]+$ && "$duration" -ge 10 && "$duration" -le 3600 ]] || { echo 'Hold must be 10–3600 seconds.' >&2; exit 2; }
   for ((elapsed=0; elapsed<duration; elapsed++)); do
    sleep 1
    if [[ "$elapsed" = 9 ]]; then xcrun simctl io "$udid" screenshot docs/evidence/ios-sim/latest.png; fi

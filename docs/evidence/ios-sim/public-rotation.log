@@ -1,0 +1,1039 @@
+       0 tty console mode disabled
+       0 ^2ET Legacy v2.86.2-184-g62750f7 MacOS Nov 16 2026
+       0 Zone megs: 64
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0 [0m
+       0 5322 files in pk3 files[0m
+       0 --------------------------------[0m
+2026-11-16 21:37:46.117 ETPad[92902:6334410] ETPad: Reset settings: ET:L crashed last time it was running. Do you want to reset settings to default values?
+
+Note:
+If you are running several client instances ensure a different value
+of CVAR fs_homepath is set for each client.
+Otherwise the same profile path is used which may cause other side effects.
+       0 Creating PID file 'profiles/ETPad/profile.pid'[0m
+       0 ----- Database Initialization --[0m
+       0 SQLite3 libversion 3.36.0 - database URI 'etl.db' - in file[0m
+       0 ... loading existing database '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etl.db'[0m
+       0 ... database file '/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etl.db' loaded[0m
+       0 SQLite3 ETL: database init #4 /Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etl.db in [0] ms - autocommit 1[0m
+       0 SQLite3 ETL: DB schema version #4 is up to date[0m
+       0 --------------------------------[0m
+       0 execing default.cfg[0m
+       0 execing profiles/ETPad/etconfig.cfg[0m
+       0 couldn't exec autoexec.cfg[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 Not logging server attacks to disk[0m
+       0 logfile opened on Mon Nov 16 21:37:46 2026[0m
+       0 ----- Client Initialization ----[0m
+       0 [1;33mCouldn't read etl-history.[0m
+       0 ETKEY found[0m
+       0 --------------------------------[0m
+       0 [1;33mWARNING: NET_AddLocalAddress - numIP >= MAX_IPS[0m
+       0 [1;33mWARNING: NET_AddLocalAddress - numIP >= MAX_IPS[0m
+       0 [1;33mWARNING: NET_AddLocalAddress - numIP >= MAX_IPS[0m
+       0 IP: 127.0.0.1[0m
+       0 IP6: ::1[0m
+       0 IP6: fe80::1%lo0[0m
+       0 IP: 192.168.1.135[0m
+       0 IP6: fe80::14a1:319c:2e6f:b106%en8[0m
+       0 IP6: 2600:1700:a119:d0:24:18ff:514b:2a0[0m
+       0 IP6: 2600:1700:a119:d0:8919:1112:c973:b537[0m
+       0 IP6: 2600:1700:a119:d0::15[0m
+       0 IP6: 2600:1700:a119:d0:1551:743b:ff98:cf03[0m
+       0 IP6: 2600:1700:a119:d0:8b7:8ade:e674:ae31[0m
+       0 IP6: 2600:1700:a119:d0:70a2:7574:e392:ac64[0m
+       0 IP6: 2600:1700:a119:d0:b0d8:c676:812d:dd81[0m
+       0 IP6: 2600:1700:a119:d0:7931:e905:6d2b:732[0m
+       0 IP6: 2600:1700:a119:d0:6136:1546:6c24:ad83[0m
+       0 IP6: fe80::c8c:cb8b:5374:3b76%en0[0m
+       0 IP6: 2600:1700:a119:d0:8a9:8d26:5632:cbc0[0m
+       0 IP6: 2600:1700:a119:d0:c977:b92e:463d:12d9[0m
+       0 IP6: 2600:1700:a119:d0::1d[0m
+       0 IP: 192.168.1.190[0m
+       0 IP6: 2600:1700:a119:d0:e538:efca:d142:795d[0m
+       0 IP6: 2600:1700:a119:d0:c819:5240:649d:e9fc[0m
+       0 IP6: 2600:1700:a119:d0:5432:8ff3:236d:d5e0[0m
+       0 IP6: 2600:1700:a119:d0:c1f1:aee9:4a62:fff0[0m
+       0 IP6: 2600:1700:a119:d0:89e4:c7ab:46e5:dc06[0m
+       0 IP6: 2600:1700:a119:d0:484d:6fde:abe9:d12[0m
+       0 IP6: fe80::5cab:c4ff:fe75:b13b%awdl0[0m
+       0 IP6: fe80::5cab:c4ff:fe75:b13b%llw0[0m
+       0 IP6: fe80::1be0:f20d:85fc:ca59%utun0[0m
+       0 IP6: fe80::c5ca:abd6:67c8:8f43%utun1[0m
+       0 IP6: fe80::e074:c17b:8d3d:cb13%utun2[0m
+       0 IP6: fe80::ce81:b1c:bd2c:69e%utun3[0m
+       0 IP6: fe80::8e94:bca2:4aab:5823%utun4[0m
+       0 Opening IP6 socket: [::]:27960[0m
+       0 Opening IP socket: 0.0.0.0:27960[0m
+       0 Network initialized[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 SDL build version 2.30.9 - link version 2.30.9[0m
+       0 SDL initialized driver "uikit"[0m
+       0 Initializing window[0m
+       0 Estimated display aspect: 1.451[0m
+       0 ...setting mode -1: 1280x882[0m
+2026-11-16 21:37:46.143 ETPad[92902:6334410] ETPad renderer attached before Metal: frame={{0, 0}, {1210, 834}} bounds={{0, 0}, {1210, 834}} root={{0, 0}, {1210, 834}} orientation=3
+       0 Using 24 color bits, 24 depth, 0 stencil display[0m
+       0 Available modes [2]: '1210x834 834x1210'[0m
+       0 GL_VENDOR: GL4ES wrapping Google Inc. (Apple)[0m
+       0 GL_RENDERER: GL4ES using ANGLE (Apple, ANGLE Metal Renderer: Apple iOS simulator GPU, Version 26.5 (Build 23F77))[0m
+       0 GL_VERSION: 2.1 gl4es wrapper 1.1.7[0m
+       0 GL_SHADING_LANGUAGE_VERSION: [0m
+       0 Using vanilla renderer[0m
+       0 Initializing OpenGL extensions[0m
+       0 ...using GL_EXT_texture_env_add[0m
+       0 ...using GL_ARB_multitexture (16 texture units)[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 ----- Initializing Sound (1) ---[0m
+       0 SDL_Init( SDL_INIT_AUDIO )... OK[0m
+       0 SDL audio driver is "coreaudio".[0m
+       0 SDL_AudioSpec:[0m
+       0   Format:   AUDIO_S16LSB[0m
+       0   Freq:     44100[0m
+       0   Samples:  1024[0m
+       0   Channels: 2[0m
+       0   Silence:  0[0m
+       0   Size:     4096[0m
+       0 Starting SDL audio callback...[0m
+       0 SDL audio initialized.[0m
+       0 ----- Sound Info -----[0m
+       0 sound system is muted[0m
+       0     2 channels[0m
+       0 32768 samples[0m
+       0    16 samplebits[0m
+       0     1 submission_chunk[0m
+       0 44100 speed[0m
+       0 0x1183b8000 dma buffer[0m
+       0 No background file.[0m
+       0 ----------------------[0m
+       0 Sound initialization successfully done[0m
+s_backend set to SDL2[0m
+       0 --------------------------------[0m
+       0 Sound memory manager started[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 ----- Common Initialized -------[0m
+2026-11-16 21:37:47.069 ETPad[92902:6334410] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x114db5400>.
+2026-11-16 21:37:47.069 ETPad[92902:6334410] Unbalanced calls to begin/end appearance transitions for <SDL_uikitviewcontroller: 0x114db5400>.
+       0 MOTD: resolving motd.etlegacy.com... resolved to 104.248.140.165:27951[0m
+objc[92902]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x123e50310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x123ee0398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+2026-11-16 21:37:57.165 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=2.807 cpu_p95_ms=5.716 interval_avg_ms=16.874
+2026-11-16 21:38:07.203 ETPad[92902:6334410] CoreText note: Client requested name ".SFCompact", it will get TimesNewRomanPSMT rather than the intended font. All system UI font access should be through proper APIs such as CTFontCreateUIFontForLanguage() or +[UIFont systemFontOfSize:].
+2026-11-16 21:38:07.203 ETPad[92902:6334410] CoreText note: Set a breakpoint on CTFontLogSystemFontNameRequest to debug.
+2026-11-16 21:38:07.798 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=2.855 cpu_p95_ms=3.703 interval_avg_ms=17.722
+       0 Unknown command "messagemode-sprint[0m"[0m
+       0 Unknown command "classmenu-sprint[0m"[0m
+       0 Unknown command "zoomout-sprint[0m"[0m
+       0 Unknown command "classmenu-sprint[0m"[0m
+       0 Unknown command "messagemode3-sprint[0m"[0m
+       0 Unknown command "openlimbomenu-sprint[0m"[0m
+       0 Unknown command "spawnmenu-sprint[0m"[0m
+       0 ETPAD_PUBLIC_ROTATION_BEGIN[0m
+       0 87.116.30.113:27960 resolved to 87.116.30.113:27960[0m
+       0 Connected to a pure server.[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3 (1545 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 6867 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Client download complete[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;30mInitializing legacy cgame [1;32mv2.86.2-184-g62750f7[0m
+       0 234 client cvars in use[0m
+       0 Not logging client output to disk.[0m
+       0 LOADING...  - collision map -[0m
+       0 Loaded entities from maps/railgun.bsp[0m
+       0 LOADING...  - sounds -[0m
+       0 Initializing Sound Scripts[0m
+       0 ...loading 'sound/scripts/vo_allies.sounds'[0m
+       0 ...'sound/scripts/vo_allies.sounds' parsed - total script sounds: 48[0m
+       0 ...loading 'sound/scripts/vo_axis.sounds'[0m
+       0 ...'sound/scripts/vo_axis.sounds' parsed - total script sounds: 96[0m
+       0 ...loading 'sound/scripts/railgun.sounds'[0m
+       0 ...'sound/scripts/railgun.sounds' parsed - total script sounds: 132[0m
+       0 ...3 of 3 sound scripts files loaded. Total sounds: 132[0m
+       0 done.[0m
+       0 LOADING...  - graphics -[0m
+       0 LOADING...  - maps/railgun.bsp -[0m
+       0 stitched 16 LoD cracks[0m
+       0 ...loaded 20747 faces, 303 meshes, 440 trisurfs, 0 flares, 0 foliages[0m
+       0 LOADING...  - entities -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - textures -[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 LOADING...  - models -[0m
+       0 LOADING...  - heads-up display -[0m
+       0 ...properties for hud Alternate Hud 1 have been read.[0m
+       0 ...properties for hud Alternate Hud 2 have been read.[0m
+       0 ...properties for hud Alternate Hud 3 have been read.[0m
+       0 ...properties for hud Competitor Hud have been read.[0m
+       0 ...properties for hud Shoutcaster have been read.[0m
+       0 ...hud count: 6[0m
+       0 Setting hud to: 'ETmain'[0m
+       0 LOADING...  - weapons -[0m
+       0 LOADING...  - items -[0m
+       0 LOADING...  - inline models -[0m
+       0 LOADING...  - server models -[0m
+       0 LOADING...  - particles -[0m
+       0 LOADING...  - classes -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - flamechunks -[0m
+       0 LOADING...  - clients -[0m
+       0 [38;5;33mLoadLocations: [1;30mlocation data for map [1;32mrailgun [1;30mloaded[0m
+       0 [1;32m60 [1;30mlocations loaded.[0m
+       0 CL_InitCGame:  6.09 seconds[0m
+       0 Com_TouchMemory: 0 msec -1268769655 [0m
+LIBGL: Initialising gl4es
+LIBGL: v1.1.7 built on Nov 16 2026 11:06:49
+LIBGL: Using GLES 2.0 backend
+LIBGL: Hardware test on current Context...
+LIBGL: Hardware Full NPOT detected and used
+LIBGL: Extension GL_EXT_blend_minmax  detected and used
+LIBGL: Extension GL_EXT_draw_buffers  detected and used
+LIBGL: FBO are in core, and so used
+LIBGL: PointSprite are in core, and so used
+LIBGL: CubeMap are in core, and so used
+LIBGL: BlendColor is in core, and so used
+LIBGL: Blend Subtract is in core, and so used
+LIBGL: Blend Function and Equation Separation is in core, and so used
+LIBGL: Texture Mirrored Repeat is in core, and so used
+LIBGL: Extension GL_OES_mapbuffer  detected
+LIBGL: Extension GL_OES_element_index_uint  detected and used
+LIBGL: Extension GL_OES_packed_depth_stencil  detected and used
+LIBGL: Extension GL_OES_depth24  detected and used
+LIBGL: Extension GL_OES_rgb8_rgba8  detected and used
+LIBGL: Extension GL_EXT_texture_format_BGRA8888  detected and used
+LIBGL: Extension GL_OES_depth_texture  detected and used
+LIBGL: Extension GL_OES_texture_stencil8  detected and used
+LIBGL: Extension GL_EXT_texture_rg  detected and used
+LIBGL: Extension GL_OES_texture_float  detected and used
+LIBGL: Extension GL_OES_texture_half_float  detected and used
+LIBGL: Extension GL_EXT_color_buffer_float  detected and used
+LIBGL: Extension GL_EXT_color_buffer_half_float  detected and used
+LIBGL: high precision float in fragment shader available and used
+LIBGL: Extension GL_EXT_shader_texture_lod detected and used
+LIBGL: Extension GL_EXT_frag_depth  detected and used
+LIBGL: Max vertex attrib: 16
+LIBGL: Extension GL_OES_standard_derivatives  detected and used
+LIBGL: Extension GL_OES_get_program_binary  detected and used
+LIBGL: Number of supported Program Binary Format: 1
+LIBGL: Max texture size: 8192
+LIBGL: Max Varying Vector: 30
+LIBGL: Texture Units: 16/16 (hardware: 16), Max lights: 8, Max planes: 6
+LIBGL: Extension GL_EXT_texture_filter_anisotropic  detected and used
+LIBGL: Max Anisotropic filtering: 16
+LIBGL: Max Color Attachments: 8 / Draw buffers: 8
+LIBGL: Hardware vendor is Google Inc. (Apple)
+LIBGL: Targeting OpenGL 2.1
+LIBGL: Not trying to batch small subsequent glDrawXXXX
+LIBGL: Trying to use VBO
+LIBGL: Hack to trigger a SwapBuffers when a Full Framebuffer Blit on default FBO is done
+LIBGL: Current folder is:/
+2026-11-16 21:38:26.129 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=16.488 cpu_p95_ms=4.506 interval_avg_ms=30.528
+1461341100 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461341450 Unknown client game command: pr [27008][0m
+1461342100 [skipnotify][1;37m[38;5;228m[BOT][1;37mMalin[1;33m: [1;32mExcellent![0m
+1461346150 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461346500 Unknown client game command: pr [27008][0m
+1461347900 The Track Switch MG Nest has been constructed.[0m
+1461349100 Axis captures the Depot Yard![0m
+2026-11-16 21:38:36.266 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.028 cpu_p95_ms=5.806 interval_avg_ms=16.917
+1461351550 Unknown client game command: pr [27008][0m
+1461354250 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 21:38:46.299 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.629 cpu_p95_ms=4.985 interval_avg_ms=16.722
+2026-11-16 21:38:56.299 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.791 cpu_p95_ms=5.087 interval_avg_ms=16.667
+1461371750 Unknown client game command: pr [27008][0m
+1461371800 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's MP 34[0m
+1461372200 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mAmadi[1;37m[0m's .45ACP 1911[0m
+1461372750 [1;37m[38;5;228m[BOT][1;37mAmadi[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's MP 40[0m
+1461376350 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's Panzerfaust[0m
+1461376800 Unknown client game command: pr [27008][0m
+2026-11-16 21:39:06.299 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.776 cpu_p95_ms=4.925 interval_avg_ms=16.667
+1461381850 Unknown client game command: pr [27008][0m
+1461383150 Track Switch raised![0m
+1461386000 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Garand[0m
+1461386900 Unknown client game command: pr [27008][0m
+1461388700 Track Switch lowered![0m
+1461389900 Allies capture the Depot Yard![0m
+2026-11-16 21:39:16.298 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.853 cpu_p95_ms=5.073 interval_avg_ms=16.667
+1461390300 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;31m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;31m's MP 40[0m
+1461391950 Unknown client game command: pr [27008][0m
+1461396550 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mAmadi[1;37m[0m's Bazooka[0m
+1461397000 Unknown client game command: pr [27008][0m
+1461397450 [skipnotify][1;37mETPadTest[1;37m entered the game[0m
+1461397450 ETPadTest[1;37m has joined the Allied team[1;37m![0m
+1461397650 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 21:39:26.299 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.884 cpu_p95_ms=5.081 interval_avg_ms=16.667
+1461402050 Unknown client game command: pr [27008][0m
+1461404450 Axis captures the Depot Yard![0m
+1461407100 Unknown client game command: pr [27008][0m
+2026-11-16 21:39:36.299 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.845 cpu_p95_ms=5.134 interval_avg_ms=16.667
+1461410150 Track Switch raised![0m
+2026-11-16 21:39:46.315 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.796 cpu_p95_ms=5.046 interval_avg_ms=16.695
+1461426100 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Garand[0m
+1461428750 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's MP 40[0m
+1461429250 Allies capture the Depot Yard![0m
+2026-11-16 21:39:56.317 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.089 cpu_p95_ms=4.530 interval_avg_ms=16.667
+1461438250 [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1461439550 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;31m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;31m's artillery support[0m
+2026-11-16 21:40:06.317 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.646 cpu_p95_ms=4.941 interval_avg_ms=16.667
+1461442750 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461443650 Axis captures the Depot Yard![0m
+1461444800 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461446850 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461446950 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+2026-11-16 21:40:16.317 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.731 cpu_p95_ms=5.009 interval_avg_ms=16.666
+2026-11-16 21:40:26.315 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.708 cpu_p95_ms=4.981 interval_avg_ms=16.666
+1461464650 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1461469200 Track Switch lowered![0m
+2026-11-16 21:40:36.331 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.622 cpu_p95_ms=4.977 interval_avg_ms=16.694
+1461471500 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;31m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;31m's Thompson[0m
+1461477700 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's rifle grenade[0m
+2026-11-16 21:40:46.334 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.511 cpu_p95_ms=4.771 interval_avg_ms=16.667
+1461482150 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461486250 Track Switch raised![0m
+2026-11-16 21:40:56.334 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.659 cpu_p95_ms=5.059 interval_avg_ms=16.667
+1461497200 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+2026-11-16 21:41:06.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.650 cpu_p95_ms=5.088 interval_avg_ms=16.667
+1461507200 Track Switch lowered![0m
+1461507750 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Bazooka[0m
+1461507750 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Bazooka[0m
+1461509300 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's rifle grenade[0m
+2026-11-16 21:41:16.333 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.714 cpu_p95_ms=4.943 interval_avg_ms=16.667
+1461512700 Allies capture the Depot Yard![0m
+1461513100 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's K43[0m
+1461518150 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's artillery support[0m
+2026-11-16 21:41:26.333 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.658 cpu_p95_ms=4.898 interval_avg_ms=16.667
+1461521900 Track Switch raised![0m
+2026-11-16 21:41:36.331 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.575 cpu_p95_ms=4.677 interval_avg_ms=16.667
+1461537550 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+2026-11-16 21:41:46.330 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.656 cpu_p95_ms=4.875 interval_avg_ms=16.667
+1461542800 Axis captures the Depot Yard![0m
+1461545300 Track Switch lowered![0m
+1461546800 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's rifle grenade[0m
+1461547100 The Track Switch MG Nest has been destroyed.[0m
+1461548550 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1461549200 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's Panzerfaust[0m
+1461549400 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Bazooka[0m
+2026-11-16 21:41:56.333 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.753 cpu_p95_ms=5.055 interval_avg_ms=16.667
+2026-11-16 21:42:06.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.732 cpu_p95_ms=5.116 interval_avg_ms=16.667
+1461563300 Axis team has destroyed the Allied Command Post![0m
+1461565450 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1461565850 The Track Switch MG Nest has been constructed.[0m
+1461568500 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1461569400 [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:42:16.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.688 cpu_p95_ms=5.050 interval_avg_ms=16.667
+1461573300 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m vaporized himself[0m
+1461578750 Axis Command Post constructed. Charge speed increased![0m
+1461579500 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was cooked by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's flamethrower[0m
+2026-11-16 21:42:26.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.740 cpu_p95_ms=5.288 interval_avg_ms=16.667
+1461580050 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mDepot Yard[1;33m): [1;36mHold your fire![0m
+1461581250 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461581700 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mDepot Yard[1;33m): [1;36mHold your fire![0m
+1461589200 Track Switch raised![0m
+2026-11-16 21:42:36.333 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.659 cpu_p95_ms=5.040 interval_avg_ms=16.667
+1461591150 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461598450 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+2026-11-16 21:42:46.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.461 cpu_p95_ms=4.698 interval_avg_ms=16.667
+1461604100 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's FG 42[0m
+1461604100 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;31m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;31m's MP 40[0m
+2026-11-16 21:42:56.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.464 cpu_p95_ms=4.675 interval_avg_ms=16.667
+1461612700 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;31m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;31m's MP 40[0m
+1461612950 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461613250 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;31m was blasted by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;31m's Bazooka[0m
+1461613600 Track Switch lowered![0m
+1461614200 [skipnotify][1;37m([38;5;228m[BOT][1;37mWhittlinMan[1;37m)[1;33m([1;33m[1;33mTrack: Depot Yard - Switch[1;33m): [1;36mHold your fire![0m
+2026-11-16 21:43:06.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.486 cpu_p95_ms=4.927 interval_avg_ms=16.667
+1461624850 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's MP 40[0m
+2026-11-16 21:43:16.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.598 cpu_p95_ms=4.913 interval_avg_ms=16.667
+1461633850 Track Switch raised![0m
+1461639400 [1;37mGary[1;37m connected[0m
+[0m
+2026-11-16 21:43:26.331 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.579 cpu_p95_ms=4.919 interval_avg_ms=16.667
+1461642150 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's MP 40[0m
+1461647100 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461647650 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+2026-11-16 21:43:36.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.513 cpu_p95_ms=4.805 interval_avg_ms=16.667
+1461653250 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+1461656550 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461656850 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461657750 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461658550 Track Switch lowered![0m
+1461658700 [skipnotify][1;37m[38;5;228m[BOT][1;37mMalin[1;33m: [1;32mOh yes![0m
+2026-11-16 21:43:46.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.487 cpu_p95_ms=4.782 interval_avg_ms=16.667
+1461661850 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[0m's MP 40[0m
+1461667450 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m committed suicide[0m
+2026-11-16 21:43:56.333 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.565 cpu_p95_ms=4.947 interval_avg_ms=16.667
+2026-11-16 21:44:06.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.661 cpu_p95_ms=5.126 interval_avg_ms=16.667
+1461681750 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's rifle grenade[0m
+1461686650 [1;37m[38;5;228m[BOT][1;37mMorgan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:44:16.331 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.539 cpu_p95_ms=4.856 interval_avg_ms=16.667
+1461690150 [skipnotify][1;37mGary[1;37m entered the game[0m
+1461690150 Gary[1;37m has joined the Axis team[1;37m![0m
+1461691200 Track Switch raised![0m
+1461693200 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461696900 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's rifle grenade[0m
+2026-11-16 21:44:26.332 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.695 cpu_p95_ms=5.095 interval_avg_ms=16.667
+1461700350 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's K43[0m
+1461702450 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37mGary[1;37m[0m's MP 40[0m
+2026-11-16 21:44:36.549 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.634 cpu_p95_ms=5.377 interval_avg_ms=17.028
+1461714750 Unknown client game command: pr [27008][0m
+1461716800 Unknown client game command: pr [27008][0m
+2026-11-16 21:44:46.549 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.558 cpu_p95_ms=4.809 interval_avg_ms=16.667
+1461723800 Track Switch lowered![0m
+1461728950 Track Switch raised![0m
+2026-11-16 21:44:56.548 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.493 cpu_p95_ms=5.036 interval_avg_ms=16.667
+1461730600 The Track Switch MG Nest has been destroyed.[0m
+1461733050 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Garand[0m
+1461733100 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's FG 42[0m
+1461734650 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461734950 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's Panzerfaust[0m
+1461734950 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's Panzerfaust[0m
+1461737850 Track Switch lowered![0m
+2026-11-16 21:45:06.649 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.698 cpu_p95_ms=4.860 interval_avg_ms=16.834
+2026-11-16 21:45:16.650 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.298 cpu_p95_ms=4.372 interval_avg_ms=16.666
+1461753050 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+2026-11-16 21:45:26.649 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.567 cpu_p95_ms=4.909 interval_avg_ms=16.666
+1461765800 The Track Switch MG Nest has been constructed.[0m
+1461767050 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461768850 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37mGary[1;37m[0m's MP 40[0m
+1461770050 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37mGary[1;37m[0m's MP 40[0m
+2026-11-16 21:45:36.649 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.447 cpu_p95_ms=4.843 interval_avg_ms=16.667
+1461773400 Axis loaded the Rail Gun Ammo onto the First Tug![0m
+1461776350 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37mGary[1;37m[0m's MP 40[0m
+2026-11-16 21:45:46.648 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.413 cpu_p95_ms=4.726 interval_avg_ms=16.666
+1461786000 Track Switch raised![0m
+1461786400 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's FG 42[0m
+1461788750 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 40[0m
+2026-11-16 21:45:56.649 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.549 cpu_p95_ms=4.889 interval_avg_ms=16.667
+1461796750 [1;37mGary[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:46:06.649 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.518 cpu_p95_ms=4.808 interval_avg_ms=16.667
+1461801600 Gary[1;37m[1;37m disconnected[0m
+1461801650 [skipnotify][1;37m[38;5;228m[BOT][1;37mTanz[1;37m entered the game[0m
+1461801650 [38;5;228m[BOT][1;37mTanz[1;37m has joined the Axis team[1;37m![0m
+1461804700 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Thompson[0m
+1461805850 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 40[0m
+1461807900 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 40[0m
+2026-11-16 21:46:16.648 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.607 cpu_p95_ms=4.803 interval_avg_ms=16.667
+1461813050 Track Switch lowered![0m
+1461817050 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+2026-11-16 21:46:27.015 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.404 cpu_p95_ms=4.295 interval_avg_ms=17.278
+1461821800 [skipnotify][1;37m([38;5;228m[BOT][1;37mWhittlinMan[1;37m)[1;33m([1;33m[1;33mAllied Camp[1;33m): [1;36mI need a Medic![0m
+1461823800 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1461825150 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461825950 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's MP 40[0m
+1461826800 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m vaporized himself[0m
+1461827100 Axis transported the Ammo to the North Crane![0m
+2026-11-16 21:46:37.016 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.731 cpu_p95_ms=4.524 interval_avg_ms=16.667
+1461833000 Unknown client game command: pr [27008][0m
+1461836400 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:46:47.099 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.682 cpu_p95_ms=4.841 interval_avg_ms=16.806
+1461844800 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's rifle grenade[0m
+1461847550 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1461848700 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's FG 42[0m
+2026-11-16 21:46:57.100 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.652 cpu_p95_ms=4.734 interval_avg_ms=16.667
+1461856150 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1461857900 Axis transferred the Ammo to the Second Tug![0m
+1461859450 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's Akimbo Luger 9mms[0m
+2026-11-16 21:47:07.098 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.530 cpu_p95_ms=4.549 interval_avg_ms=16.667
+1461869150 Axis team have loaded the Rail Gun![0m
+2026-11-16 21:47:17.099 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.459 cpu_p95_ms=4.463 interval_avg_ms=16.667
+1461872000 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 40[0m
+1461872450 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1461873850 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;30m.[0m
+1461874700 [skipnotify][1;37m([38;5;228m[BOT][1;37mWhittlinMan[1;37m)[1;33m([1;33m[1;33mRail Gun[1;33m): [1;36mThanks![0m
+1461875700 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mTrack: Rail Gun Netting[1;33m): [1;36mYou're welcome.[0m
+1461877500 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+1461877500 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+1461878550 [skipnotify][1;37m[38;5;228m[BOT][1;37mTanz[1;33m: [1;32mOh yes![0m
+2026-11-16 21:47:27.099 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.446 cpu_p95_ms=4.350 interval_avg_ms=16.667
+2026-11-16 21:47:37.097 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.440 cpu_p95_ms=4.321 interval_avg_ms=16.667
+1461894450 Rail Gun Firing Controls rebuilt![0m
+1461899600 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's artillery support[0m
+1461899600 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's artillery support[0m
+1461900650 [skipnotify][1;37m[38;5;228m[BOT][1;37mNoAmmo[1;33m: [1;32mExcellent![0m
+2026-11-16 21:47:47.097 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.743 cpu_p95_ms=4.890 interval_avg_ms=16.667
+1461902650 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[0m's Garand[0m
+1461906450 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's Akimbo Luger 9mms[0m
+2026-11-16 21:47:57.099 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.712 cpu_p95_ms=4.826 interval_avg_ms=16.667
+1461916350 Axis fired the Rail Gun![0m
+1461918850 Unknown client game command: pr [27008][0m
+1461918850 [38;5;33mAnd the last kill of the round goes to.. [1;37m[38;5;228m[BOT][1;37mHalfwit[38;5;33m![0m
+1461918850 [38;5;33mA total of [1;37m133 [38;5;33msoldiers died during this battle.[0m
+1461919050 [1;33m>>> Map: [1;32mrailgun[0m
+[0m
+1461919050 [0m
+1461919050 [1;37mOverall stats for: [1;33mETPadTest [1;37m([1;32m0[1;37m Rounds)[0m
+1461919050 [0m
+1461919050 [1;37mWeapon      Acrcy Hits/Shts Kills Deaths Headshots[0m
+1461919050 [1;37m--------------------------------------------------[0m
+1461919050 [1;33mThompson  : [1;37m  0.0 [1;36m   0/5    [1;32m    0 [1;31m     0 [1;33m        0[0m
+1461919050 [0m
+1461919050 [1;33mDamage Given: [1;37m     0     [1;33mTeam Damage Given: [1;37m     0[0m
+1461919050 [1;33mDamage Recvd: [1;37m     0     [1;33mTeam Damage Recvd: [1;37m     0[0m
+1461919050 [0m
+1461919050 [1;33mKills:   [1;37m  0   [1;33mTeam Kills: [1;37m  0   [1;33mAccuracy:  [1;37m  0.0%[0m
+1461919050 [1;33mDeaths:  [1;37m  0   [1;33mSelf Kills: [1;37m  0   [1;33mHeadshots: [1;37m  0.0%[0m
+1461919050 [1;33mGibs:    [1;37m  0   [1;33mTeam Gibs:  [1;37m  0   [1;33mPlaytime:  [1;37m 87.5%[0m
+1461919050 [1;33mAssists: [1;37m  0[0m
+1461919050 [0m
+1461919050 [1;32mRank: [1;37mPrivate (0 XP)[0m
+1461919050 [1;32mSkill Rating: [1;37m-1.19   ([1;36m-1.48[1;37m)[0m
+1461919050 [0m
+1461919050 [1;37mSkills         Level/Points[0m
+1461919050 [1;37m---------------------------[0m
+1461919050 [1;33mNo skills acquired![0m
+1461919550 [skipnotify][0m
+1461919550 [skipnotify][1;37mGUID      TEAM       Player         [1;31m TmX[38;5;33m TmL[1;37m TmP[1;37m Kll Ast Dth Gib  SK  TK  TG[1;37m Eff[1;32m    DG[1;31m    DR[1;35m  TDG[38;5;33m  TDR[1;33m  Score[38;5;208m  Rating[1;36m  Delta[0m
+1461919550 [skipnotify][1;37m----------------------------------------------------------------------------------------------------------------------------[0m
+1461919550 [skipnotify]OMNIBOT06 [1;31mAxis[1;37m       [1;37m[BOT]Halfbaked [1;31m  13[38;5;33m   0[1;37m[1;37m  87[1;33m  11   0   7   0   1   0   0[1;37m  61[1;32m  1191[1;31m  1077[1;35m    0[38;5;33m   91[1;33m  14841[38;5;208m   17.40[1;36m  +0.18[0m
+1461919550 [skipnotify]OMNIBOT08 [1;31mAxis[1;37m       [1;37m[BOT]Malin     [1;31m  13[38;5;33m   0[1;37m[1;37m  92[1;33m  22   2   6   0   0   4   0[1;37m  78[1;32m  2161[1;31m  1892[1;35m  134[38;5;33m    0[1;33m  14678[38;5;208m   21.49[1;36m  +0.17[0m
+1461919550 [skipnotify]OMNIBOT02 [1;31mAxis[1;37m       [1;37m[BOT]Halfwit   [1;31m  13[38;5;33m   0[1;37m[1;37m  83[1;33m  10   3  13   5   0   1   0[1;37m  43[1;32m  1520[1;31m  1608[1;35m   39[38;5;33m  105[1;33m  12433[38;5;208m   17.39[1;36m  +0.18[0m
+1461919550 [skipnotify]OMNIBOT04 [1;31mAxis[1;37m       [1;37m[BOT]NoAmmo    [1;31m  13[38;5;33m   0[1;37m[1;37m  88[1;33m  15   4  10   6   1   0   0[1;37m  60[1;32m  2417[1;31m  1464[1;35m   36[38;5;33m   65[1;33m  11314[38;5;208m   17.41[1;36m  +0.18[0m
+1461919550 [skipnotify]OMNIBOT10 [1;31mAxis[1;37m       [1;37m[BOT]Tanz      [1;31m  11[38;5;33m   0[1;37m[1;37m  12[1;33m   2   1   1   1   1   0   0[1;37m  66[1;32m   275[1;31m   178[1;35m    0[38;5;33m   18[1;33m     21[38;5;208m   18.73[1;36m  +0.15[0m
+1461919550 [skipnotify][1;37m----------------------------------------------------------------------------------------------------------------------------[0m
+1461919550 [skipnotify]          [1;31mAxis[1;37m       [1;36mTotals         [1;31m  65[38;5;33m   0[1;36m  74  60  10  37  12   3   5   0[1;36m  61[1;32m  7564[1;31m  6219[1;35m  209[38;5;33m  279[1;33m  53287[0m
+1461919550 [skipnotify][0m
+1461919550 [skipnotify][1;37mGUID      TEAM       Player         [1;31m TmX[38;5;33m TmL[1;37m TmP[1;37m Kll Ast Dth Gib  SK  TK  TG[1;37m Eff[1;32m    DG[1;31m    DR[1;35m  TDG[38;5;33m  TDR[1;33m  Score[38;5;208m  Rating[1;36m  Delta[0m
+1461919550 [skipnotify][1;37m----------------------------------------------------------------------------------------------------------------------------[0m
+1461919550 [skipnotify]OMNIBOT03 [38;5;33mAllies[1;37m     [1;37m[BOT]Beelz     [1;31m   0[38;5;33m  13[1;37m[1;37m  73[1;33m  12   2  20   1   0   0   0[1;37m  37[1;32m  1770[1;31m  2072[1;35m    0[38;5;33m   18[1;33m  13977[38;5;208m   20.40[1;36m  -0.17[0m
+1461919550 [skipnotify]OMNIBOT05 [38;5;33mAllies[1;37m     [1;37m[BOT]Merki     [1;31m   0[38;5;33m  13[1;37m[1;37m  74[1;33m  11   3  18   0   0   1   0[1;37m  37[1;32m  2096[1;31m  2993[1;35m  148[38;5;33m  238[1;33m  11302[38;5;208m   20.43[1;36m  -0.17[0m
+1461919550 [skipnotify]OMNIBOT07 [38;5;33mAllies[1;37m     [1;37m[BOT]WhittlinMa[1;31m   0[38;5;33m  13[1;37m[1;37m  69[1;33m  11   5  20   0   0   0   0[1;37m  35[1;32m  1784[1;31m  2177[1;35m    0[38;5;33m   58[1;33m   8422[38;5;208m   20.35[1;36m  -0.17[0m
+1461919550 [skipnotify]OMNIBOT09 [38;5;33mAllies[1;37m     [1;37m[BOT]Mungri    [1;31m   0[38;5;33m  13[1;37m[1;37m  81[1;33m   6   4  13   4   0   1   2[1;37m  31[1;32m  1390[1;31m  1537[1;35m  238[38;5;33m   72[1;33m   8234[38;5;208m   16.87[1;36m  -0.17[0m
+1461919550 [skipnotify]4C8A23A5* [38;5;33mAllies[1;37m     [1;33mETPadTest      [1;31m   0[38;5;33m   9[1;37m[1;33m  87[1;33m   0   0   0   0   0   0   0[1;33m   0[1;32m     0[1;31m     0[1;35m    0[38;5;33m    0[1;33m      0[38;5;208m   -1.19[1;36m  -1.48[0m
+1461919550 [skipnotify][1;37m----------------------------------------------------------------------------------------------------------------------------[0m
+1461919550 [skipnotify]          [38;5;33mAllies[1;37m     [1;36mTotals         [1;31m   0[38;5;33m  63[1;36m  76  40  14  71   5   0   2   2[1;36m  36[1;32m  7040[1;31m  8779[1;35m  386[38;5;33m  386[1;33m  41935[0m
+1461919550 [skipnotify][0m
+[1;32mMap bias: [1;31m-0.0[1;37m/[38;5;33m+0.0[1;37m pct[0m
+[1;32mWin prob: [1;31m+18.6[1;37m/[38;5;33m+81.4[1;37m pct[0m
+1461919550 [skipnotify][0m
+[0m
+1461919550 [skipnotify][0m
+[1;33m>>> Stats recorded to: [1;37mstats/2026-11/2026-11-16-214805-railgun.txt[0m
+[0m
+2026-11-16 21:48:07.115 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.656 cpu_p95_ms=4.717 interval_avg_ms=16.694
+2026-11-16 21:48:17.115 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.700 cpu_p95_ms=4.814 interval_avg_ms=16.667
+2026-11-16 21:48:27.116 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.707 cpu_p95_ms=4.818 interval_avg_ms=16.667
+2026-11-16 21:48:37.115 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.726 cpu_p95_ms=4.927 interval_avg_ms=16.667
+2026-11-16 21:48:47.115 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.655 cpu_p95_ms=4.683 interval_avg_ms=16.667
+2026-11-16 21:48:57.215 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.758 cpu_p95_ms=4.887 interval_avg_ms=16.834
+       0 Connected to a pure server.[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3 (1545 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 6867 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Client download complete[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;30mInitializing legacy cgame [1;32mv2.86.2-184-g62750f7[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 234 client cvars in use[0m
+       0 Not logging client output to disk.[0m
+       0 LOADING...  - collision map -[0m
+       0 Loaded entities from maps/fueldump.bsp[0m
+       0 LOADING...  - sounds -[0m
+       0 LOADING...  - graphics -[0m
+       0 LOADING...  - maps/fueldump.bsp -[0m
+       0 stitched 35 LoD cracks[0m
+       0 ...loaded 13134 faces, 166 meshes, 1078 trisurfs, 0 flares, 0 foliages[0m
+       0 LOADING...  - entities -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - textures -[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 LOADING...  - models -[0m
+       0 LOADING...  - heads-up display -[0m
+       0 ...properties for hud Alternate Hud 1 have been read.[0m
+       0 ...properties for hud Alternate Hud 2 have been read.[0m
+       0 ...properties for hud Alternate Hud 3 have been read.[0m
+       0 ...properties for hud Competitor Hud have been read.[0m
+       0 ...properties for hud Shoutcaster have been read.[0m
+       0 ...hud count: 6[0m
+       0 LOADING...  - weapons -[0m
+       0 LOADING...  - items -[0m
+       0 LOADING...  - inline models -[0m
+       0 LOADING...  - server models -[0m
+       0 LOADING...  - particles -[0m
+       0 LOADING...  - classes -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - flamechunks -[0m
+       0 LOADING...  - clients -[0m
+       0 [38;5;33mLoadLocations: [1;30mlocation data for map [1;32mfueldump [1;30mloaded[0m
+       0 [1;32m140 [1;30mlocations loaded.[0m
+       0 CL_InitCGame:  1.82 seconds[0m
+       0 Com_TouchMemory: 1 msec 1099408596 [0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mBeelz[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mMerki[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mMalin[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mMungri[1;37m entered the game[0m
+1461983250 [skipnotify][1;37m[38;5;228m[BOT][1;37mTanz[1;37m entered the game[0m
+1461983250 [skipnotify][1;37mETPadTest[1;37m entered the game[0m
+2026-11-16 21:49:10.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=9.646 cpu_p95_ms=4.898 interval_avg_ms=22.556
+1461988350 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m committed suicide[0m
+1461994700 [skipnotify][1;37m([38;5;228m[BOT][1;37mMungri[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mThanks![0m
+2026-11-16 21:49:20.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.018 cpu_p95_ms=4.781 interval_avg_ms=16.667
+1462001350 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m committed suicide[0m
+1462001350 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m committed suicide[0m
+1462001350 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m committed suicide[0m
+2026-11-16 21:49:30.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.898 cpu_p95_ms=4.829 interval_avg_ms=16.667
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mBeelz[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mMerki[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mMalin[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mMungri[1;37m entered the game[0m
+1462010500 [skipnotify][1;37m[38;5;228m[BOT][1;37mTanz[1;37m entered the game[0m
+1462010500 [skipnotify][1;37mETPadTest[1;37m entered the game[0m
+1462010500 Connected to a pure server.[0m
+1462010500 [skipnotify][1;31mFIGHT![0m
+1462012450 [1;33mWARNING: CG_SoundPlaySoundScript cannot find sound script 'fueldump_allies_bridge_construct'[0m
+1462012450 [1;31mERROR: sound file 'fueldump_allies_bridge_construct' does not exist or can't be read[0m
+1462012450 [1;33mWARNING: CG_EntityEvent() cannot play EV_GLOBAL_SOUND sound 'fueldump_allies_bridge_construct'[0m
+2026-11-16 21:49:40.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.911 cpu_p95_ms=4.845 interval_avg_ms=16.667
+2026-11-16 21:49:50.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.013 cpu_p95_ms=4.815 interval_avg_ms=16.667
+1462028800 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mThanks![0m
+1462032050 Allied team has constructed the Foot Bridge![0m
+1462034200 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's MP 40[0m
+2026-11-16 21:50:00.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.240 cpu_p95_ms=5.058 interval_avg_ms=16.667
+1462037300 Axis Command Post constructed. Charge speed increased![0m
+1462045700 Axis team has destroyed the Foot Bridge![0m
+2026-11-16 21:50:10.748 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.911 cpu_p95_ms=4.705 interval_avg_ms=16.666
+1462049200 Axis team has constructed the Tunnel MG![0m
+1462053800 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's tank-mounted browning 30cal[0m
+2026-11-16 21:50:20.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.086 cpu_p95_ms=5.152 interval_avg_ms=16.668
+1462059850 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mBridge Supplies[1;33m): [1;36mNeed a Medic![0m
+1462060350 [skipnotify][1;37m([38;5;228m[BOT][1;37mWhittlinMan[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mNeed a Medic![0m
+1462061750 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's artillery support[0m
+1462062600 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was silenced by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Garand[0m
+1462063350 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mI'm a medic.[0m
+2026-11-16 21:50:30.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.287 cpu_p95_ms=5.135 interval_avg_ms=16.667
+1462073200 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+1462073550 Allied team has breached the Tunnel Grate![0m
+1462073800 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mThanks![0m
+1462073800 [1;33mWARNING: CG_SoundPlaySoundScript cannot find sound script 'fueldump_allies_grate_destroyed'[0m
+1462073800 [1;31mERROR: sound file 'fueldump_allies_grate_destroyed' does not exist or can't be read[0m
+1462073800 [1;33mWARNING: CG_EntityEvent() cannot play EV_GLOBAL_SOUND sound 'fueldump_allies_grate_destroyed'[0m
+1462073950 Planted at the Bridge.[0m
+1462074800 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mNo problem.[0m
+1462075200 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m fired-for-effect on himself[0m
+2026-11-16 21:50:40.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.355 cpu_p95_ms=5.585 interval_avg_ms=16.667
+1462078400 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's crew-served MG[0m
+1462080050 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;31m was shelled by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;31m's artillery support[0m
+1462082700 The Tank has been damaged[0m
+2026-11-16 21:50:50.748 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.816 cpu_p95_ms=5.641 interval_avg_ms=16.667
+2026-11-16 21:51:00.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.503 cpu_p95_ms=5.118 interval_avg_ms=16.667
+1462105000 [skipnotify][1;37m([38;5;228m[BOT][1;37mMerki[1;37m)[1;33m([1;33m[1;33mTank Path[1;33m): [1;36mThank you![0m
+2026-11-16 21:51:10.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.666 cpu_p95_ms=5.399 interval_avg_ms=16.667
+1462110800 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's artillery support[0m
+2026-11-16 21:51:20.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.540 cpu_p95_ms=5.341 interval_avg_ms=16.667
+1462116900 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was shelled by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's artillery support[0m
+1462120950 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's crew-served MG[0m
+1462124650 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's crew-served MG[0m
+2026-11-16 21:51:30.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.636 cpu_p95_ms=5.508 interval_avg_ms=16.667
+2026-11-16 21:51:40.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.282 cpu_p95_ms=5.135 interval_avg_ms=16.668
+1462143000 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:51:50.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.615 cpu_p95_ms=5.463 interval_avg_ms=16.667
+1462146850 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1462149250 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462153300 Allied team has constructed the Road MG Nest![0m
+2026-11-16 21:52:00.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.438 cpu_p95_ms=5.359 interval_avg_ms=16.666
+1462162200 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462164450 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:52:10.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.419 cpu_p95_ms=5.376 interval_avg_ms=16.667
+2026-11-16 21:52:20.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.489 cpu_p95_ms=5.358 interval_avg_ms=16.667
+1462175800 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m fired-for-effect on himself[0m
+1462178100 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:52:30.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.650 cpu_p95_ms=5.598 interval_avg_ms=16.667
+2026-11-16 21:52:40.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.268 cpu_p95_ms=5.223 interval_avg_ms=16.666
+1462199800 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mBridge Supplies[1;33m): [1;36mHold your fire![0m
+1462201100 [skipnotify][1;37m([38;5;228m[BOT][1;37mBeelz[1;37m)[1;33m([1;33m[1;33mBridge Supplies[1;33m): [1;36mI'm constructing![0m
+1462201450 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+2026-11-16 21:52:50.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.361 cpu_p95_ms=5.291 interval_avg_ms=16.667
+1462212800 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[0m's Akimbo Luger 9mms[0m
+1462215050 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:53:00.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.631 cpu_p95_ms=5.458 interval_avg_ms=16.666
+1462215800 [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1462219950 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+1462222850 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462223650 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfwit[1;33m: [1;32mExcellent![0m
+2026-11-16 21:53:10.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.952 cpu_p95_ms=5.640 interval_avg_ms=16.666
+1462226750 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462230750 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:53:20.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.659 cpu_p95_ms=5.583 interval_avg_ms=16.667
+1462241900 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:53:30.751 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.396 cpu_p95_ms=5.471 interval_avg_ms=16.667
+2026-11-16 21:53:40.750 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.273 cpu_p95_ms=5.178 interval_avg_ms=16.666
+1462255850 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462259150 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:53:50.749 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.518 cpu_p95_ms=5.369 interval_avg_ms=16.667
+2026-11-16 21:54:00.766 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.207 cpu_p95_ms=5.355 interval_avg_ms=16.694
+1462280250 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1462281300 [skipnotify][1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;33m: [1;32mWoo![0m
+2026-11-16 21:54:10.766 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.431 cpu_p95_ms=5.333 interval_avg_ms=16.667
+1462288500 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;31m was killed by [1;37m[38;5;228m[BOT][1;37mMalin[1;37m[1;31m's MP 40[0m
+1462288850 Allied team has constructed the bridge![0m
+1462288850 [1;33mWARNING: CG_SoundPlaySoundScript cannot find sound script 'fueldump_allies_bridge_reinforce'[0m
+1462288850 [1;31mERROR: sound file 'fueldump_allies_bridge_reinforce' does not exist or can't be read[0m
+1462288850 [1;33mWARNING: CG_EntityEvent() cannot play EV_GLOBAL_SOUND sound 'fueldump_allies_bridge_reinforce'[0m
+1462294250 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:54:20.766 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.314 cpu_p95_ms=5.163 interval_avg_ms=16.667
+1462298200 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's crew-served MG[0m
+1462299050 [skipnotify][1;37m[38;5;228m[BOT][1;37mTanz[1;33m: [1;32mJahaa![0m
+1462301400 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[0m's Akimbo .45ACP 1911s[0m
+1462303850 [skipnotify][1;37m([38;5;228m[BOT][1;37mMungri[1;37m)[1;33m([1;33m[1;33mBridge Supplies[1;33m): [1;36mI need ammo![0m
+2026-11-16 21:54:30.766 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.752 cpu_p95_ms=5.565 interval_avg_ms=16.667
+1462314500 Allied team has reinforced the Bridge![0m
+1462314500 [1;37m[38;5;228m[BOT][1;37mMungri[1;37m[1;31m got caught in [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;31m's construction madness[0m
+1462314500 [1;33mWARNING: CG_SoundPlaySoundScript cannot find sound script 'fueldump_allies_bridge_reinforced'[0m
+1462314500 [1;31mERROR: sound file 'fueldump_allies_bridge_reinforced' does not exist or can't be read[0m
+1462314500 [1;33mWARNING: CG_EntityEvent() cannot play EV_GLOBAL_SOUND sound 'fueldump_allies_bridge_reinforced'[0m
+1462314500 [1;33mWARNING: CG_SoundPlaySoundScript cannot find sound script 'fueldump_allies_tank_bridge'[0m
+1462314500 [1;31mERROR: sound file 'fueldump_allies_tank_bridge' does not exist or can't be read[0m
+1462314500 [1;33mWARNING: CG_EntityEvent() cannot play EV_GLOBAL_SOUND sound 'fueldump_allies_tank_bridge'[0m
+2026-11-16 21:54:40.949 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.089 cpu_p95_ms=5.293 interval_avg_ms=16.972
+1462316300 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462317250 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfwit[1;33m: [1;32mOh yes![0m
+1462321550 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;30m.[0m
+2026-11-16 21:54:50.949 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.350 cpu_p95_ms=5.158 interval_avg_ms=16.667
+1462328000 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1462328350 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462331200 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462331200 Planted at the Bridge.[0m
+1462333700 The Tank has been repaired[0m
+2026-11-16 21:55:00.948 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.915 cpu_p95_ms=4.945 interval_avg_ms=16.667
+1462338300 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+2026-11-16 21:55:11.099 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.273 cpu_p95_ms=5.122 interval_avg_ms=16.917
+2026-11-16 21:55:21.300 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.357 cpu_p95_ms=5.149 interval_avg_ms=17.000
+1462356850 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462357450 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+1462358300 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462361150 Axis team has damaged the Bridge![0m
+1462362150 The Tank has been damaged[0m
+1462362650 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462363950 ----- Initializing Filesystem --[0m
+1462363950 Current working directory:[0m
+1462363950     /[0m
+1462363950 Current search path:[0m
+1462363950     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy[0m
+1462363950     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy[0m
+1462363950     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain[0m
+1462363950     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/etmain[0m
+1462363950     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+1462363950     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+1462363950     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+1462363950     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+1462363950 [0m
+1462363950 handle 1: etconsole.log[0m
+1462363950 5322 files in pk3 files[0m
+1462363950 --------------------------------[0m
+1462363950 ********************[0m
+ERROR: Disconnected from server[0m
+********************[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 Unknown command "cpm[0m"[0m
+       0 87.116.30.113:27960 resolved to 87.116.30.113:27960[0m
+       0 Connected to a pure server.[0m
+       0 ----- Initializing Filesystem --[0m
+       0 Current working directory:[0m
+       0     /[0m
+       0 Current search path:[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain[0m
+       0     [1;32mD [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/etmain[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/legacy/dlcache/legacy_v2.84.0.pk3 (1545 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak2.pk3 (22 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak1.pk3 (10 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Data/Application/D4C4B2F0-4A93-4512-95D1-6BCCEC2BA200/Documents/ETPad/etmain/pak0.pk3 (3725 files)[0m
+       0         on the pure list[0m
+       0     [1;31mP [38;5;124m/Users/chrissotraidis/Library/Developer/CoreSimulator/Devices/672DC5A6-8C79-465E-8ABC-50E57C8F7B80/data/Containers/Bundle/Application/7B24E20E-A56B-49A4-82C8-A746070F74B0/ETPad-simulator.app/GameContent/legacy/legacy_v2.86.2_dirty.pk3 (1565 files)[0m
+       0         not on the pure list[0m
+       0 [0m
+       0 handle 1: etconsole.log[0m
+       0 6867 files in pk3 files[0m
+       0 --------------------------------[0m
+       0 Client download complete[0m
+       0 RE_Shutdown( 0 )[0m
+       0 Hunk_Clear: reset the hunk ok[0m
+       0 ----- Initializing Renderer ----[0m
+       0 [1;33mtess.xyz not 16 byte aligned[0m
+       0 GL_MAX_TEXTURE_SIZE: 8192[0m
+       0 GL_MAX_ACTIVE_TEXTURES_ARB: 16[0m
+       0 PIXELFORMAT: color(24-bits) Z(24-bit) stencil(0-bits)[0m
+       0 MODE: -1, SCREEN: 1280 x 882 fullscreen (ratio 1.4512) Hz:N/A[0m
+       0 GAMMA: software w/ 0 overbright bits[0m
+       0 texturemode: GL_LINEAR_MIPMAP_LINEAR[0m
+       0 picmip: 0[0m
+       0 texture bits: 32[0m
+       0 multitexture: enabled[0m
+       0 texenv add: enabled[0m
+       0 compressed textures: disabled[0m
+       0 Initializing Shaders[0m
+       0 --------------------------------[0m
+       0 [1;30mInitializing legacy ui [1;32mv2.86.2-184-g62750f7[0m
+       0 150 UI cvars in use[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/directory.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/home.tga' not found - using default shader[0m
+       0 [1;33mRE_RegisterShaderNoMip WARNING: shader 'ui/assets/up.tga' not found - using default shader[0m
+       0 Total favorite servers restored: 0[0m
+       0 [1;30mInitializing legacy cgame [1;32mv2.86.2-184-g62750f7[0m
+       0 [1;32mRestoring CVARS forced by server[0m
+       0 [1;33mcvar: rate 25000[0m
+       0 [1;33mcvar: cl_maxpackets 125[0m
+       0 [1;33mcvar: snaps 20[0m
+       0 [1;33mcvar: com_maxfps 250[0m
+       0 234 client cvars in use[0m
+       0 Not logging client output to disk.[0m
+       0 LOADING...  - collision map -[0m
+       0 Loaded entities from maps/fueldump.bsp[0m
+       0 LOADING...  - sounds -[0m
+       0 LOADING...  - graphics -[0m
+       0 LOADING...  - maps/fueldump.bsp -[0m
+       0 stitched 35 LoD cracks[0m
+       0 ...loaded 13134 faces, 166 meshes, 1078 trisurfs, 0 flares, 0 foliages[0m
+       0 LOADING...  - entities -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - textures -[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairs_alt' not found - using default shader[0m
+       0 [1;33mRE_RegisterShader WARNING: shader 'gfx/2d/crosshairt_alt' not found - using default shader[0m
+       0 LOADING...  - models -[0m
+       0 LOADING...  - heads-up display -[0m
+       0 ...properties for hud Alternate Hud 1 have been read.[0m
+       0 ...properties for hud Alternate Hud 2 have been read.[0m
+       0 ...properties for hud Alternate Hud 3 have been read.[0m
+       0 ...properties for hud Competitor Hud have been read.[0m
+       0 ...properties for hud Shoutcaster have been read.[0m
+       0 ...hud count: 6[0m
+       0 LOADING...  - weapons -[0m
+       0 LOADING...  - items -[0m
+       0 LOADING...  - inline models -[0m
+       0 LOADING...  - server models -[0m
+       0 LOADING...  - particles -[0m
+       0 LOADING...  - classes -[0m
+       0 LOADING...  - game media -[0m
+       0 LOADING...  - flamechunks -[0m
+       0 LOADING...  - clients -[0m
+       0 [38;5;33mLoadLocations: [1;30mlocation data for map [1;32mfueldump [1;30mloaded[0m
+       0 [1;32m140 [1;30mlocations loaded.[0m
+       0 CL_InitCGame:  5.51 seconds[0m
+       0 Com_TouchMemory: 0 msec 419323578 [0m
+2026-11-16 21:55:39.896 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=18.129 cpu_p95_ms=5.638 interval_avg_ms=31.000
+1462376450 Unknown client game command: pr [27008][0m
+1462381500 Unknown client game command: pr [27008][0m
+1462383750 [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[0m's Thompson[0m
+2026-11-16 21:55:49.898 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.538 cpu_p95_ms=4.702 interval_avg_ms=16.667
+1462386550 Unknown client game command: pr [27008][0m
+1462391600 Unknown client game command: pr [27008][0m
+1462392000 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;31m was shelled by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;31m's artillery support[0m
+1462393450 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[0m's crew-served MG[0m
+2026-11-16 21:55:59.898 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.572 cpu_p95_ms=4.764 interval_avg_ms=16.667
+1462396650 Unknown client game command: pr [27008][0m
+1462398800 [1;37m[38;5;228m[BOT][1;37mNoAmmo[1;37m[1;37m never saw [1;37m[38;5;228m[BOT][1;37mChan[1;37m[0m's mortar round coming[0m
+1462401700 Unknown client game command: pr [27008][0m
+2026-11-16 21:56:09.899 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.647 cpu_p95_ms=4.751 interval_avg_ms=16.667
+1462406750 Unknown client game command: pr [27008][0m
+1462407200 Planted at the Bridge.[0m
+1462411800 Unknown client game command: pr [27008][0m
+1462414850 Allied team has reinforced the Bridge![0m
+2026-11-16 21:56:20.031 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.583 cpu_p95_ms=4.730 interval_avg_ms=16.889
+1462416600 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[0m's MP 40[0m
+1462416850 Unknown client game command: pr [27008][0m
+1462417250 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1462420050 [skipnotify][1;37mETPadTest[1;37m entered the game[0m
+1462420050 ETPadTest[1;37m has joined the Allied team[1;37m![0m
+1462420050 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462420600 [38;5;33mrevive: [1;37m[38;5;228m[BOT][1;37mMerki [1;30mrevived [1;37m[38;5;228m[BOT][1;37mBeelz[1;30m.[0m
+1462421900 Unknown client game command: pr [27008][0m
+1462424600 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+2026-11-16 21:56:30.135 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.438 cpu_p95_ms=5.215 interval_avg_ms=16.834
+1462426150 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462426950 Unknown client game command: pr [27008][0m
+1462431950 Unknown client game command: pr [27008][0m
+2026-11-16 21:56:40.135 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.860 cpu_p95_ms=5.021 interval_avg_ms=16.667
+1462437050 Unknown client game command: pr [27008][0m
+2026-11-16 21:56:50.136 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.118 cpu_p95_ms=5.145 interval_avg_ms=16.667
+2026-11-16 21:57:00.143 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.712 cpu_p95_ms=8.628 interval_avg_ms=16.667
+1462456100 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462457200 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462458250 [skipnotify][1;37m[38;5;228m[BOT][1;37mHalfwit[1;33m: [1;32mExcellent![0m
+1462459100 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+2026-11-16 21:57:10.151 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=5.898 cpu_p95_ms=9.895 interval_avg_ms=16.693
+1462467750 Planted at the Bridge.[0m
+2026-11-16 21:57:20.153 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=4.606 cpu_p95_ms=5.381 interval_avg_ms=16.667
+1462479200 [1;37m[38;5;228m[BOT][1;37mHalfbaked[1;37m[1;37m was killed by [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[0m's Thompson[0m
+1462479300 [1;37m[38;5;228m[BOT][1;37mMerki[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+1462479300 [1;37m[38;5;228m[BOT][1;37mBeelz[1;37m[1;37m was blasted by [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[0m's Panzerfaust[0m
+2026-11-16 21:57:30.153 ETPad[92902:6334410] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=5.032 cpu_p95_ms=5.860 interval_avg_ms=16.667
+1462489600 [1;37m[38;5;228m[BOT][1;37mTanz[1;37m[1;37m vaporized himself[0m
+1462489850 [skipnotify][1;37m([38;5;228m[BOT][1;37mMungri[1;37m)[1;33m([1;33m[1;33mAllied Health & Ammo[1;33m): [1;36mI need ammo![0m
+1462491100 [1;37m[38;5;228m[BOT][1;37mWhittlinMan[1;37m[1;37m was perforated by [1;37m[38;5;228m[BOT][1;37mHalfwit[1;37m[0m's crew-served MG[0m
+1462493800 ----- Client Shutdown ----------[0m
+1462493800 ----- Initializing Filesystem --[0m

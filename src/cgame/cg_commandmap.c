@@ -554,6 +554,21 @@ static void CG_DrawGrid(float x, float y, float w, float h, mapScissor_t *scisso
 	dist[0] = Max0Min0;
 	dist[1] = Max1Min1;
 
+#ifdef ETPAD_IOS
+	// dyld can retain this framework across map changes. Recompute the grid
+	// when the new worldspawn has a different map span, even if its step
+	// remains unchanged: the centered grid origin also depends on the span.
+	{
+		static vec2_t cachedGridSpan;
+		if (cachedGridSpan[0] != Max0Min0 || cachedGridSpan[1] != Min1Max1)
+		{
+			gridInitDone = qfalse;
+			cachedGridSpan[0] = Max0Min0;
+			cachedGridSpan[1] = Min1Max1;
+		}
+	}
+#endif
+
 	if (!gridInitDone)
 	{
 		gridStep[0] = 1200.f;
