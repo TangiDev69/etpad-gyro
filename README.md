@@ -20,20 +20,20 @@ Build success, simulator behavior, and physical-device play are tracked separate
 | --- | --- | --- |
 | **macOS · arm64** | Source-built engine, renderer and Legacy modules; Oasis and Goldrush bot rounds through intermission; public Legacy session exceeding ten minutes, including map change and reconnect | Gameplay input was injected. Physical controller play has not been tested. Optional Omni-bot core is a separate, prebuilt macOS dependency. |
 | **iPad Simulator · arm64** | Native data acquisition; signed embedded frameworks; real local/public gameplay; first-tap Allies → engineer → OK → spawn; source-built Omni-bot 0.93 with four active Oasis bots, touch fire/reload, death/respawn, assisted objective capture and timed intermission; Oasis → Goldrush local reload; public Radar disconnect/reconnect in the same process; landscape and suspend/resume | Bot-round input and objective travel were assisted, including developer positioning and god mode. Multi-touch feel, physical controllers and physical keyboard/trackpad use remain unverified. |
-| **Physical iPad** | Earlier unsigned arm64 iOS app/IPA passed architecture, dependency and package checks | The bot-enabled device build needs a fresh check. No device or signing identity was available; no installation, performance, bot or public-server acceptance is claimed. |
+| **Physical iPad** | Fresh bot-enabled unsigned arm64 iOS app/IPA passes architecture, dependency, notice and package checks | No device or signing identity was available; no installation, performance, bot or public-server acceptance is claimed. |
 | **PadMint** | Build interface and manifest validation against a read-only snapshot of PadMint main | Targets remain `experimental`, manifest status `draft-untested`; no catalog listing or release acceptance. |
 
-The [handoff](docs/HANDOFF.md) contains exact checkpoints, assisted test procedures, failure logs and remaining gates. The [earlier artifact audit](docs/evidence/package-final.txt) records the pre-bot package checks; the new bot-enabled packages need a fresh audit. The accepted iPad bot round used assisted input, developer positioning and god mode for objective interaction; it does not establish unassisted play.
+The [handoff](docs/HANDOFF.md) contains exact checkpoints, assisted test procedures, failure logs and remaining gates. The [final artifact audit](docs/evidence/package-resumed.txt) covers the Mac package, default ANGLE and optional Vulkan simulator apps, and bot-enabled unsigned device app/IPA. The accepted iPad bot round used assisted input, developer positioning and god mode for objective interaction; it does not establish unassisted play.
 
 ### What the Apple port adds
 
 - **Shared controller layout:** analog movement/look, trigger actions, utility and weapon layers, persistent remapping, and held-input cleanup on disconnect.
-- **Native iPad controls:** a left movement area, right look area, action buttons, utility diamond, and separate menu button. Black translucent resting buttons gain color only while pressed; movement/look guides appear during use or arrangement.
-- **Native three-dot menu:** controller mappings, touch visibility/size/opacity/handedness/layouts, render resolution, FOV and FPS settings, player name, favorites, game data, Console, Game Keyboard, and report preview.
+- **Native iPad controls:** a larger Fire target, readable icon/caption buttons, compact utility diamond, separate menu pill, and movement/look areas. Black translucent resting buttons gain color only while pressed; movement/look guides appear during use or arrangement.
+- **Native three-dot menu:** Play, Settings and Tools groups organize controller mappings, touch visibility/size/opacity/handedness/layouts, render resolution, FOV and FPS settings, player name, favorites, game data, Console, Game Keyboard, and report preview.
 - **Original-data acquisition:** official download or Files import, with SHA-256 verification before installation. The app package carries no original `pak0.pk3`, `pak1.pk3` or `pak2.pk3`.
 - **iPad rendering through Metal:** the source-built GL4ES adapter feeds ANGLE's Metal backend. UIKit owns presentation and lifecycle; embedded frameworks provide the engine and built-in Legacy modules.
 
-Touch layout settings and named presets persist. Arrange mode opens and closes, but the current automated drag check did not establish position changes; physical usability remains a testing gate.
+The [native UI pass](docs/UI-DESIGN.md) includes before/after screenshots and verified simulator actions. Touch layout settings and named presets persist. Arrange mode opens and closes, but the current automated drag check did not establish position changes; physical usability remains a testing gate.
 
 ## Get the original game data
 
@@ -123,7 +123,7 @@ scripts/build-etpad.sh --platform macos \
   --zip build/output/ETPad-mac.zip
 ```
 
-Output: `build/output/ETPad-mac/ET Legacy.app`, its renderer/modules, GPL Legacy data and dependency notices. Original game media is excluded. See [BUILDING.md](docs/BUILDING.md) for the exact local launch and optional macOS bot setup. The optional Omni-bot 0.93 core is an official prebuilt macOS runtime downloaded separately; it is not part of exported packages.
+Output: `build/output/ETPad-mac/ET Legacy.app`, its renderer/modules, a GPL Legacy mod pack and dependency notices. The Mac mod pack retains upstream native-module entries, which must match the separately exported source-built modules byte for byte. The iPad Legacy pack is data-only. Original game media is excluded. See [BUILDING.md](docs/BUILDING.md) for the exact local launch and optional macOS bot setup. The optional Omni-bot 0.93 core is an official prebuilt macOS runtime downloaded separately; it is not part of exported packages.
 
 ### iPad Simulator app
 
@@ -153,11 +153,13 @@ The [PadMint manifest](padmint.json) uses this same build interface for experime
 
 ## Rendering and performance
 
-The current iPad path is **Legacy GLES → GL4ES → ANGLE → Metal**. The default app embeds five native engine/module frameworks plus the source-built `ETPadOmnibot.framework`, signed together for the simulator; ANGLE is a pinned, hash-verified distributor dependency, while GL4ES and ETPad's engine/modules are built from source. Notices accompany exports.
+The default iPad path is **Legacy GLES → GL4ES → ANGLE → Metal**. An optional **Legacy Vulkan → MoltenVK → Metal** simulator build also renders real Oasis gameplay with active local bots, touch menus and engineer fire/reload. The default app embeds five native engine/module frameworks plus the source-built `ETPadOmnibot.framework`, signed together for the simulator; ANGLE is a pinned, hash-verified distributor dependency, while GL4ES and ETPad's engine/modules are built from source. Notices accompany exports.
 
 The simulator has verified full-screen Oasis rendering at 960×662 and a live main-menu resolution change to 1280×882. Steady 600-frame Oasis windows at 1280×882 recorded CPU frame means of **4.4–5.6 ms** and p95 of **5.8–6.9 ms**, with a display interval near 16.67 ms. These are simulator CPU measurements, not physical iPad GPU or frame-rate guarantees.
 
-A Vulkan/MoltenVK comparison is still pending; no second-backend gameplay or comparative frame times have been accepted. Renderer experiments and their exact failures are retained in [HANDOFF.md](docs/HANDOFF.md).
+The optional Vulkan run recorded selected steady spectator CPU means of **2.660–3.621 ms** (p95 **3.541–5.172 ms**), then selected steady engineer/bot means of **6.784–11.491 ms** (p95 **15.409–29.693 ms**). Display intervals ranged from 16.667–16.722 ms in the spectator samples to 16.858–18.809 ms in the engineer/bot samples. Its logical scene was 1280×882, but the actual MoltenVK swapchain was 1210×834.
+
+The selected steady ranges exclude loading and the initial team-entry transition. These are exploratory simulator observations under different game states and render sizes, **not a controlled backend benchmark or a renderer winner**. ANGLE remains the default. See [optional Vulkan build/launch instructions](docs/BUILDING.md#optional-vulkanmoltenvk-simulator-renderer) and the [acceptance record](docs/HANDOFF.md) for the initial failed run, vertex-binding fallback, timing limits and package audit.
 
 ## Common questions
 
@@ -178,6 +180,7 @@ A Vulkan/MoltenVK comparison is still pending; no second-backend gameplay or com
 | iPad rendering | [960-pixel render screenshot](docs/evidence/ios-sim/resolution-fixed-960.png) · [resolution log](docs/evidence/ios-sim/resolution-final.log) |
 | iPad assisted local bot round | [Bot-round log](docs/evidence/ios-sim/bots-resumed.log) · [respawn/objective screenshot](docs/evidence/ios-sim/bots-respawn-objective.png) · [timed intermission screenshot](docs/evidence/ios-sim/bots-intermission.png) |
 | iPad resumed menu / map / reconnect checks | [Resumed-session log](docs/evidence/ios-sim/reconnect-resumed.log) · [reconnected Radar screenshot](docs/evidence/ios-sim/reconnect-resumed.png) |
+| Optional Vulkan simulator | [Oasis screenshot](docs/evidence/ios-sim/vulkan-oasis.png) · [runtime and timing log](docs/evidence/ios-sim/vulkan-resumed.log) |
 | Earlier package boundaries | [Pre-bot architecture, signatures, dependencies and media audit](docs/evidence/package-final.txt) |
 
 Some raw simulator screenshots have portrait framebuffers containing rotated landscape content. They are simulator captures, not photographs or physical-device evidence.
@@ -192,6 +195,7 @@ For a useful bug report, include the commit, target/OS, controller model if rele
 | --- | --- |
 | [`apple/`](apple/) | Native iPad host, rendering integration and shared Apple controls |
 | [`scripts/build-etpad.sh`](scripts/build-etpad.sh) | Public macOS / simulator / device export interface |
+| [`scripts/check-apple-package.py`](scripts/check-apple-package.py) | Read-only architecture, dependency, signature and media-boundary audit |
 | [`docs/BUILDING.md`](docs/BUILDING.md) | Reproducible builds, launch commands and optional Mac bots |
 | [`docs/GAME_DATA.md`](docs/GAME_DATA.md) | Official data source, hash pins and licensing boundary |
 | [`docs/CONTROLS.md`](docs/CONTROLS.md) | Complete controller mapping and input validation limits |
@@ -204,9 +208,9 @@ For a useful bug report, include the commit, target/OS, controller model if rele
 
 ETPad builds on [ET: Legacy](https://github.com/etlegacy/etlegacy), the open-source engine and Legacy mod derived from id Software and Splash Damage's Wolfenstein: Enemy Territory. Upstream history and notices are retained. The Apple work starts from upstream commit `f49e6db1e54eb292b4abe9e761210bf98522672f`, with the pristine `etlegacy-libs` pin recorded in the repository.
 
-Apple integration uses SDL, GL4ES, ANGLE and Omni-bot. The iPad bot core is built from pinned source with pinned GameMonkey/Boost inputs; script/navigation data comes from a hash-verified official distribution, excluding its downloaded native executable. Adapted Apple host, rendering and control components credit UTP, TribesPad and GoldenPad; the report flow also draws on SunPad. [DECISIONS.md](docs/DECISIONS.md) records exact reference commits and copied/adapted components. Dependency license notices ship with exported artifacts.
+Apple integration uses SDL, GL4ES, ANGLE and Omni-bot, with MoltenVK for the optional Vulkan backend. The iPad bot core is built from pinned source with pinned GameMonkey/Boost inputs; script/navigation data comes from a hash-verified official distribution, excluding its downloaded native executable. Adapted Apple host, rendering and control components credit UTP, TribesPad and GoldenPad; the report flow also draws on SunPad. [DECISIONS.md](docs/DECISIONS.md) records exact reference commits and copied/adapted components. Dependency license notices ship with exported artifacts.
 
-ET: Legacy engine/mod source is GPLv3-or-later, subject to the additional terms and exclusions below; see [COPYING.txt](COPYING.txt). This does not relicense the original game media. Source control excludes original media, installers, saves, downloaded bot distributions, signing material and generated builds. Exported apps exclude original media, installers, saves, the prebuilt macOS bot runtime and signing material. iPad apps include the source-built bot framework and verified script/navigation data. Packages include the GPL Legacy mod-data pack, not the original Wolfenstein: Enemy Territory media.
+ET: Legacy engine/mod source is GPLv3-or-later, subject to the additional terms and exclusions below; see [COPYING.txt](COPYING.txt). This does not relicense the original game media. Source control excludes original media, installers, saves, downloaded bot distributions, signing material and generated builds. Exported apps exclude original media, installers, saves, the prebuilt macOS bot runtime and signing material. iPad apps include the source-built bot framework and verified script/navigation data. Packages include the GPL Legacy mod pack, not the original Wolfenstein: Enemy Territory media. The Mac pack may include its own matching source-built native modules; the iPad pack is data-only.
 
 For upstream development guidance, see [CONTRIBUTING.md](CONTRIBUTING.md) and the [ET: Legacy project](https://github.com/etlegacy/etlegacy).
 

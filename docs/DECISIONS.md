@@ -97,3 +97,23 @@ Context: the macOS Omni-bot binary cannot run on iOS. Fresh dependency investiga
 Decision: build jswigart/omni-bot b3f10f334de625765100bbfeacc5eac95c098607 (historical 0.83 tree reporting 0.93), gmscriptex 2d24f6e500c327aa2e99f3572e8e2f4b285e37f4 and Boost 1.85.0 in private build copies via scripts/build_omnibot.py. Patch desktop-only frameworks/compiler flags, generate a signable framework, and redirect the bot's writable root to fs_homepath/omni-bot. Embed only script/navigation data from the SHA-256-verified official ET: Legacy bot archive; exclude its macOS executable. Preserve dependency notices and a reproducibility receipt. The iOS game interface ignores writable omnibot_path/lib and loads only Frameworks/ETPadOmnibot.framework/ETPadOmnibot.
 
 Evidence: public build driver succeeds with deep/strict simulator signature validation; real local Oasis bot round covers first-tap class/team selection, touch fire/reload, bot-inflicted death, tapout/respawn, assisted Old City capture and timed intermission (bots-resumed.log/png). No physical-iPad claim. Reversal: source pin or dependency compatibility fails on a supported SDK, or an upstream signed/static bot integration replaces this narrow adaptation. Never load a downloaded native bot core.
+
+## 2026-11-16 — Touch and menu visual refinement
+
+Context: Chris rejected the first touch-control appearance and requested better three-dot-menu organization. A fresh native screenshot audit is in UI-DESIGN.md.
+
+Decision: refine the existing native UIKit surface with SF Symbols and short captions, compact role-based control sizes, opaque labels over adjustable translucent black faces, pressed-only action tints, and final hit bounds of at least 44 points. Preserve custom centers, left-handed layout, controller hiding, action vocabulary and release semantics. Native UIMenu separates play shortcuts, settings, tools and support; controller bindings use a compact chip. Ellipsis capsule appearance adapts read-only Kartpad apple/ios/KartPadMenuButton.h at 90647e905db8afd10b4dde8e18ed4e44f234c6fc, preserving the original reference's UIKit configuration approach. No raster/illustration assets are copied or generated.
+
+Reversal: observed HUD overlap, failed input, inaccessible sizing or physical comfort testing requires adjustment. Simulator screenshots establish visual placement and basic action behavior only; they do not certify physical multi-touch ergonomics or complete accessibility compliance.
+
+## 2026-11-16 — Optional Vulkan comparison and relocatable framework packaging
+
+Context: ANGLE works, but the goal requests measurements for both backends. MoltenVK's upstream CMake path assumed desktop frameworks; the simulator rejects indexed draws with a nonzero base vertex.
+
+Decision: provide an opt-in ETPAD_RENDERER=vulkan simulator variant, keeping ANGLE default. Build pinned MoltenVK 1.4.2 from a SHA-256-verified archive in an ignored private copy, replacing AppKit/IOKit with UIKit/CoreGraphics there. Build shaderc on the Mac host with Apple's Python 3.9. Load only the exact embedded MoltenVK framework path on iOS, ignoring external loader overrides. For iOS arena draws, move the vertex binding by baseVertex×stride and draw with zero base vertex; cache the byte offset so static/indirect paths restore zero correctly. Desktop retains its prior draw semantics.
+
+Evidence: real Vulkan Oasis, team/class menus and engineer fire/reload with active local bots and no VK_ERROR (vulkan-resumed.log/png). Selected 600-frame spectator windows: CPU mean 2.660–3.621 ms, p95 3.541–5.172 ms, interval 16.667–16.722 ms. Engineer/bot windows vary more; BUILDING records the ranges. Logical scene 1280×882, swapchain 1210×834; this is exploratory simulator observation, not a matched controlled benchmark or physical GPU claim.
+
+Package audits reject original media, private runtime data, foreign executables and absolute build/homebrew dependencies/search paths. CMake uses relocatable @loader_path/.. framework rpaths; own framework version/platform metadata is completed before Xcode embeds/signs. Additional bot dependency notices are preserved, including original Logger/WildMagic historical terms; compatibility review remains part of future release preparation. Reversal: native/device tests show a renderer or package regression; keep the default ANGLE artifact independently buildable.
+
+Final packaging evidence: package-resumed.txt covers Mac, default ANGLE, optional Vulkan and unsigned bot-enabled device output. MoltenVK exports preserve cereal, SPIRV-Cross and Vulkan-Headers license/attribution notices. IPA staging is recreated per export, omits AppleDouble resource metadata and matches the audited device app file for file.

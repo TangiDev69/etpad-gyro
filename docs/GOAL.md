@@ -1,3 +1,5 @@
+User amendment, 2026-11-16 (design pass): improve the touch-control appearance and organization of the three-dot menu; inspect current native screens, implement, visually verify and push with the ongoing changes.
+
 User amendment, 2026-11-16: continue in parallel, improve README to Kartpad quality, and push changes to the existing GitHub repository. This supersedes the original no-push restriction below for origin/etpad only. No release, tag, new repository, post or PadMint catalog edit is authorized. Parallel source/docs work is allowed; builds remain serial.
 
 GOAL: ETPad (working name). Wolfenstein: Enemy Territory through ET: Legacy, native on macOS and iPad.

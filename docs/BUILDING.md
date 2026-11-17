@@ -31,7 +31,7 @@ The one reserved simulator is documented in SIMULATOR.md. Every simulator operat
 scripts/build-etpad.sh --platform macos --output build/output --zip build/output/ETPad-mac.zip
 ```
 
-The macOS package contains the source-built app, renderer, Legacy native modules and GPL mod-data pack. It excludes original pak0/1/2. The default simulator app embeds five engine/module frameworks plus the source-built ETPadOmnibot.framework, with ad hoc signatures, and ANGLE. Earlier device output is unsigned until a signing identity is available; a fresh bot-enabled device build/package check is pending.
+The macOS package contains the source-built app, renderer, Legacy native modules and GPL mod pack. Its upstream native-module entries must be byte-identical to the corresponding separately exported source-built modules; other native archive entries are rejected. The iPad Legacy pack is data-only. It excludes original pak0/1/2. The default simulator app embeds five engine/module frameworks plus the source-built ETPadOmnibot.framework, with ad hoc signatures, and ANGLE. The fresh bot-enabled device app/IPA is unsigned; its strict package audit passes, but installation requires signing.
 
 Local baseline launch (after copying owned paks into build/macos/etmain):
 
@@ -117,4 +117,36 @@ After the local map loads, open Console again:
 bot maxbots 4
 ```
 
-Use **Game Menu** or the touch MENU button to open Limbo, choose Allies, select the engineer wrench and confirm **OK**. The simulator test loaded core version 0.93, produced four active Oasis bots, selected engineer on the first tap, fired from 30 to 25 rounds and reloaded to 30/25 ammunition, then encountered a bot kill at the objective. After the bot kill, `forcetapout` and respawn returned the engineer at 110 HP. Objective interaction then used `god`, `setviewpos` and forward movement to capture Old City (5 XP), and a reduced time limit produced AXIS WIN intermission. This verifies an assisted round, not unassisted traversal or physical input. Evidence: [bot-round log](evidence/ios-sim/bots-resumed.log), [respawn/objective](evidence/ios-sim/bots-respawn-objective.png) and [intermission](evidence/ios-sim/bots-intermission.png). No physical iPad or physical-controller acceptance is claimed. The fresh macOS shared-code regression, bot-enabled device build, package audit and Vulkan runtime comparison remain pending.
+Use **Game Menu** or the touch MENU button to open Limbo, choose Allies, select the engineer wrench and confirm **OK**. The simulator test loaded core version 0.93, produced four active Oasis bots, selected engineer on the first tap, fired from 30 to 25 rounds and reloaded to 30/25 ammunition, then encountered a bot kill at the objective. After the bot kill, `forcetapout` and respawn returned the engineer at 110 HP. Objective interaction then used `god`, `setviewpos` and forward movement to capture Old City (5 XP), and a reduced time limit produced AXIS WIN intermission. This verifies an assisted round, not unassisted traversal or physical input. Evidence: [bot-round log](evidence/ios-sim/bots-resumed.log), [respawn/objective](evidence/ios-sim/bots-respawn-objective.png) and [intermission](evidence/ios-sim/bots-intermission.png). No physical iPad or physical-controller acceptance is claimed. The final macOS shared-guard repeat, refreshed default ANGLE UI/package checks and bot-enabled unsigned device build/audit also pass; see [final package audit](evidence/package-resumed.txt). Optional Vulkan simulator runtime and strict package audit now pass, as described below.
+
+
+## Optional Vulkan/MoltenVK simulator renderer
+
+ANGLE/GL4ES remains the default. To build the optional source-built Vulkan renderer and MoltenVK simulator variant:
+
+```sh
+ETPAD_RENDERER=vulkan scripts/build-etpad.sh --platform simulator --output build/output
+ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 \
+  scripts/sim.sh test "$PWD/build/output/ETPad-simulator-vulkan.app" \
+  com.etpad.ETPad --etpad-vulkan --etpad-oasis
+```
+
+This variant embeds ETPadVulkanRenderer.framework and MoltenVK.framework alongside the default engine/bot/ANGLE frameworks. Its strict package audit passes architectures/platforms, bundled/system dependencies, runtime search paths, signatures, notices and media exclusions. The source-built bot core and its script/navigation setup are the same as above. Device Vulkan runtime is not tested.
+
+The first resumed runtime produced a magenta screen because the simulator's Apple2 feature set rejected nonzero base-vertex draws. The iOS vertex-binding-offset fallback then rendered full Oasis with active local bots, native touch MENU → Limbo/team/class/OK, engineer fire 25/30 and reload 30/25, with no VK_ERROR in the accepted log. Evidence: [accepted runtime log](evidence/ios-sim/vulkan-resumed.log), [Oasis screenshot](evidence/ios-sim/vulkan-oasis.png), and the retained [first failure log](evidence/ios-sim/vulkan-resume-attempt1.log) / [screenshot](evidence/ios-sim/vulkan-resume-failure1.png).
+
+Selected steady spectator windows recorded CPU means 2.660–3.621 ms, p95 3.541–5.172 ms and display intervals 16.667–16.722 ms. Selected steady engineer/bot windows recorded CPU means 6.784–11.491 ms, p95 15.409–29.693 ms and intervals 16.858–18.809 ms; the initial team-entry transition is excluded. The scene was logically 1280×882 while the actual MoltenVK swapchain was 1210×834. Earlier ANGLE windows used a different gameplay state and surface configuration. These observations are not a matched controlled benchmark, a physical-device performance guarantee or a renderer-winner claim.
+
+
+## Read-only package audit
+
+Run after exporting an app/package; these checks do not build, launch, sign or modify the artifact:
+
+```sh
+/usr/bin/python3 scripts/check-apple-package.py --platform macos build/output/ETPad-mac
+/usr/bin/python3 scripts/check-apple-package.py --platform simulator build/output/ETPad-simulator.app
+/usr/bin/python3 scripts/check-apple-package.py --platform simulator build/output/ETPad-simulator-vulkan.app
+/usr/bin/python3 scripts/check-apple-package.py --platform device build/output/ETPad-device.app
+```
+
+The Mac command takes the whole package directory, including its app and separate renderer/modules. iOS commands take an exported `.app`, not an IPA. Mac PK3 native entries must match the separately exported own modules byte for byte; iOS PK3 files must be data-only. Device signatures are not required by this audit, so passing it does not establish installability or physical-device runtime acceptance.
