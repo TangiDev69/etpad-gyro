@@ -20,19 +20,47 @@ private final class TouchActionButton: UIButton {
     var accent = UIColor.white
     var editingLayout = false
     var opacity:CGFloat = 0.72
+    private(set) var actionTitle = ""
+    private let symbolView=UIImageView(),caption=UILabel()
+    private var primary=false,utility=false
     override var isHighlighted: Bool { didSet { updateFace() } }
+    func configure(title:String,symbol:String,primary:Bool,utility:Bool) {
+        actionTitle=title;self.primary=primary;self.utility=utility
+        let symbolSize:CGFloat=primary ? 26:(utility ? 15:21)
+        symbolView.image=UIImage(systemName:symbol,withConfiguration:UIImage.SymbolConfiguration(pointSize:symbolSize,weight:.semibold))
+        caption.text=title;caption.font = .roundedBold(size:primary ? 12:(utility ? 9:10))
+        accessibilityLabel=title
+    }
     func updateFace() {
-        backgroundColor=(isHighlighted && !editingLayout ? accent.withAlphaComponent(0.8):UIColor.black.withAlphaComponent(0.46))
-        layer.borderColor=UIColor.white.withAlphaComponent(0.34).cgColor;layer.borderWidth=1
-        alpha=opacity
+        // Opacity controls the face, keeping symbols and captions readable.
+        let pressed=isHighlighted && !editingLayout
+        backgroundColor=pressed ? accent.withAlphaComponent(0.82):UIColor.black.withAlphaComponent(0.18+opacity*0.46)
+        layer.borderColor=UIColor.white.withAlphaComponent(editingLayout ? 0.65:(pressed ? 0.75:0.28)).cgColor
+        layer.borderWidth=primary ? 1.3:0.8
+        symbolView.tintColor = .white;caption.textColor = .white
+        alpha=1
     }
     override init(frame:CGRect) {
         super.init(frame:frame)
         isMultipleTouchEnabled=false;isExclusiveTouch=false
-        titleLabel?.font = .roundedBold(size:13)
-        setTitleColor(.white,for:.normal)
+        symbolView.contentMode = .scaleAspectFit
+        caption.textAlignment = .center;caption.adjustsFontSizeToFitWidth=true;caption.minimumScaleFactor=0.8
+        symbolView.isUserInteractionEnabled=false;caption.isUserInteractionEnabled=false
+        addSubview(symbolView);addSubview(caption)
+        layer.shadowColor=UIColor.black.cgColor;layer.shadowOpacity=0.16
+        layer.shadowRadius=3;layer.shadowOffset=CGSize(width:0,height:1)
         addTarget(self,action:#selector(down),for:.touchDown)
         addTarget(self,action:#selector(up),for:[.touchUpInside,.touchUpOutside,.touchCancel])
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let iconSide:CGFloat=primary ? min(28,max(20,bounds.height*0.35)):(utility ? 17:23)
+        let gap:CGFloat=utility ? 2:4
+        let captionHeight:CGFloat=primary ? 15:(utility ? 11:13)
+        let top=(bounds.height-iconSide-gap-captionHeight)/2
+        symbolView.frame=CGRect(x:(bounds.width-iconSide)/2,y:top,width:iconSide,height:iconSide)
+        caption.frame=CGRect(x:2,y:top+iconSide+gap,width:bounds.width-4,height:captionHeight)
+        layer.shadowPath=UIBezierPath(roundedRect:bounds,cornerRadius:bounds.height/2).cgPath
     }
     required init?(coder:NSCoder) { fatalError("init(coder:)") }
     @objc private func down(){ if !editingLayout { edge?(true) } }
@@ -51,24 +79,25 @@ private extension UIFont {
 }
 final class GoldenPadTouchOverlay: UIView {
     struct Action {
-        let title:String, command:String
-        let x:CGFloat,y:CGFloat,scale:CGFloat
+        let title:String,command:String,symbol:String
+        // Aiming controls are inset from the lower-right safe corner. Utility
+        // offsets are relative to the center of the separate compact diamond.
+        let x:CGFloat,y:CGFloat,diameter:CGFloat
         let tint:UIColor
+        var utility:Bool { ["SCORE","PREV","NEXT","USE"].contains(title) }
     }
-    // GoldenPad tablet FIRE/ALT/JUMP thumb arc; ET's additional aiming actions
-    // occupy the inner/lower arc. The utility diamond stays separate.
     static let actions:[Action] = [
-        .init(title:"FIRE",command:"+attack",x:0.91,y:0.71,scale:1.16,tint:.systemRed),
-        .init(title:"ALT",command:"weapalt",x:0.91,y:0.56,scale:1,tint:.systemOrange),
-        .init(title:"JUMP",command:"+moveup",x:0.91,y:0.86,scale:0.94,tint:.systemBlue),
-        .init(title:"CROUCH",command:"+movedown",x:0.81,y:0.89,scale:0.82,tint:.systemTeal),
-        .init(title:"PRONE",command:"+prone",x:0.71,y:0.89,scale:0.82,tint:.systemPurple),
-        .init(title:"RELOAD",command:"+reload",x:0.78,y:0.58,scale:0.9,tint:.systemYellow),
-        .init(title:"SCORE",command:"+scores",x:0.36,y:0.64,scale:0.72,tint:.systemGray),
-        .init(title:"PREV",command:"weapprev",x:0.30,y:0.74,scale:0.72,tint:.systemGray),
-        .init(title:"NEXT",command:"weapnext",x:0.42,y:0.74,scale:0.72,tint:.systemGray),
-        .init(title:"USE",command:"+activate",x:0.36,y:0.84,scale:0.72,tint:.systemGreen),
-        .init(title:"MENU",command:"togglemenu",x:0.50,y:0.92,scale:0.72,tint:.systemGray)]
+        .init(title:"FIRE",command:"+attack",symbol:"scope",x:82,y:190,diameter:84,tint:.systemRed),
+        .init(title:"ALT",command:"weapalt",symbol:"arrow.triangle.2.circlepath",x:84,y:282,diameter:62,tint:.systemOrange),
+        .init(title:"JUMP",command:"+moveup",symbol:"arrow.up",x:88,y:100,diameter:64,tint:.systemBlue),
+        .init(title:"CROUCH",command:"+movedown",symbol:"arrow.down",x:171,y:126,diameter:62,tint:.systemTeal),
+        .init(title:"PRONE",command:"+prone",symbol:"arrow.down.to.line",x:250,y:111,diameter:60,tint:.systemPurple),
+        .init(title:"RELOAD",command:"+reload",symbol:"arrow.clockwise",x:172,y:263,diameter:64,tint:.systemYellow),
+        .init(title:"SCORE",command:"+scores",symbol:"list.number",x:0,y:-56,diameter:48,tint:.systemGray),
+        .init(title:"PREV",command:"weapprev",symbol:"chevron.left",x:-56,y:0,diameter:48,tint:.systemGray),
+        .init(title:"NEXT",command:"weapnext",symbol:"chevron.right",x:56,y:0,diameter:48,tint:.systemGray),
+        .init(title:"USE",command:"+activate",symbol:"hand.tap",x:0,y:56,diameter:48,tint:.systemGreen),
+        .init(title:"MENU",command:"togglemenu",symbol:"line.3.horizontal",x:0,y:0,diameter:64,tint:.systemGray)]
     var onAction:((String,Bool)->Void)?
     var onMove:((CGPoint)->Void)?
     var onLook:((CGPoint)->Void)?
@@ -87,8 +116,9 @@ final class GoldenPadTouchOverlay: UIView {
             guide.backgroundColor=UIColor.black.withAlphaComponent(0.25);guide.layer.borderColor=UIColor.white.withAlphaComponent(0.4).cgColor;guide.layer.borderWidth=1;guide.isHidden=true;guide.isUserInteractionEnabled=false;addSubview(guide)
         }
         for action in Self.actions {
-            let button=TouchActionButton(frame:.zero);button.setTitle(action.title,for:.normal)
-            button.accessibilityLabel=action.title;button.accent=action.tint
+            let button=TouchActionButton(frame:.zero)
+            button.configure(title:action.title,symbol:action.symbol,primary:action.title=="FIRE",utility:action.utility || action.title=="MENU")
+            button.accent=action.tint
             button.edge = { [weak self] pressed in self?.onAction?(action.command,pressed) }
             button.addGestureRecognizer(UIPanGestureRecognizer(target:self,action:#selector(arrange(_:))))
             buttons[action.title]=button;addSubview(button)
@@ -99,15 +129,29 @@ final class GoldenPadTouchOverlay: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let safe=bounds.inset(by:safeAreaInsets)
-        let base=min(min(94,max(62,safe.width*0.075))*configuration.size,max(44,(safe.height*0.15-12)*2/(1.16+1)))
+        let responsive=min(1,min(safe.width/1100,safe.height/720))
+        let spacing=max(0.85,responsive)*max(1,configuration.size)
+        let utilityCenter=CGPoint(x:safe.minX+safe.width*0.33,y:safe.maxY-185*spacing)
         for action in Self.actions {
             guard let button=buttons[action.title] else { continue }
+            let defaultCenter:CGPoint
+            if action.title=="MENU" {
+                // Bottom-align inside the safe area, below ET's spectator label.
+                let menuHeight=max(44,44*configuration.size)
+                defaultCenter=CGPoint(x:safe.midX,y:safe.maxY-menuHeight/2-4)
+            } else if action.utility {
+                defaultCenter=CGPoint(x:utilityCenter.x+action.x*spacing,y:utilityCenter.y+action.y*spacing)
+            } else {
+                defaultCenter=CGPoint(x:safe.maxX-action.x*spacing,y:safe.maxY-action.y*spacing)
+            }
             let custom=configuration.centers[action.title]
-            let x=custom.map { CGFloat($0[0]) } ?? action.x,y=custom.map { CGFloat($0[1]) } ?? action.y
+            let x=custom.map { CGFloat($0[0]) } ?? (defaultCenter.x-safe.minX)/safe.width
+            let y=custom.map { CGFloat($0[1]) } ?? (defaultCenter.y-safe.minY)/safe.height
             let center=CGPoint(x:safe.minX+(configuration.leftHanded ? 1-x:x)*safe.width,y:safe.minY+y*safe.height)
-            let side=base*action.scale
-            button.bounds=CGRect(x:0,y:0,width:side,height:action.title=="MENU" ? side*0.54:side)
-            button.center=CGPoint(x:max(safe.minX+side/2,min(safe.maxX-side/2,center.x)),y:max(safe.minY+side/2,min(safe.maxY-side/2,center.y)))
+            let width=max(44,action.diameter*responsive*configuration.size)
+            let height=action.title=="MENU" ? max(44,44*configuration.size):width
+            button.bounds=CGRect(x:0,y:0,width:width,height:height)
+            button.center=CGPoint(x:max(safe.minX+width/2,min(safe.maxX-width/2,center.x)),y:max(safe.minY+height/2,min(safe.maxY-height/2,center.y)))
             button.layer.cornerRadius=button.bounds.height/2
             button.editingLayout=arranging;button.opacity=configuration.opacity;button.updateFace()
             button.gestureRecognizers?.forEach { $0.isEnabled=arranging }
@@ -118,7 +162,8 @@ final class GoldenPadTouchOverlay: UIView {
         } else if moveTouch==nil && lookTouch==nil { moveGuide.isHidden=true;lookGuide.isHidden=true }
     }
     @objc private func arrange(_ recognizer:UIPanGestureRecognizer) {
-        guard arranging,let button=recognizer.view as? TouchActionButton,let title=button.title(for:.normal) else { return }
+        guard arranging,let button=recognizer.view as? TouchActionButton else { return }
+        let title=button.actionTitle
         let location=recognizer.location(in:self),safe=bounds.inset(by:safeAreaInsets)
         var x=(location.x-safe.minX)/safe.width;if configuration.leftHanded { x=1-x }
         configuration.centers[title]=[Double(x),Double((location.y-safe.minY)/safe.height)]

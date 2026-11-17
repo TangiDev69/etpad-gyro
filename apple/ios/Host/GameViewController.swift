@@ -6,11 +6,12 @@ import UniformTypeIdentifiers
 
 final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private var started=false,engineReady=false,checking=false,dataReady=false
-    private var showTouch=true,autoHide=true
+    private var showTouch=true
+    private var autoHide:Bool { overlay.configuration.hideWithController }
     private var displayLink:CADisplayLink?
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
-    private let status=UILabel(),prompts=UILabel(),menu=UIButton(type:.system)
+    private let status=UILabel(),prompts=UIButton(type:.system),menu=UIButton(type:.system)
     private let downloadButton=UIButton(type:.system),importButton=UIButton(type:.system),playButton=UIButton(type:.system)
     private let overlay=GoldenPadTouchOverlay(frame:.zero),surface=GameSurfaceInputView(frame:.zero)
     private var gameHome:URL { dataManager.home }
@@ -25,16 +26,37 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     override func viewDidLoad(){
         super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black
         showTouch=UserDefaults.standard.object(forKey:"etpad.showTouch") as? Bool ?? true
-        autoHide=UserDefaults.standard.object(forKey:"etpad.autoHide") as? Bool ?? true
+        // Migrate the two older switches without changing effective visibility.
+        let legacyAutoHide=UserDefaults.standard.object(forKey:"etpad.autoHide") as? Bool ?? true
+        overlay.configuration.hideWithController=legacyAutoHide && overlay.configuration.hideWithController
+        UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
         view.addSubview(surface);view.addSubview(overlay)
         status.text="ETPad\nChecking original game data…";status.textColor = .white;status.numberOfLines=0;status.textAlignment = .center
         status.font = .systemFont(ofSize:18,weight:.medium);view.addSubview(status)
-        prompts.font = .systemFont(ofSize:12,weight:.semibold);prompts.textColor = .white;prompts.textAlignment = .center;prompts.numberOfLines=2;view.addSubview(prompts)
+        var controllerStyle=UIButton.Configuration.plain()
+        controllerStyle.image=UIImage(systemName:"gamecontroller.fill");controllerStyle.imagePadding=7
+        controllerStyle.baseForegroundColor = .white;controllerStyle.cornerStyle = .capsule
+        controllerStyle.background.backgroundColor=UIColor(white:0.06,alpha:0.72)
+        controllerStyle.contentInsets=NSDirectionalEdgeInsets(top:7,leading:12,bottom:7,trailing:12)
+        controllerStyle.titleTextAttributesTransformer=UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing=incoming;outgoing.font=UIFont.systemFont(ofSize:12,weight:.semibold);return outgoing
+        }
+        prompts.configuration=controllerStyle;prompts.addTarget(self,action:#selector(mapping),for:.touchUpInside)
+        prompts.accessibilityHint="Opens controller button mapping";view.addSubview(prompts)
         for (button,title,action) in [(downloadButton,"Download Free Game Data",#selector(downloadData)),(importButton,"Import Game Data",#selector(importData)),(playButton,"Play ETPad",#selector(play))] {
             button.setTitle(title,for:.normal);button.backgroundColor=UIColor.white.withAlphaComponent(0.1);button.layer.cornerRadius=12
             button.addTarget(self,action:action,for:.touchUpInside);view.addSubview(button)
         }
-        menu.setImage(UIImage(systemName:"ellipsis"),for:.normal);menu.tintColor = .white;menu.backgroundColor=UIColor.black.withAlphaComponent(0.65);menu.layer.cornerRadius=22
+        // Capsule appearance adapted from Kartpad apple/ios/KartPadMenuButton.h,
+        // commit 90647e905db8afd10b4dde8e18ed4e44f234c6fc (read-only reference).
+        var menuStyle=UIButton.Configuration.plain()
+        menuStyle.image=UIImage(systemName:"ellipsis",withConfiguration:UIImage.SymbolConfiguration(pointSize:20,weight:.semibold))?.withTintColor(.white,renderingMode:.alwaysOriginal)
+        menuStyle.baseForegroundColor = .white;menuStyle.cornerStyle = .capsule
+        menuStyle.contentInsets = .zero
+        menuStyle.background.backgroundColor=UIColor(white:0.06,alpha:0.72)
+        menuStyle.background.cornerRadius=20;menuStyle.background.strokeColor=UIColor.white.withAlphaComponent(0.30)
+        menuStyle.background.strokeWidth=1
+        menu.automaticallyUpdatesConfiguration=false;menu.configuration=menuStyle;menu.tintColor = .white
         menu.showsMenuAsPrimaryAction=true;menu.accessibilityLabel="ETPad menu";view.addSubview(menu)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
         overlay.onMove = { [weak self] value in if self?.engineReady == true { etpad_touch_move(Float(value.x),Float(value.y)) } }
@@ -76,7 +98,8 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         super.viewDidLayoutSubviews();surface.frame=view.bounds;overlay.frame=view.bounds
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         menu.frame=CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44)
-        prompts.frame=CGRect(x:safe.midX-300,y:safe.minY+12,width:600,height:48)
+        let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
+        prompts.frame=CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44)
         status.frame=CGRect(x:safe.midX-350,y:safe.midY-140,width:700,height:150)
         downloadButton.frame=CGRect(x:safe.midX-160,y:safe.midY+20,width:320,height:48)
         importButton.frame=CGRect(x:safe.midX-160,y:safe.midY+80,width:320,height:48)
@@ -135,16 +158,19 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     }
     private func releaseInputs(){overlay.releaseAll();if engineReady { etpad_release_inputs() }}
     private func refreshPrompts(){
-        guard let controller=GCController.controllers().first else { prompts.text="";updateTouchVisibility();return }
+        guard let controller=GCController.controllers().first else {
+            prompts.isHidden=true;updateTouchVisibility();return
+        }
         let profile=controller.physicalInputProfile
         let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
-        let labels = playStation ? "✕ Jump   ○ Crouch   □ Reload   △ Use" : "A Jump   B Crouch   X Reload   Y Use"
-        let shoulders=playStation ? "R2 Fire · L2 Alt · L1 Utilities · R1 Weapons" : profile is GCXboxGamepad ? "RT Fire · LT Alt · LB Utilities · RB Weapons" : "Right trigger Fire · Left trigger Alt · Shoulders Utilities / Weapons"
-        prompts.text="\(controller.vendorName ?? "Controller") · \(shoulders)\n\(labels)"
-        updateTouchVisibility()
+        let family=playStation ? "PlayStation" : profile is GCXboxGamepad ? "Xbox" : "Controller"
+        let quickBindings=playStation ? "R2 Fire · ✕ Jump · □ Reload" : "RT Fire · A Jump · X Reload"
+        prompts.setTitle(quickBindings,for:.normal)
+        prompts.accessibilityLabel="\(controller.vendorName ?? family) connected. Controller Button Mapping"
+        prompts.isHidden=false;view.setNeedsLayout();updateTouchVisibility()
     }
     private func updateTouchVisibility(){
-        let controllerHides=autoHide && overlay.configuration.hideWithController && !GCController.controllers().isEmpty
+        let controllerHides=autoHide && !GCController.controllers().isEmpty
         let active=hostOnly || (engineReady && etpad_gameplay() != 0)
         let hidden = !overlay.arranging && (!showTouch || controllerHides || !active)
         if hidden && !overlay.isHidden { overlay.releaseAll() };overlay.isHidden=hidden
@@ -158,29 +184,53 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             if frameTimes.count>=600 {
                 let sorted=frameTimes.sorted(),average=frameTimes.reduce(0,+)/Double(frameTimes.count)
                 let interval=intervals.isEmpty ? 0:intervals.reduce(0,+)/Double(intervals.count)
-                NSLog("ETPad TIMING ANGLE_GL4ES frames=%d cpu_avg_ms=%.3f cpu_p95_ms=%.3f interval_avg_ms=%.3f",frameTimes.count,average,sorted[Int(Double(sorted.count-1)*0.95)],interval)
+                NSLog("ETPad TIMING renderer=%@ pixels=%dx%d frames=%d cpu_avg_ms=%.3f cpu_p95_ms=%.3f interval_avg_ms=%.3f",String(cString:etpad_renderer()),etpad_render_width(),etpad_render_height(),frameTimes.count,average,sorted[Int(Double(sorted.count-1)*0.95)],interval)
                 frameTimes.removeAll(keepingCapacity:true);intervals.removeAll(keepingCapacity:true)
             }
         }
         updateTouchVisibility()
     }
-    private func action(_ title:String,state:Bool?=nil,_ handler:@escaping()->Void)->UIAction {
-        UIAction(title:title,state:state==true ? .on:.off) { _ in handler() }
+    private func action(_ title:String,icon:String?=nil,fullTitle:String?=nil,state:Bool?=nil,attributes:UIAction.Attributes=[],_ handler:@escaping()->Void)->UIAction {
+        UIAction(title:title,image:icon.flatMap { UIImage(systemName:$0) },discoverabilityTitle:fullTitle,attributes:attributes,state:state==true ? .on:.off) { _ in handler() }
+    }
+    private func setAutoHide(_ enabled:Bool){
+        overlay.configuration.hideWithController=enabled
+        refreshMenu()
     }
     private func refreshMenu(){
-        let controls=UIMenu(title:"Controls",children:[
-            action("Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},
-            action("Auto-Hide Touch Controls",state:autoHide){[weak self] in guard let s=self else{return};s.autoHide.toggle();UserDefaults.standard.set(s.autoHide,forKey:"etpad.autoHide");s.refreshMenu()},
-            action("Controller Button Mapping…"){[weak self] in self?.mapping()},
-            action("Touch Control Settings…"){[weak self] in self?.touchSettings()},
-            action(overlay.arranging ? "Done Arranging Controls":"Arrange Controls"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])
-        let display=UIMenu(title:"Display",children:[
-            UIMenu(title:"Render Resolution",children:[960,1280,1600,1920].map { width in action("\(width) pixels wide",state:UserDefaults.standard.integer(forKey:"etpad.renderWidth")==width){[weak self] in self?.resolution(width)} }),
-            action("Field of View…"){[weak self] in self?.fieldOfView()},
-            action("Show FPS Counter",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])
-        let online=UIMenu(title:"Online",children:[action("Player Name…"){[weak self] in self?.playerName()},action("Favorite Servers"){[weak self] in self?.favorites()}])
-        let data=UIMenu(title:"Game Data & Saves",children:[action("Download Free Game Data"){[weak self] in self?.downloadData()},action("Import or Reimport Game Data"){[weak self] in self?.importData()},action("Remove Stored Game Data"){[weak self] in self?.removeData()}])
-        menu.menu=UIMenu(title:"ETPad",children:[controls,display,online,data,action("Game Menu"){[weak self] in self?.command("togglemenu")},action("Console…"){[weak self] in self?.console()},action("Game Keyboard…"){[weak self] in self?.gameKeyboard()},action("Report a Problem…"){[weak self] in self?.reportProblem()}])
+        // Layout restore/import also changes this one canonical setting.
+        UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
+        let visibility=UIMenu(options:.displayInline,children:[
+            action("Show Controls",icon:"hand.tap",fullTitle:"Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},
+            action("Auto-Hide Controls",icon:"eye.slash",fullTitle:"Auto-Hide Touch Controls",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}])
+        let layout=UIMenu(options:.displayInline,children:[
+            action("Touch Settings…",icon:"slider.horizontal.3",fullTitle:"Touch Control Settings…"){[weak self] in self?.touchSettings()},
+            action(overlay.arranging ? "Done Arranging Controls":"Arrange Controls",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])
+        let controls=UIMenu(title:"Controls",image:UIImage(systemName:"gamecontroller"),children:[visibility,layout,
+            UIMenu(options:.displayInline,children:[action("Button Mapping…",icon:"gamecontroller",fullTitle:"Controller Button Mapping…"){[weak self] in self?.mapping()}])])
+        let display=UIMenu(title:"Display",image:UIImage(systemName:"display"),children:[
+            UIMenu(title:"Render Resolution",image:UIImage(systemName:"rectangle.expand.vertical"),children:[960,1280,1600,1920].map { width in action("\(width) pixels wide",state:UserDefaults.standard.integer(forKey:"etpad.renderWidth")==width){[weak self] in self?.resolution(width)} }),
+            action("Field of View…",icon:"viewfinder"){[weak self] in self?.fieldOfView()},
+            action("Show FPS Counter",icon:"speedometer",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])
+        let online=UIMenu(title:"Online",image:UIImage(systemName:"network"),children:[
+            action("Player Name…",icon:"person.crop.circle"){[weak self] in self?.playerName()},
+            action("Favorite Servers",icon:"star"){[weak self] in self?.favorites()}])
+        let data=UIMenu(title:"Game Data & Saves",image:UIImage(systemName:"folder"),children:[
+            UIMenu(options:.displayInline,children:[
+                action("Download Free Game Data",icon:"arrow.down.circle"){[weak self] in self?.downloadData()},
+                action("Import or Reimport Game Data",icon:"square.and.arrow.down"){[weak self] in self?.importData()}]),
+            UIMenu(options:.displayInline,children:[action("Remove Stored Game Data",icon:"trash",attributes:.destructive){[weak self] in self?.removeData()}])])
+        let tools=UIMenu(title:"Tools",image:UIImage(systemName:"wrench.and.screwdriver"),children:[
+            action("Console…",icon:"terminal"){[weak self] in self?.console()},
+            action("Game Keyboard…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}])
+        let play=UIMenu(title:"Play",options:.displayInline,children:[
+            action("Game Menu",icon:"pause.rectangle",attributes:engineReady ? []:.disabled){[weak self] in self?.command("togglemenu")},
+            action("Team & Class…",icon:"person.2",attributes:engineReady ? []:.disabled){[weak self] in self?.command("openlimbomenu")},
+            action("Toggle Map",icon:"map",attributes:engineReady ? []:.disabled){[weak self] in self?.command("ToggleAutoMap")}])
+        menu.menu=UIMenu(title:"ETPad",children:[play,
+            UIMenu(title:"Settings",options:.displayInline,children:[controls,display,online,data]),
+            UIMenu(options:.displayInline,children:[tools]),
+            UIMenu(options:.displayInline,children:[action("Report a Problem…",icon:"questionmark.circle"){[weak self] in self?.reportProblem()}])])
         updateTouchVisibility()
     }
     private func alert(_ title:String,_ message:String){let alert=UIAlertController(title:title,message:message,preferredStyle:.alert);alert.addAction(UIAlertAction(title:"OK",style:.default));present(alert,animated:true)}
@@ -197,7 +247,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             .slider("Opacity",0.25,1,Float(overlay.configuration.opacity)){[weak self] in self?.overlay.configuration.opacity=Double($0)},
             .slider("Size",0.7,1.3,Float(overlay.configuration.size)){[weak self] in self?.overlay.configuration.size=Double($0)},
             .toggle("Left-handed",overlay.configuration.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
-            .toggle("Hide with controller",overlay.configuration.hideWithController){[weak self] in self?.overlay.configuration.hideWithController=$0;self?.refreshMenu()},
+            .toggle("Hide with controller",autoHide){[weak self] in self?.setAutoHide($0)},
             .button("Arrange Controls"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
             .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
             .button("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}])
@@ -208,7 +258,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         for name in saved.keys.sorted(){rows.append(.button(name){[weak self] in if let data=saved[name],let config=try? JSONDecoder().decode(TouchConfiguration.self,from:data){self?.releaseInputs();self?.overlay.configuration=config;self?.refreshMenu()} })}
         presentSettings("Saved Layouts",rows:rows)
     }
-    private func mapping(){
+    @objc private func mapping(){
         let text="LS Move · RS Look\nRT Fire · LT Alt fire\nA / ✕ Jump · B / ○ Crouch\nX / □ Reload · Y / △ Use\nL3 Sprint · R3 Prone\nBack Score · Start Game menu\nD-pad: Map, Limbo, Previous, Next\n\nHold LB: A/B Lean · X/Y Vote Yes/No\nBack Console · Start Team · L3 Class\nD-pad: Medic, Need Ammo, Thanks, Affirmative\n\nHold RB: A/B/X/Y weapon banks 5–8\nBack 9 · Start 10 · L3 1 · R3 2\nD-pad Up/Down 3/4 · Left/Right Previous/Next"
         var rows:[HostSettingsViewController.Row]=[.button("View Default Mapping"){[weak self] in self?.alert("Default Controller Mapping",text)}]
         let saved=UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:]
@@ -306,12 +356,14 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
                     "+set","r_allowSoftwareGL","1","+set","r_swapInterval","0","+set","com_maxfps","250","+set","name",UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer",
                     "+set","cg_fov",String(Int(UserDefaults.standard.object(forKey:"etpad.fov") as? Double ?? 90)),
                     "+set","cg_drawFPS",UserDefaults.standard.bool(forKey:"etpad.fps") ? "1":"0"]
+        args += ["+set","cl_renderer",ProcessInfo.processInfo.arguments.contains("--etpad-vulkan") ? "vulkan":"opengles"]
         if ProcessInfo.processInfo.arguments.contains("--etpad-oasis") { args += ["+set","sv_pure","0","+set","g_gametype","2","+devmap","oasis"] }
         let pointers = args.map { strdup($0) }
         defer { pointers.forEach { free($0) } }
         var mutable = pointers + [nil]
         mutable.withUnsafeMutableBufferPointer { _ = etpad_engine_main(Int32(args.count),$0.baseAddress) }
         engineReady=true
+        refreshMenu()
         for (key,value) in UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:] {
             if Self.controllerKeys.contains(where:{$0.1==key}) && Self.bindingActions.contains(where:{$0.1==value}) { command("bind \(key) \"\(value)\"") }
         }
