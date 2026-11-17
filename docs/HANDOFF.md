@@ -156,3 +156,8 @@ Default optimized ANGLE simulator build and strict audit pass. Live checks pass 
 GitHub inspection found only origin/etpad, with no main branch. The verified history was published to both etpad and main, and GitHub default branch is now main; remote equality was verified at 595e18710 before this handoff-only follow-up. Upstream history is preserved. No release, tag or PadMint catalog publication. Simulator and Mac game are stopped; the final handoff commit follows in history.
 
 Final source checkpoint: `a40f4ad01`. Default ANGLE simulator, optional Vulkan simulator, unsigned bot-enabled device and existing accepted Mac package all pass strict read-only audits: [package-performance.txt](evidence/package-performance.txt). The IPA passes CRC and matches all 3,247 audited device-app files byte for byte. PadMint current local main validates `draft-untested`; README license text is unchanged and new documentation links resolve. The final documentation commit follows the source checkpoint in history.
+
+
+## Selected app icon — 2026-11-17
+
+Chris approved the 1940s poster portrait. The full-bleed opaque master, iPad/marketing sizes and XcodeGen AppIcon selection are now included; [APP-ICON.md](APP-ICON.md) records generation/edit provenance and validation. Default simulator and unsigned device builds plus strict audits pass (9 Mach-O binaries, 3,258 and 3,249 files respectively). Home-screen/dock icon visually verified using the single reserved simulator, then shut down. This changes artwork/resources only; prior gameplay acceptance remains applicable. Optional Vulkan picks up the same catalog on its next build; its existing artifact predates this artwork.

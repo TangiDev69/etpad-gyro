@@ -7,6 +7,7 @@ settings:
   base:
     ARCHS: arm64
     SWIFT_VERSION: '5.0'
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     TARGETED_DEVICE_FAMILY: '2'
     CODE_SIGN_STYLE: Automatic
     SWIFT_OBJC_BRIDGING_HEADER: ${ETPAD_ROOT}/apple/ios/Host/ETPad-Bridging-Header.h
