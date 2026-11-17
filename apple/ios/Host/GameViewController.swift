@@ -15,8 +15,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private let downloadButton=UIButton(type:.system),importButton=UIButton(type:.system),playButton=UIButton(type:.system)
     private let overlay=GoldenPadTouchOverlay(frame:.zero),surface=GameSurfaceInputView(frame:.zero)
     private var gameHome:URL { dataManager.home }
-    private var hostOnly:Bool { ProcessInfo.processInfo.arguments.contains("--etpad-host-only") }
-    private var frameTimes:[Double]=[],intervals:[Double]=[]
+    private let hostOnly=ProcessInfo.processInfo.arguments.contains("--etpad-host-only")
+    private var controllerConnected=false,gameplayActive=false
+    private var frameTimes:[Double]=[],intervals:[Double]=[],hostTimes:[Double]=[],callbackTimes:[Double]=[]
     private var lastFrameTime:Double=0
     private var controllerHintUntil:Double=0
     private weak var promptController:GCController?
@@ -97,15 +98,15 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         }
     }
     override func viewDidLayoutSubviews(){
-        super.viewDidLayoutSubviews();surface.frame=view.bounds;overlay.frame=view.bounds
+        super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay)
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         layoutMenu(in:safe)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
-        prompts.frame=CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44)
-        status.frame=CGRect(x:safe.midX-350,y:safe.midY-140,width:700,height:150)
-        downloadButton.frame=CGRect(x:safe.midX-160,y:safe.midY+20,width:320,height:48)
-        importButton.frame=CGRect(x:safe.midX-160,y:safe.midY+80,width:320,height:48)
-        playButton.frame=CGRect(x:safe.midX-160,y:safe.midY+140,width:320,height:48)
+        setFrame(CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44),for:prompts)
+        setFrame(CGRect(x:safe.midX-350,y:safe.midY-140,width:700,height:150),for:status)
+        setFrame(CGRect(x:safe.midX-160,y:safe.midY+20,width:320,height:48),for:downloadButton)
+        setFrame(CGRect(x:safe.midX-160,y:safe.midY+80,width:320,height:48),for:importButton)
+        setFrame(CGRect(x:safe.midX-160,y:safe.midY+140,width:320,height:48),for:playButton)
         restoreHost()
     }
     func restoreHost(){
@@ -114,7 +115,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         if let pointer=etpad_render_window(){
             let renderer=Unmanaged<UIWindow>.fromOpaque(pointer).takeUnretainedValue()
             if renderer.windowScene !== scene { renderer.windowScene=scene }
-            renderer.windowLevel = .normal;renderer.frame=host.bounds;renderer.isUserInteractionEnabled=false
+            renderer.windowLevel = .normal;setFrame(host.bounds,for:renderer);renderer.isUserInteractionEnabled=false
         }
         // Native menus/keyboards own their windows; reassert only SDL's window.
         host.windowLevel=engineReady ? UIWindow.Level(rawValue:UIWindow.Level.normal.rawValue+1) : .normal
@@ -161,8 +162,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private func releaseInputs(){overlay.releaseAll();if engineReady { etpad_release_inputs() }}
     private func refreshPrompts(){
         guard let controller=GCController.controllers().first else {
-            prompts.isHidden=true;promptController=nil;controllerHintUntil=0;updateTouchVisibility();return
+            controllerConnected=false;setHidden(true,for:prompts);promptController=nil;controllerHintUntil=0;updateTouchVisibility();return
         }
+        controllerConnected=true
         if promptController !== controller { controllerHintUntil=CACurrentMediaTime()+8;promptController=controller }
         let profile=controller.physicalInputProfile
         let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
@@ -170,39 +172,62 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         let quickBindings=playStation ? "R2 Fire · ✕ Jump · □ Reload" : "RT Fire · A Jump · X Reload"
         prompts.setTitle(quickBindings,for:.normal)
         prompts.accessibilityLabel="\(controller.vendorName ?? family) connected. Controller Button Mapping"
-        prompts.isHidden=false;view.setNeedsLayout();updateTouchVisibility()
+        setHidden(false,for:prompts);view.setNeedsLayout();updateTouchVisibility()
+    }
+    private func setHidden(_ hidden:Bool,for target:UIView){
+        if target.isHidden != hidden { target.isHidden=hidden }
+    }
+    private func setFrame(_ frame:CGRect,for target:UIView){
+        if target.frame != frame { target.frame=frame }
     }
     private func layoutMenu(in safe:CGRect){
-        // Active ET HUD reserves the left gutter; its upper-right corner is
-        // occupied by the compass. Rendered ET menus use their original layout.
-        let playing=engineReady && etpad_gameplay() != 0
-        menu.frame=playing ? CGRect(x:safe.minX+12,y:safe.minY+12,width:64,height:44)
+        // Layout callbacks reuse the last completed host-state snapshot. They
+        // can occur inside SDL's nested UIKit loop while Com_Frame is running.
+        let frame=gameplayActive ? CGRect(x:safe.minX+12,y:safe.minY+12,width:64,height:44)
             : CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44)
+        setFrame(frame,for:menu)
     }
     private func updateTouchVisibility(){
+        // Keep actual HUD/scoreboard polling every display tick. Controller
+        // membership changes are captured by refreshPrompts on lifecycle and
+        // connect/disconnect notifications, including the initial refresh.
+        gameplayActive=engineReady && etpad_gameplay() != 0
         let hudFlags=engineReady ? etpad_hud_flags():0
-        overlay.scoreboardVisible=(hudFlags & 3) != 0
-        prompts.isHidden=GCController.controllers().isEmpty || (!hostOnly && ((hudFlags & 3) != 0 || CACurrentMediaTime()>controllerHintUntil))
+        let scoreboard=(hudFlags & 3) != 0
+        if overlay.scoreboardVisible != scoreboard { overlay.scoreboardVisible=scoreboard }
+        setHidden(!controllerConnected || (!hostOnly && (scoreboard || CACurrentMediaTime()>controllerHintUntil)),for:prompts)
         layoutMenu(in:view.bounds.inset(by:view.safeAreaInsets))
-        let controllerHides=autoHide && !GCController.controllers().isEmpty
-        let active=hostOnly || (engineReady && etpad_gameplay() != 0)
+        let controllerHides=autoHide && controllerConnected
+        let active=hostOnly || gameplayActive
         let hidden = !overlay.arranging && (!showTouch || controllerHides || !active)
-        if hidden && !overlay.isHidden { overlay.releaseAll() };overlay.isHidden=hidden
+        if hidden != overlay.isHidden {
+            if hidden { overlay.releaseAll() }
+            overlay.isHidden=hidden
+        }
     }
     @objc private func frame(){
         guard UIApplication.shared.applicationState == .active && !inFrame else { return }
         inFrame=true;defer { inFrame=false }
+        let start=CACurrentMediaTime()
+        var engineMilliseconds:Double=0
         if engineReady {
-            let start=CACurrentMediaTime();etpad_frame();frameTimes.append((CACurrentMediaTime()-start)*1000)
+            etpad_frame();engineMilliseconds=(CACurrentMediaTime()-start)*1000
             if lastFrameTime>0 { intervals.append((start-lastFrameTime)*1000) };lastFrameTime=start
-            if frameTimes.count>=600 {
-                let sorted=frameTimes.sorted(),average=frameTimes.reduce(0,+)/Double(frameTimes.count)
-                let interval=intervals.isEmpty ? 0:intervals.reduce(0,+)/Double(intervals.count)
-                NSLog("ETPad TIMING renderer=%@ pixels=%dx%d frames=%d cpu_avg_ms=%.3f cpu_p95_ms=%.3f interval_avg_ms=%.3f",String(cString:etpad_renderer()),etpad_render_width(),etpad_render_height(),frameTimes.count,average,sorted[Int(Double(sorted.count-1)*0.95)],interval)
-                frameTimes.removeAll(keepingCapacity:true);intervals.removeAll(keepingCapacity:true)
-            }
         }
         updateTouchVisibility()
+        guard engineReady else { return }
+        let totalMilliseconds=(CACurrentMediaTime()-start)*1000
+        frameTimes.append(engineMilliseconds)
+        hostTimes.append(max(0,totalMilliseconds-engineMilliseconds))
+        callbackTimes.append(totalMilliseconds)
+        if frameTimes.count>=600 {
+            let sorted=frameTimes.sorted(),callbacks=callbackTimes.sorted(),hosts=hostTimes.sorted()
+            let count=Double(frameTimes.count),p95=Int(Double(frameTimes.count-1)*0.95)
+            let interval=intervals.isEmpty ? 0:intervals.reduce(0,+)/Double(intervals.count)
+            NSLog("ETPad TIMING renderer=%@ pixels=%dx%d frames=%d cpu_avg_ms=%.3f cpu_p95_ms=%.3f host_avg_ms=%.3f host_p95_ms=%.3f callback_avg_ms=%.3f callback_p95_ms=%.3f interval_avg_ms=%.3f",String(cString:etpad_renderer()),etpad_render_width(),etpad_render_height(),frameTimes.count,frameTimes.reduce(0,+)/count,sorted[p95],hostTimes.reduce(0,+)/count,hosts[p95],callbackTimes.reduce(0,+)/count,callbacks[p95],interval)
+            frameTimes.removeAll(keepingCapacity:true);intervals.removeAll(keepingCapacity:true)
+            hostTimes.removeAll(keepingCapacity:true);callbackTimes.removeAll(keepingCapacity:true)
+        }
     }
     private func action(_ title:String,icon:String?=nil,fullTitle:String?=nil,state:Bool?=nil,attributes:UIAction.Attributes=[],_ handler:@escaping()->Void)->UIAction {
         UIAction(title:title,image:icon.flatMap { UIImage(systemName:$0) },discoverabilityTitle:fullTitle,attributes:attributes,state:state==true ? .on:.off) { _ in handler() }

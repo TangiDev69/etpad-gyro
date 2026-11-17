@@ -33,7 +33,11 @@ void ETPad_MetalDrawable(void *pointer,int width,int height)
     }
     // ANGLE Metal derives its framebuffer from bounds * contentsScale and
     // overwrites drawableSize. Match that calculation to the render width.
-    if(layer.bounds.size.width>0)layer.contentsScale=(CGFloat)width/layer.bounds.size.width;
+    CGFloat presentationWidth=layer.bounds.size.width;
+    if(presentationWidth>0){
+        CGFloat scale=(CGFloat)width/presentationWidth;
+        if(layer.contentsScale!=scale)layer.contentsScale=scale;
+    }
     CGSize size=CGSizeMake(width,height);
     if(!CGSizeEqualToSize(layer.drawableSize,size))layer.drawableSize=size;
 }
