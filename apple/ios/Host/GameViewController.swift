@@ -18,6 +18,8 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private var hostOnly:Bool { ProcessInfo.processInfo.arguments.contains("--etpad-host-only") }
     private var frameTimes:[Double]=[],intervals:[Double]=[]
     private var lastFrameTime:Double=0
+    private var controllerHintUntil:Double=0
+    private weak var promptController:GCController?
     private var inFrame=false
     override var supportedInterfaceOrientations:UIInterfaceOrientationMask { .landscape }
     override var prefersStatusBarHidden:Bool { true }
@@ -97,7 +99,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     override func viewDidLayoutSubviews(){
         super.viewDidLayoutSubviews();surface.frame=view.bounds;overlay.frame=view.bounds
         let safe=view.bounds.inset(by:view.safeAreaInsets)
-        menu.frame=CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44)
+        layoutMenu(in:safe)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
         prompts.frame=CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44)
         status.frame=CGRect(x:safe.midX-350,y:safe.midY-140,width:700,height:150)
@@ -159,8 +161,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private func releaseInputs(){overlay.releaseAll();if engineReady { etpad_release_inputs() }}
     private func refreshPrompts(){
         guard let controller=GCController.controllers().first else {
-            prompts.isHidden=true;updateTouchVisibility();return
+            prompts.isHidden=true;promptController=nil;controllerHintUntil=0;updateTouchVisibility();return
         }
+        if promptController !== controller { controllerHintUntil=CACurrentMediaTime()+8;promptController=controller }
         let profile=controller.physicalInputProfile
         let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
         let family=playStation ? "PlayStation" : profile is GCXboxGamepad ? "Xbox" : "Controller"
@@ -169,7 +172,18 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         prompts.accessibilityLabel="\(controller.vendorName ?? family) connected. Controller Button Mapping"
         prompts.isHidden=false;view.setNeedsLayout();updateTouchVisibility()
     }
+    private func layoutMenu(in safe:CGRect){
+        // Active ET HUD reserves the left gutter; its upper-right corner is
+        // occupied by the compass. Rendered ET menus use their original layout.
+        let playing=engineReady && etpad_gameplay() != 0
+        menu.frame=playing ? CGRect(x:safe.minX+12,y:safe.minY+12,width:64,height:44)
+            : CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44)
+    }
     private func updateTouchVisibility(){
+        let hudFlags=engineReady ? etpad_hud_flags():0
+        overlay.scoreboardVisible=(hudFlags & 3) != 0
+        prompts.isHidden=GCController.controllers().isEmpty || (!hostOnly && ((hudFlags & 3) != 0 || CACurrentMediaTime()>controllerHintUntil))
+        layoutMenu(in:view.bounds.inset(by:view.safeAreaInsets))
         let controllerHides=autoHide && !GCController.controllers().isEmpty
         let active=hostOnly || (engineReady && etpad_gameplay() != 0)
         let hidden = !overlay.arranging && (!showTouch || controllerHides || !active)

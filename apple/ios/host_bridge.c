@@ -3,6 +3,8 @@
 #include "../../src/qcommon/qcommon.h"
 #include "../../src/client/client.h"
 #include "../../src/sys/sys_local.h"
+#include "host_bridge.h"
+#include "../shared/etpad_vm_commands.h"
 #define EXPORT __attribute__((visibility("default")))
 EXPORT void etpad_command(const char *text) { Cbuf_AddText(text); Cbuf_AddText("\n"); }
 EXPORT void etpad_key(int key,int down) { Com_QueueEvent(0,SE_KEY,key,down,0,NULL); }
@@ -15,6 +17,12 @@ EXPORT void etpad_release_inputs(void) {
 
 EXPORT void etpad_frame(void) { Com_Frame(); }
 EXPORT int etpad_gameplay(void) { return cls.state == CA_ACTIVE && !(Key_GetCatcher() & (KEYCATCH_UI|KEYCATCH_CGAME|KEYCATCH_CONSOLE)); }
+EXPORT int etpad_hud_flags(void)
+{
+    if (cls.state != CA_ACTIVE || !cls.cgameStarted || !cgvm) return 0;
+    // A private read-only VM command preserves the cgame syscall context.
+    return (int)VM_Call(cgvm, ETPAD_VM_HUD_FLAGS);
+}
 EXPORT const char *etpad_renderer(void) { return Cvar_VariableString("cl_renderer"); }
 EXPORT int etpad_render_width(void) { return cls.glconfig.vidWidth; }
 EXPORT int etpad_render_height(void) { return cls.glconfig.vidHeight; }

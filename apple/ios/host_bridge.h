@@ -10,6 +10,8 @@ void etpad_frame(void);
 void *etpad_render_window(void);
 int etpad_extract_official(const char *archive, const char *directory);
 int etpad_gameplay(void);
+// Bit 1: scoreboard requested/rendered; bit 2: snapshot is intermission.
+int etpad_hud_flags(void);
 const char *etpad_renderer(void);
 int etpad_render_width(void);
 int etpad_render_height(void);

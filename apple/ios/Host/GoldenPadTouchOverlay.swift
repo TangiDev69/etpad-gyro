@@ -80,11 +80,12 @@ private extension UIFont {
 final class GoldenPadTouchOverlay: UIView {
     struct Action {
         let title:String,command:String,symbol:String
-        // Aiming controls are inset from the lower-right safe corner. Utility
-        // offsets are relative to the center of the separate compact diamond.
+        // Gameplay controls are inset from the lower-right safe corner.
+        // SCORE and MENU occupy the left HUD gutter by default.
         let x:CGFloat,y:CGFloat,diameter:CGFloat
         let tint:UIColor
         var utility:Bool { ["SCORE","PREV","NEXT","USE"].contains(title) }
+        var gutter:Bool { title=="SCORE" || title=="MENU" }
     }
     static let actions:[Action] = [
         .init(title:"FIRE",command:"+attack",symbol:"scope",x:82,y:190,diameter:84,tint:.systemRed),
@@ -93,17 +94,31 @@ final class GoldenPadTouchOverlay: UIView {
         .init(title:"CROUCH",command:"+movedown",symbol:"arrow.down",x:171,y:126,diameter:62,tint:.systemTeal),
         .init(title:"PRONE",command:"+prone",symbol:"arrow.down.to.line",x:250,y:111,diameter:60,tint:.systemPurple),
         .init(title:"RELOAD",command:"+reload",symbol:"arrow.clockwise",x:172,y:263,diameter:64,tint:.systemYellow),
-        .init(title:"SCORE",command:"+scores",symbol:"list.number",x:0,y:-56,diameter:48,tint:.systemGray),
-        .init(title:"PREV",command:"weapprev",symbol:"chevron.left",x:-56,y:0,diameter:48,tint:.systemGray),
-        .init(title:"NEXT",command:"weapnext",symbol:"chevron.right",x:56,y:0,diameter:48,tint:.systemGray),
-        .init(title:"USE",command:"+activate",symbol:"hand.tap",x:0,y:56,diameter:48,tint:.systemGreen),
-        .init(title:"MENU",command:"togglemenu",symbol:"line.3.horizontal",x:0,y:0,diameter:64,tint:.systemGray)]
+        .init(title:"SCORE",command:"+scores",symbol:"list.number",x:0,y:88,diameter:64,tint:.systemGray),
+        .init(title:"PREV",command:"weapprev",symbol:"chevron.left",x:250,y:263,diameter:48,tint:.systemGray),
+        .init(title:"NEXT",command:"weapnext",symbol:"chevron.right",x:250,y:190,diameter:48,tint:.systemGray),
+        .init(title:"USE",command:"+activate",symbol:"hand.tap",x:172,y:190,diameter:56,tint:.systemGreen),
+        .init(title:"MENU",command:"togglemenu",symbol:"line.3.horizontal",x:0,y:142,diameter:64,tint:.systemGray)]
     var onAction:((String,Bool)->Void)?
     var onMove:((CGPoint)->Void)?
     var onLook:((CGPoint)->Void)?
     var onConfigurationChanged:(()->Void)?
     var configuration:TouchConfiguration { didSet { configuration.sanitize();persist();setNeedsLayout() } }
-    var arranging=false { didSet { releaseAll();setNeedsLayout() } }
+    var arranging=false {
+        didSet {
+            if scoreboardVisible { releaseCombatActions() } else { releaseAll() }
+            updateButtonVisibility();setNeedsLayout()
+        }
+    }
+    // Supplied by the engine's actual scoreboard state, including keyboard and
+    // controller activation. Never synthesize -scores when that state changes.
+    var scoreboardVisible=false {
+        didSet {
+            guard scoreboardVisible != oldValue else { return }
+            if scoreboardVisible { releaseCombatActions() }
+            updateButtonVisibility();setNeedsLayout()
+        }
+    }
     private var buttons:[String:TouchActionButton]=[:]
     private let moveGuide=UIView(),lookGuide=UIView()
     private weak var moveTouch:UITouch?,lookTouch:UITouch?
@@ -119,7 +134,11 @@ final class GoldenPadTouchOverlay: UIView {
             let button=TouchActionButton(frame:.zero)
             button.configure(title:action.title,symbol:action.symbol,primary:action.title=="FIRE",utility:action.utility || action.title=="MENU")
             button.accent=action.tint
-            button.edge = { [weak self] pressed in self?.onAction?(action.command,pressed) }
+            button.edge = { [weak self] pressed in
+                guard let self=self else { return }
+                if pressed && self.scoreboardVisible && !self.arranging && !action.gutter { return }
+                self.onAction?(action.command,pressed)
+            }
             button.addGestureRecognizer(UIPanGestureRecognizer(target:self,action:#selector(arrange(_:))))
             buttons[action.title]=button;addSubview(button)
         }
@@ -131,28 +150,31 @@ final class GoldenPadTouchOverlay: UIView {
         let safe=bounds.inset(by:safeAreaInsets)
         let responsive=min(1,min(safe.width/1100,safe.height/720))
         let spacing=max(0.85,responsive)*max(1,configuration.size)
-        let utilityCenter=CGPoint(x:safe.minX+safe.width*0.33,y:safe.maxY-185*spacing)
         for action in Self.actions {
             guard let button=buttons[action.title] else { continue }
             let defaultCenter:CGPoint
-            if action.title=="MENU" {
-                // Bottom-align inside the safe area, below ET's spectator label.
-                let menuHeight=max(44,44*configuration.size)
-                defaultCenter=CGPoint(x:safe.midX,y:safe.maxY-menuHeight/2-4)
-            } else if action.utility {
-                defaultCenter=CGPoint(x:utilityCenter.x+action.x*spacing,y:utilityCenter.y+action.y*spacing)
+            if action.gutter {
+                defaultCenter=CGPoint(x:safe.minX+44,y:safe.minY+action.y)
             } else {
                 defaultCenter=CGPoint(x:safe.maxX-action.x*spacing,y:safe.maxY-action.y*spacing)
             }
             let custom=configuration.centers[action.title]
             let x=custom.map { CGFloat($0[0]) } ?? (defaultCenter.x-safe.minX)/safe.width
-            let y=custom.map { CGFloat($0[1]) } ?? (defaultCenter.y-safe.minY)/safe.height
-            let center=CGPoint(x:safe.minX+(configuration.leftHanded ? 1-x:x)*safe.width,y:safe.minY+y*safe.height)
-            let width=max(44,action.diameter*responsive*configuration.size)
-            let height=action.title=="MENU" ? max(44,44*configuration.size):width
+            // ET's health/class HUD and killfeed stay at bottom left when
+            // controls mirror. Lift only default combat positions above them;
+            // explicit saved layouts retain their chosen vertical coordinates.
+            let leftHUDLift:CGFloat=configuration.leftHanded && !action.gutter && custom == nil ? 180:0
+            let y=custom.map { CGFloat($0[1]) } ?? (defaultCenter.y-leftHUDLift-safe.minY)/safe.height
+            let mirror=configuration.leftHanded && (!action.gutter || custom != nil)
+            let center=CGPoint(x:safe.minX+(mirror ? 1-x:x)*safe.width,y:safe.minY+y*safe.height)
+            // Keep occasional controls inside the narrow scoreboard gutter even
+            // at large Size settings. Gameplay targets still follow Size.
+            let width=action.gutter ? 64:max(44,action.diameter*responsive*configuration.size)
+            let height=action.gutter ? 44:width
             button.bounds=CGRect(x:0,y:0,width:width,height:height)
             button.center=CGPoint(x:max(safe.minX+width/2,min(safe.maxX-width/2,center.x)),y:max(safe.minY+height/2,min(safe.maxY-height/2,center.y)))
             button.layer.cornerRadius=button.bounds.height/2
+            button.isHidden=scoreboardVisible && !arranging && !action.gutter
             button.editingLayout=arranging;button.opacity=configuration.opacity;button.updateFace()
             button.gestureRecognizers?.forEach { $0.isEnabled=arranging }
         }
@@ -173,7 +195,7 @@ final class GoldenPadTouchOverlay: UIView {
         guide.bounds=CGRect(x:0,y:0,width:diameter,height:diameter);guide.center=point;guide.layer.cornerRadius=diameter/2;guide.isHidden=false
     }
     override func touchesBegan(_ touches:Set<UITouch>,with event:UIEvent?) {
-        guard !arranging else { return }
+        guard !arranging && !scoreboardVisible else { return }
         for touch in touches {
             let p=touch.location(in:self),left=p.x<bounds.midX
             if left != configuration.leftHanded && moveTouch==nil { moveTouch=touch;moveOrigin=p;showGuide(moveGuide,at:p,diameter:130) }
@@ -181,6 +203,7 @@ final class GoldenPadTouchOverlay: UIView {
         }
     }
     override func touchesMoved(_ touches:Set<UITouch>,with event:UIEvent?) {
+        guard !arranging && !scoreboardVisible else { return }
         for touch in touches {
             let p=touch.location(in:self)
             if touch===moveTouch {
@@ -198,6 +221,18 @@ final class GoldenPadTouchOverlay: UIView {
         }
     }
     override func touchesCancelled(_ touches:Set<UITouch>,with event:UIEvent?){ touchesEnded(touches,with:event) }
+    private func updateButtonVisibility() {
+        for action in Self.actions {
+            buttons[action.title]?.isHidden=scoreboardVisible && !arranging && !action.gutter
+        }
+    }
+    private func releaseCombatActions() {
+        for action in Self.actions where !action.gutter {
+            onAction?(action.command,false);buttons[action.title]?.isHighlighted=false
+        }
+        moveTouch=nil;lookTouch=nil;moveGuide.isHidden=true;lookGuide.isHidden=true
+        onMove?(.zero);onLook?(.zero)
+    }
     func releaseAll() {
         for action in Self.actions { onAction?(action.command,false);buttons[action.title]?.isHighlighted=false }
         moveTouch=nil;lookTouch=nil;moveGuide.isHidden=true;lookGuide.isHidden=true;onMove?(.zero)

@@ -78,6 +78,11 @@ Q_EXPORT intptr_t vmMain(intptr_t command, intptr_t arg0, intptr_t arg1, intptr_
 	switch (command)
 	{
 #ifdef ETPAD_IOS
+	case ETPAD_VM_HUD_FLAGS:
+		// Read actual rendered/snapshot state without changing key catchers or
+		// predicting intermission from timers. The host calls after Com_Frame.
+		return ((cg.showScores || cg.scoreBoardShowing) ? ETPAD_HUD_SCOREBOARD : 0)
+		       | ((cg.snap && cg.snap->ps.pm_type == PM_INTERMISSION) ? ETPAD_HUD_INTERMISSION : 0);
 	case ETPAD_VM_ABSOLUTE_POINTER:
 		etpad_module_pointer((float)arg0 / ETPAD_POINTER_SCALE, (float)arg1 / ETPAD_POINTER_SCALE);
 		return 0;
