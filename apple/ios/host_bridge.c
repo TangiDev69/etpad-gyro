@@ -15,6 +15,9 @@ EXPORT void etpad_release_inputs(void) {
 
 EXPORT void etpad_frame(void) { Com_Frame(); }
 EXPORT int etpad_gameplay(void) { return cls.state == CA_ACTIVE && !(Key_GetCatcher() & (KEYCATCH_UI|KEYCATCH_CGAME|KEYCATCH_CONSOLE)); }
+EXPORT const char *etpad_renderer(void) { return Cvar_VariableString("cl_renderer"); }
+EXPORT int etpad_render_width(void) { return cls.glconfig.vidWidth; }
+EXPORT int etpad_render_height(void) { return cls.glconfig.vidHeight; }
 EXPORT void etpad_touch_move(float side,float forward)
 {
     Com_QueueEvent(0,SE_JOYSTICK_AXIS,Cvar_VariableIntegerValue("j_side_axis"),(int)(side*32767),0,NULL);

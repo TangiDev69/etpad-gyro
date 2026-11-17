@@ -1172,11 +1172,19 @@ static qboolean GLimp_StartDriverAndSetMode(glconfig_t *glConfig, int mode, qboo
 			// Resources folder SDL_GetBasePath() returns), unless
 			// SDL_VULKAN_LIBRARY names another library, e.g. the Vulkan SDK
 			// loader for the validation layer
+#ifdef ETPAD_IOS
+			if ((basePath = SDL_GetBasePath()) != NULL)
+#else
 			if (!getenv("SDL_VULKAN_LIBRARY") && (basePath = SDL_GetBasePath()) != NULL)
+#endif
 			{
 				char moltenVK[MAX_OSPATH];
 
+#ifdef ETPAD_IOS
+				Com_sprintf(moltenVK, sizeof(moltenVK), "%sFrameworks/MoltenVK.framework/MoltenVK", basePath);
+#else
 				Com_sprintf(moltenVK, sizeof(moltenVK), "%s../Frameworks/libMoltenVK.dylib", basePath);
+#endif
 				SDL_free(basePath);
 				if (SDL_Vulkan_LoadLibrary(moltenVK) == 0)
 				{
@@ -1185,10 +1193,19 @@ static qboolean GLimp_StartDriverAndSetMode(glconfig_t *glConfig, int mode, qboo
 				}
 			}
 #endif
+#ifdef ETPAD_IOS
+			// iOS executable dependencies come only from signed app frameworks.
+			if (!loaded)
+			{
+				Com_Printf("Bundled MoltenVK failed: %s\n", SDL_GetError());
+				return qfalse;
+			}
+#else
 			if (!loaded && SDL_Vulkan_LoadLibrary(NULL) != 0)
 			{
 				Com_Printf("SDL_Vulkan_LoadLibrary failed: %s\n", SDL_GetError());
 			}
+#endif
 		}
 #endif
 

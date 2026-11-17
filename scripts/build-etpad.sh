@@ -67,9 +67,10 @@ cp build/macos/librenderer_opengl1_mac "$stage/"
 cp COPYING.txt "$stage/" 2>/dev/null || cp COPYING "$stage/"
 /usr/bin/python3 scripts/prepare-notices.py --build-dir build/macos --platform macos --output "$stage/Notices"
 # Original pak0/1/2 and saved profiles are deliberately excluded.
+ditto "$stage" "$output/ETPad-mac"
+/usr/bin/python3 scripts/check-apple-package.py --platform macos "$output/ETPad-mac"
 if [[ -n "$zip" ]]; then
  mkdir -p "$(dirname "$zip")"
  ditto -c -k --keepParent "$stage" "$zip"
 fi
-ditto "$stage" "$output/ETPad-mac"
 printf 'Experimental macOS package: %s\n' "$output/ETPad-mac"

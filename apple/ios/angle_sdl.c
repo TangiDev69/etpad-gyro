@@ -22,9 +22,10 @@ static int failure(const char *operation) { return SDL_SetError("ANGLE %s: EGL 0
 SDL_Window *ETPad_CreateWindow(const char *title,int x,int y,int w,int h,Uint32 flags)
 {
     renderWidth=w;renderHeight=h;
-    SDL_Window *created=SDL_CreateWindow(title,x,y,w,h,(flags & ~SDL_WINDOW_OPENGL) | SDL_WINDOW_METAL);
+    SDL_Window *created=SDL_CreateWindow(title,x,y,w,h,(flags & SDL_WINDOW_VULKAN) ? flags : (flags & ~SDL_WINDOW_OPENGL) | SDL_WINDOW_METAL);
     SDL_SysWMinfo info;SDL_VERSION(&info.version);
     if(created && SDL_GetWindowWMInfo(created,&info))ETPad_AttachRenderWindow(info.info.uikit.window);
+    if(flags & SDL_WINDOW_VULKAN)window=created;
     return created;
 }
 SDL_GLContext ETPad_CreateContext(SDL_Window *target)

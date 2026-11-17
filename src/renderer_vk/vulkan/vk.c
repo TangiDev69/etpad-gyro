@@ -438,6 +438,7 @@ typedef struct
 	float pushData[VK_SCENE_PUSH_FLOATS];
 	uint32_t pushBytes;
 	VkBuffer boundVertexBuffer;
+	VkDeviceSize boundVertexOffset;
 	VkBuffer boundIndexBuffer;
 	qboolean viewport2DSet;
 
@@ -5856,6 +5857,7 @@ static void VK_ResetBindCache(void)
 	vk.pushLayout        = VK_NULL_HANDLE;
 	vk.pushBytes         = 0;
 	vk.boundVertexBuffer = VK_NULL_HANDLE;
+	vk.boundVertexOffset = 0;
 	vk.boundIndexBuffer  = VK_NULL_HANDLE;
 	vk.viewport2DSet     = qfalse;
 }
@@ -5934,23 +5936,43 @@ static void VK_PushConstantsCached(VkPipelineLayout layout, VkShaderStageFlags s
 }
 
 /**
- * @brief Keeps the vertex/index arena buffers bound at offset 0; draws
- * address their data with firstIndex/vertexOffset.
+ * @brief Caches arena bindings, including the vertex byte offset.
  */
-static void VK_BindArenaBuffers(VkBuffer vertexBuffer, VkBuffer indexBuffer)
+static void VK_BindArenaBuffersOffset(VkBuffer vertexBuffer, VkBuffer indexBuffer, VkDeviceSize vertexOffset)
 {
-	if (vk.boundVertexBuffer != vertexBuffer)
+	if (vk.boundVertexBuffer != vertexBuffer || vk.boundVertexOffset != vertexOffset)
 	{
-		VkDeviceSize zero = 0;
-
-		vkCmdBindVertexBuffers(vk.commandBuffer, 0, 1, &vertexBuffer, &zero);
+		vkCmdBindVertexBuffers(vk.commandBuffer, 0, 1, &vertexBuffer, &vertexOffset);
 		vk.boundVertexBuffer = vertexBuffer;
+		vk.boundVertexOffset = vertexOffset;
 	}
 	if (vk.boundIndexBuffer != indexBuffer)
 	{
 		vkCmdBindIndexBuffer(vk.commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 		vk.boundIndexBuffer = indexBuffer;
 	}
+}
+
+static void VK_BindArenaBuffers(VkBuffer vertexBuffer, VkBuffer indexBuffer)
+{
+	VK_BindArenaBuffersOffset(vertexBuffer, indexBuffer, 0);
+}
+
+static void VK_DrawArenaIndexed(VkBuffer vertexBuffer, VkBuffer indexBuffer, uint32_t indexCount,
+                               uint32_t firstIndex, int32_t baseVertex, VkDeviceSize vertexStride)
+{
+#ifdef ETPAD_IOS
+	// MoltenVK 1.4.2 MVKCmdDrawIndexed rejects nonzero baseVertex on the
+	// iOS Simulator's Apple2 feature set. These arena shaders use vertex
+	// attributes, so moving the binding by baseVertex * stride is equivalent.
+	// Index-buffer offsets stay zero; firstIndex still addresses that arena.
+	VK_BindArenaBuffersOffset(vertexBuffer, indexBuffer, (VkDeviceSize)baseVertex * vertexStride);
+	vkCmdDrawIndexed(vk.commandBuffer, indexCount, 1, firstIndex, 0, 0);
+#else
+	(void)vertexStride;
+	VK_BindArenaBuffers(vertexBuffer, indexBuffer);
+	vkCmdDrawIndexed(vk.commandBuffer, indexCount, 1, firstIndex, baseVertex, 0);
+#endif
 }
 
 #define VK_ALIGN_UP(x, a) ((((x) + (a) - 1) / (a)) * (a))
@@ -7384,8 +7406,8 @@ static void VK_Flush2DBatch(void)
 	VK_BindPipelineCached(pipeline);
 	VK_Set2DState(vk.uiBindlessPipelineLayout, vk.batch2DStateBits);
 	VK_BindDescriptorSetsCached(vk.uiBindlessPipelineLayout, 1, &vk.bindlessSet);
-	VK_BindArenaBuffers(vk.vertexArenaBuffer, vk.indexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, vk.batch2DNumIndexes, 1, vk.batch2DFirstIndex, vk.batch2DVertexOffset, 0);
+	VK_DrawArenaIndexed(vk.vertexArenaBuffer, vk.indexArenaBuffer, vk.batch2DNumIndexes,
+	                    vk.batch2DFirstIndex, vk.batch2DVertexOffset, sizeof(vkUIVertex_t));
 }
 
 /**
@@ -7585,8 +7607,7 @@ void VK_Draw2D(shaderCommands_t *input, struct image_s *image, unsigned long sta
 	descriptorSet = (VkDescriptorSet)image->vkDescriptorSet;
 	VK_BindDescriptorSetsCached(vk.uiPipelineLayout, 1, &descriptorSet);
 
-	VK_BindArenaBuffers(vk.vertexArenaBuffer, vk.indexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.indexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.vertexArenaOffset / sizeof(vkUIVertex_t)), 0);
+	VK_DrawArenaIndexed(vk.vertexArenaBuffer, vk.indexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.indexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.vertexArenaOffset / sizeof(vkUIVertex_t)), sizeof(vkUIVertex_t));
 
 	vk.vertexArenaOffset += vertexBytes;
 	vk.indexArenaOffset  += indexBytes;
@@ -9034,8 +9055,7 @@ static void VK_Draw3DDiffuse(shaderCommands_t *input, const glIndex_t *indexes, 
 
 	VK_BindDescriptorSetsCached(vk.scenePipelineLayout, 1, &descriptorSet);
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertexN_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertexN_t)), sizeof(vk3DVertexN_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;
@@ -9345,8 +9365,7 @@ void VK_Draw3DIndexes(shaderCommands_t *input, const glIndex_t *indexes, int num
 		VK_BindDescriptorSetsCached(vk.scenePipelineLayout, 1, &descriptorSet);
 	}
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), sizeof(vk3DVertex_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;
@@ -9432,8 +9451,7 @@ void VK_Draw3DTwoStage(shaderCommands_t *input, struct image_s *image0, struct i
 	sets[1] = (VkDescriptorSet)image1->vkDescriptorSet;
 	VK_BindDescriptorSetsCached(vk.sceneLMPipelineLayout, 2, sets);
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex2_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex2_t)), sizeof(vk3DVertex2_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;
@@ -9538,8 +9556,7 @@ void VK_Draw3DLightmapped(shaderCommands_t *input, struct image_s *base, struct 
 	descriptorSets[1] = (VkDescriptorSet)lightmap->vkDescriptorSet;
 	VK_BindDescriptorSetsCached(vk.sceneLMPipelineLayout, 2, descriptorSets);
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertexLM_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertexLM_t)), sizeof(vk3DVertexLM_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;
@@ -9618,8 +9635,7 @@ static void VK_DrawSceneRaw(VkPipeline pipeline, const vec4_t *xyz, int numVerte
 	descriptorSet = (VkDescriptorSet)tr.whiteImage->vkDescriptorSet;
 	VK_BindDescriptorSetsCached(vk.scenePipelineLayout, 1, &descriptorSet);
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), sizeof(vk3DVertex_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;
@@ -9955,8 +9971,7 @@ void VK_DrawImmediate3D(const float (*xyz)[4], const byte (*colors)[4], const fl
 	descriptorSet = (VkDescriptorSet)image->vkDescriptorSet;
 	VK_BindDescriptorSetsCached(vk.scenePipelineLayout, 1, &descriptorSet);
 
-	VK_BindArenaBuffers(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer);
-	vkCmdDrawIndexed(vk.commandBuffer, (uint32_t)numIndexes, 1, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), 0);
+	VK_DrawArenaIndexed(vk.sceneVertexArenaBuffer, vk.sceneIndexArenaBuffer, (uint32_t)numIndexes, (uint32_t)(vk.sceneIndexArenaOffset / sizeof(uint32_t)), (int32_t)(vk.sceneVertexArenaOffset / sizeof(vk3DVertex_t)), sizeof(vk3DVertex_t));
 
 	vk.sceneVertexArenaOffset += vertexBytes;
 	vk.sceneIndexArenaOffset  += indexBytes;

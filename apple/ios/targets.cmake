@@ -1,5 +1,5 @@
 # Frameworks keep the Legacy VM modules in separate signed symbol namespaces.
-foreach(pair "etl:ETPadEngine" "renderer_es:ETPadRenderer" "cgame:ETPadCGame" "ui:ETPadUI" "qagame:ETPadGame" "tvgame:ETPadTVGame")
+foreach(pair "etl:ETPadEngine" "renderer_es:ETPadRenderer" "renderer_vulkan:ETPadVulkanRenderer" "cgame:ETPadCGame" "ui:ETPadUI" "qagame:ETPadGame" "tvgame:ETPadTVGame")
     string(REPLACE ":" ";" parts "${pair}")
     list(GET parts 0 target)
     list(GET parts 1 name)
@@ -9,7 +9,9 @@ foreach(pair "etl:ETPadEngine" "renderer_es:ETPadRenderer" "cgame:ETPadCGame" "u
             MACOSX_FRAMEWORK_IDENTIFIER "com.etpad.${name}"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/frameworks"
             LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/frameworks"
-            INSTALL_NAME_DIR "@rpath")
+            INSTALL_NAME_DIR "@rpath"
+            BUILD_WITH_INSTALL_RPATH TRUE
+            INSTALL_RPATH "@loader_path/..")
     endif()
 endforeach()
 

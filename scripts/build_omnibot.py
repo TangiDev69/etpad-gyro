@@ -205,6 +205,25 @@ endforeach()
     shutil.copy2(original / 'dependencies/wildmagic/WildMagic3Math.h', notices / 'WildMagic-copyright.h')
     shutil.copy2(original / 'dependencies/physfs/zlib123/zlib.h', notices / 'zlib-copyright.h')
     shutil.copy2(original / 'dependencies/physfs/zlib123/README', notices / 'zlib-README.txt')
+    # Preserve notices from the compiled embedded dependencies, not just the
+    # umbrella GameMonkey/PhysFS licenses.
+    extra_notices = {
+        'MathLib-copyright.h': gm / 'src/3rdParty/mathlib/vector.h',
+        'LZMA-license.txt': original / 'dependencies/physfs/lzma/lzma.txt',
+        'LZMA-LGPL.txt': original / 'dependencies/physfs/lzma/LGPL.txt',
+        'FSBAllocator-copyright.h': original / 'Common/FSBAllocator.h',
+        'GameMonkeyBindings-copyright.h': original / 'Common/gmBind.h',
+        'KeyValueIni-copyright.cpp': original / 'Common/KeyValueIni.cpp',
+        'Logger-copyright.h': original / 'Common/Logger.h',
+        'Bison-skeleton-notice.txt': gm / 'src/gm/bison.simple',
+    }
+    for name, path in extra_notices.items():
+        shutil.copy2(path, notices / name)
+    write(notices / 'OMNIBOT-SOURCE.txt',
+          'Omni-bot upstream source and original modified Logger implementation:\n'
+          + URL.removesuffix('.git') + '/tree/' + COMMIT + '/0.83/Omnibot\n'
+          'Logger originally by Paul Nettle / Fluid Studios; modified by Jeremy Swigart.\n'
+          'ETPad private CMake/framework/sandbox adaptations are in scripts/build_omnibot.py.\n')
     write(work / platform / 'result.json', json.dumps(dict(source_url=URL, source_commit=COMMIT,
           gamemonkey_commit=GM_COMMIT, boost_sha256=BOOST_SHA, data_archive_sha256=DATA_SHA,
           platform=platform, framework=str(framework),
