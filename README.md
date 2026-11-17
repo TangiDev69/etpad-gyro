@@ -10,7 +10,7 @@ Controller first, with a native iPad touch overlay, native settings, and separat
 
 *Actual macOS Oasis gameplay after a respawn regression check. Original game media is used locally and is not included in the repository or exported apps.*
 
-> **Development preview — experimental.** macOS has verified local bot rounds and a sustained public Legacy session. iPad Simulator runs real local and public gameplay, including touch-driven team/class selection, local map reload and public-server reconnect. An assisted Oasis bot round now passes through death, respawn, objective capture and timed intermission, with first-tap team/class selection. Physical iPad play and physical controller feel are unverified. The device IPA is unsigned. See the [acceptance record](docs/HANDOFF.md) before treating a build as ready to play.
+> **Development preview — experimental.** macOS has verified local bot rounds and a sustained public Legacy session. iPad Simulator runs real local and public gameplay, including touch-driven team/class selection, local map reload, automatic public map rotation and reconnect. An assisted Oasis bot round now passes through death, respawn, objective capture and timed intermission, with first-tap team/class selection. Physical iPad play and physical controller feel are unverified. The device IPA is unsigned. See the [acceptance record](docs/HANDOFF.md) before treating a build as ready to play.
 
 ## What is verified
 
@@ -19,21 +19,21 @@ Build success, simulator behavior, and physical-device play are tracked separate
 | Target | Recorded evidence | Remaining limits |
 | --- | --- | --- |
 | **macOS · arm64** | Source-built engine, renderer and Legacy modules; Oasis and Goldrush bot rounds through intermission; public Legacy session exceeding ten minutes, including map change and reconnect | Gameplay input was injected. Physical controller play has not been tested. Optional Omni-bot core is a separate, prebuilt macOS dependency. |
-| **iPad Simulator · arm64** | Native data acquisition; signed embedded frameworks; real local/public gameplay; first-tap Allies → engineer → OK → spawn; source-built Omni-bot 0.93 with four active Oasis bots, touch fire/reload, death/respawn, assisted objective capture and timed intermission; Oasis → Goldrush local reload; public Radar disconnect/reconnect in the same process; landscape and suspend/resume | Bot-round input and objective travel were assisted, including developer positioning and god mode. Multi-touch feel, physical controllers and physical keyboard/trackpad use remain unverified. |
+| **iPad Simulator · arm64** | Native data acquisition; signed embedded frameworks; real local/public gameplay; first-tap Allies → engineer → OK → spawn; source-built Omni-bot 0.93 with four active Oasis bots, touch fire/reload, death/respawn, assisted objective capture and timed intermission; Oasis → Goldrush local reload; public Railgun → Fuel Dump and Fuel Dump → Oasis rotations, each with post-rotation reconnect in its original app process; landscape and suspend/resume | Bot-round input and objective travel were assisted, including developer positioning and god mode. Multi-touch feel, physical controllers and physical keyboard/trackpad use remain unverified. |
 | **Physical iPad** | Fresh bot-enabled unsigned arm64 iOS app/IPA passes architecture, dependency, notice and package checks | No device or signing identity was available; no installation, performance, bot or public-server acceptance is claimed. |
 | **PadMint** | Build interface and manifest validation against a read-only snapshot of PadMint main | Targets remain `experimental`, manifest status `draft-untested`; no catalog listing or release acceptance. |
 
-The [handoff](docs/HANDOFF.md) contains exact checkpoints, assisted test procedures, failure logs and remaining gates. The [final artifact audit](docs/evidence/package-resumed.txt) covers the Mac package, default ANGLE and optional Vulkan simulator apps, and bot-enabled unsigned device app/IPA. The accepted iPad bot round used assisted input, developer positioning and god mode for objective interaction; it does not establish unassisted play.
+The [handoff](docs/HANDOFF.md) contains exact checkpoints, assisted test procedures, failure logs and remaining gates. The [final artifact audit](docs/evidence/package-resumed.txt) covers the Mac package, default ANGLE and optional Vulkan simulator apps, and bot-enabled unsigned device app/IPA. The [HUD-placement refresh](docs/evidence/package-placement.txt) repeats these package checks after the control changes. The accepted iPad bot round used assisted input, developer positioning and god mode for objective interaction; it does not establish unassisted play.
 
 ### What the Apple port adds
 
 - **Shared controller layout:** analog movement/look, trigger actions, utility and weapon layers, persistent remapping, and held-input cleanup on disconnect.
-- **Native iPad controls:** a larger Fire target, readable icon/caption buttons, compact utility diamond, separate menu pill, and movement/look areas. Black translucent resting buttons gain color only while pressed; movement/look guides appear during use or arrangement.
+- **Native iPad controls:** a larger Fire target, readable icon/caption buttons, Use and weapon cycling within the combat arc, and a narrow Score/Menu gutter that leaves movement and the HUD clear. Black translucent resting buttons gain color only while pressed; movement/look guides appear during use or arrangement.
 - **Native three-dot menu:** Play, Settings and Tools groups organize controller mappings, touch visibility/size/opacity/handedness/layouts, render resolution, FOV and FPS settings, player name, favorites, game data, Console, Game Keyboard, and report preview.
 - **Original-data acquisition:** official download or Files import, with SHA-256 verification before installation. The app package carries no original `pak0.pk3`, `pak1.pk3` or `pak2.pk3`.
 - **iPad rendering through Metal:** the source-built GL4ES adapter feeds ANGLE's Metal backend. UIKit owns presentation and lifecycle; embedded frameworks provide the engine and built-in Legacy modules.
 
-The [native UI pass](docs/UI-DESIGN.md) includes before/after screenshots and verified simulator actions. Touch layout settings and named presets persist. Arrange mode opens and closes, but the current automated drag check did not establish position changes; physical usability remains a testing gate.
+The [native UI pass](docs/UI-DESIGN.md) includes before/after screenshots and verified simulator actions. Scoreboard/intermission state hides combat buttons so they do not cover the table. Score remains available for release; the connection hint clears after eight seconds during play. Touch layout settings and named presets persist. Arrange mode opens and closes, but the current automated drag check did not establish position changes; physical usability remains a testing gate.
 
 ## Get the original game data
 
@@ -90,7 +90,7 @@ Controller evidence currently comes from SDL virtual-controller component tests 
 
 ## Online play and compatibility
 
-The goal is interoperability with existing PC ET: Legacy servers. macOS completed a public Legacy session through a map change and reconnect. iPad Simulator completed fresh joins and gameplay on a pure Legacy server, including normal data-pack downloads. A resumed test also passed an Oasis → Goldrush local map reload, a public Radar join, and disconnect/wait/reconnect in the same process. Automatic public-server map rotation remains a separate acceptance check.
+The goal is interoperability with existing PC ET: Legacy servers. macOS completed a public Legacy session through a map change and reconnect. iPad Simulator completed fresh joins and gameplay on a pure Legacy server, including normal data-pack downloads. A resumed test also passed an Oasis → Goldrush local map reload, a public Radar join, and disconnect/wait/reconnect in the same process. Two continuous public sessions pass Railgun → Fuel Dump and Fuel Dump → Oasis, each with a post-transition reconnect in the same process. See the [baseline log](docs/evidence/ios-sim/public-rotation.log) and [final-build repeat](docs/evidence/ios-sim/public-placement-final.log).
 
 **iPad supports only the built-in Legacy mod.** Executable engine, renderer, cgame, UI and game modules are embedded with the app. Downloaded PK3 files can supply data; downloaded native modules are never extracted or loaded. Unsupported native mods are rejected with a clear message. A Jaymod rejection was verified in the simulator.
 

@@ -150,3 +150,18 @@ Run after exporting an app/package; these checks do not build, launch, sign or m
 ```
 
 The Mac command takes the whole package directory, including its app and separate renderer/modules. iOS commands take an exported `.app`, not an IPA. Mac PK3 native entries must match the separately exported own modules byte for byte; iOS PK3 files must be data-only. Device signatures are not required by this audit, so passing it does not establish installability or physical-device runtime acceptance.
+
+## Public iPad Simulator rotation regression
+
+Use the single guarded simulator for a bounded hour when a public round can last 30 minutes:
+
+```sh
+ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=3600 \
+  scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.etpad.ETPad
+```
+
+Set Device → Orientation → Landscape Right/Left. In native **Tools → Console**, run `connect 87.116.30.113:27960`; select a team/class and exercise movement, Fire and Reload. Let the server change maps normally. After the second map loads, exercise gameplay again, then run `disconnect;wait 120;reconnect`. Here `wait 120` means engine frames, not 120 seconds. Re-select team/class and confirm gameplay again without restarting the app. Do not send votes, chat, admin or server-configuration commands. End with `touch build/simulator-stop`. The wrapper accepts 10–3600 seconds and always shuts down/quits the same reserved simulator.
+
+The 2026-11-16 baseline run passed Railgun → Fuel Dump, post-transition movement/fire/reload, and explicit disconnect/reconnect followed by first-tap team/class spawn and Fire, all in PID 92902. [Continuous log](evidence/ios-sim/public-rotation.log), [new-map gameplay](evidence/ios-sim/public-rotation-fueldump.png), [reconnected gameplay](evidence/ios-sim/public-rotation-reconnected.png). This is simulator Legacy-server coverage; physical iPad networking and general server/mod compatibility remain unconfirmed.
+
+The final HUD-placement build repeats public Fuel Dump → Oasis rotation and post-transition reconnect in PID 1258: [final-build log](evidence/ios-sim/public-placement-final.log). Combat controls restore after the round-end scoreboard/new map; the iOS grid cache recomputes for the new span.
