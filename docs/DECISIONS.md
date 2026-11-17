@@ -130,3 +130,14 @@ Evidence: placement-before-live/scoreboard.png and placement-after-live/scoreboa
 A continuous public Legacy session passed Railgun→Fuel Dump plus explicit disconnect/reconnect in PID 92902, with spawning/fire on both maps and after reconnect. The retained command-map grid still held Railgun's centered origin 424 when Fuel Dump requires 568 (spans11648→14336, step 1200). Invalidate the iOS-only lazy grid cache when the map span changes; this preserves desktop semantics. A local Oasis→Fuel Dump reload displays the corrected grid and remains in the same process. Baseline evidence: public-rotation.log, public-rotation-grid-before/fixed.png. Reversal: an upstream module lifecycle reset supersedes this narrow retained-state handling.
 
 The guarded simulator wrapper allows a bounded 10–3600-second block so a 30-minute public round plus reconnect fits without creating another simulator or losing process continuity. Shutdown/quit and other safety checks remain.
+
+
+## 2026-11-17 — Reduce native host work without changing engine pacing
+
+Context: a five-second main-thread sample places the dominant work in the GLES/GL4ES/ANGLE rendering path. The native host also enumerated controllers repeatedly and reassigned UIKit geometry/visibility and Metal contentsScale every display tick.
+
+Decision: cache immutable launch mode and controller membership, refreshing membership at initialization, controller connect/disconnect, app activation and window-key notifications. Continue polling gameplay/HUD state every display tick. Reuse that snapshot during layout to avoid querying the engine from SDL's nested UIKit loop. Assign frames, visibility and drawable scale only when changed; retain release-on-hide and all dimension-change handling. Add engine, host and complete-callback timing fields to distinguish their costs. Frame pacing, render quality, network processing and validation remain unchanged.
+
+Evidence and measurement limitations: [PERFORMANCE.md](PERFORMANCE.md). A separate read-only review found no concrete lifecycle regression. Reversal: a reproducible controller reconnect, input-release, rotation or render-resolution regression; preserve per-tick HUD polling when revising this optimization.
+
+Chris authorized integration into main. The existing GitHub repository had only etpad on inspection; publish main from the accepted etpad history without rewriting upstream history, and make it the default branch.

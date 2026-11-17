@@ -165,3 +165,10 @@ Set Device → Orientation → Landscape Right/Left. In native **Tools → Conso
 The 2026-11-16 baseline run passed Railgun → Fuel Dump, post-transition movement/fire/reload, and explicit disconnect/reconnect followed by first-tap team/class spawn and Fire, all in PID 92902. [Continuous log](evidence/ios-sim/public-rotation.log), [new-map gameplay](evidence/ios-sim/public-rotation-fueldump.png), [reconnected gameplay](evidence/ios-sim/public-rotation-reconnected.png). This is simulator Legacy-server coverage; physical iPad networking and general server/mod compatibility remain unconfirmed.
 
 The final HUD-placement build repeats public Fuel Dump → Oasis rotation and post-transition reconnect in PID 1258: [final-build log](evidence/ios-sim/public-placement-final.log). Combat controls restore after the round-end scoreboard/new map; the iOS grid cache recomputes for the new span.
+
+
+## Performance diagnostics
+
+Every 600 active engine frames, the iOS host logs `ETPad TIMING`. `cpu_avg_ms` / `cpu_p95_ms` retain their historical field names but measure elapsed `etpad_frame()` wall time, not CPU utilization. `host_*` measures callback work outside that engine call; `callback_*` covers both. `interval_avg_ms` measures display-callback spacing, including stalls and suspension gaps. Aggregation/sorting/log emission follows the measured callback boundary and is excluded from its duration. Dimensions identify the requested render surface, not every backend's physical swapchain size.
+
+Collect steady windows after loading, notifications and warmup finish. Match map, camera, renderer, resolution, HUD/controller state and build configuration; record the selected windows and preserve screenshots. Avoid builds, sampling and UI automation during the measurement itself. [PERFORMANCE.md](PERFORMANCE.md) records the current pass and limits. Simulator timings cannot establish iPad FPS, power use, thermal behavior or input latency.

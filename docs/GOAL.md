@@ -1,3 +1,5 @@
+User amendment, 2026-11-17: complete another performance pass, refine README/documentation, push changes and integrate into main. Creating main in the existing repository is authorized if absent; no tag, release or PadMint catalog publication.
+
 Follow-up authorization (2026-11-16): test actual public iPad Simulator map rotation and reconnect, fix failures, and push to existing GitHub branch. Rework touch placement using actual gameplay/scoreboard screenshots and HUD clearance; this supersedes the earlier fixed utility-diamond arrangement where necessary. Physical iPad claims still require hardware/signing.
 
 User amendment, 2026-11-16 (design pass): improve the touch-control appearance and organization of the three-dot menu; inspect current native screens, implement, visually verify and push with the ongoing changes.

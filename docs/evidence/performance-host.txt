@@ -1,0 +1,13 @@
+2026-11-17; M2 MacBook Air; reserved iOS 26.5 Simulator; ANGLE; 1280x882.
+Three 600-frame steady windows per build; same stationary Oasis spectator camera.
+Baseline is 0c2bc9049 plus identical timing instrumentation; optimized is current source.
+
+BASELINE
+2026-11-17 02:39:16.010 ETPad[16004:6606885] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.285 cpu_p95_ms=4.509 host_avg_ms=0.060 host_p95_ms=0.113 callback_avg_ms=3.345 callback_p95_ms=4.576 interval_avg_ms=16.666
+2026-11-17 02:39:26.010 ETPad[16004:6606885] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.253 cpu_p95_ms=4.371 host_avg_ms=0.064 host_p95_ms=0.119 callback_avg_ms=3.318 callback_p95_ms=4.435 interval_avg_ms=16.667
+2026-11-17 02:39:36.013 ETPad[16004:6606885] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.255 cpu_p95_ms=4.427 host_avg_ms=0.058 host_p95_ms=0.109 callback_avg_ms=3.313 callback_p95_ms=4.477 interval_avg_ms=16.667
+
+OPTIMIZED
+2026-11-17 02:43:04.912 ETPad[18307:6624993] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.189 cpu_p95_ms=4.378 host_avg_ms=0.008 host_p95_ms=0.016 callback_avg_ms=3.197 callback_p95_ms=4.392 interval_avg_ms=16.667
+2026-11-17 02:43:14.912 ETPad[18307:6624993] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.061 cpu_p95_ms=4.445 host_avg_ms=0.009 host_p95_ms=0.017 callback_avg_ms=3.070 callback_p95_ms=4.457 interval_avg_ms=16.667
+2026-11-17 02:43:24.911 ETPad[18307:6624993] ETPad TIMING renderer=opengles pixels=1280x882 frames=600 cpu_avg_ms=3.282 cpu_p95_ms=4.435 host_avg_ms=0.008 host_p95_ms=0.015 callback_avg_ms=3.290 callback_p95_ms=4.444 interval_avg_ms=16.667

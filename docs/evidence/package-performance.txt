@@ -1,0 +1,61 @@
+2026-11-17 optimization checkpoint a40f4ad01
+Mac artifact unchanged from prior accepted shared-code regression; iOS outputs refreshed.
+
+build/output/ETPad-mac
+PASS legacy/legacy_v2.86.2_dirty.pk3: cgame_mac matches exported own module exactly
+PASS legacy/legacy_v2.86.2_dirty.pk3: ui_mac matches exported own module exactly
+PASS ET Legacy.app/Contents/MacOS/ET Legacy: arm64 MACOS, packaged/system dependencies
+PASS legacy/cgame_mac: arm64 MACOS, packaged/system dependencies
+PASS legacy/qagame_mac: arm64 MACOS, packaged/system dependencies
+PASS legacy/ui_mac: arm64 MACOS, packaged/system dependencies
+PASS librenderer_opengl1_mac: arm64 MACOS, packaged/system dependencies
+PASS macos: 5 Mach-O binaries, 28 files, one Legacy pack with byte-verified own modules, notices and media boundaries
+Read-only package audit passed; runtime/physical-device acceptance is separate.
+
+build/output/ETPad-simulator.app
+PASS ETPad: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadGame.framework/ETPadGame: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadOmnibot.framework/ETPadOmnibot: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadUI.framework/ETPadUI: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/libEGL.framework/libEGL: arm64/x86_64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/libGLESv2.framework/libGLESv2: arm64/x86_64 IOSSIMULATOR, packaged/system dependencies
+PASS simulator framework and app deep/strict signatures
+PASS simulator: 9 Mach-O binaries, 3256 files, one data-only Legacy pack, notices and media boundaries
+Read-only package audit passed; runtime/physical-device acceptance is separate.
+
+build/output/ETPad-simulator-vulkan.app
+PASS ETPad: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadGame.framework/ETPadGame: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadOmnibot.framework/ETPadOmnibot: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadUI.framework/ETPadUI: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/ETPadVulkanRenderer.framework/ETPadVulkanRenderer: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/MoltenVK.framework/MoltenVK: arm64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/libEGL.framework/libEGL: arm64/x86_64 IOSSIMULATOR, packaged/system dependencies
+PASS Frameworks/libGLESv2.framework/libGLESv2: arm64/x86_64 IOSSIMULATOR, packaged/system dependencies
+PASS simulator framework and app deep/strict signatures
+PASS simulator: 11 Mach-O binaries, 3273 files, one data-only Legacy pack, notices and media boundaries
+Read-only package audit passed; runtime/physical-device acceptance is separate.
+
+build/output/ETPad-device.app
+PASS ETPad: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadCGame.framework/ETPadCGame: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadEngine.framework/ETPadEngine: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadGame.framework/ETPadGame: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadOmnibot.framework/ETPadOmnibot: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadRenderer.framework/ETPadRenderer: arm64 IOS, packaged/system dependencies
+PASS Frameworks/ETPadUI.framework/ETPadUI: arm64 IOS, packaged/system dependencies
+PASS Frameworks/libEGL.framework/libEGL: arm64 IOS, packaged/system dependencies
+PASS Frameworks/libGLESv2.framework/libGLESv2: arm64 IOS, packaged/system dependencies
+NOTE device signatures are not required; this audit does not establish installability
+PASS device: 9 Mach-O binaries, 3247 files, one data-only Legacy pack, notices and media boundaries
+Read-only package audit passed; runtime/physical-device acceptance is separate.
+
+PASS IPA CRC and all 3247 files byte-identical to audited device app.
+PASS current local PadMint main check-manifest: etpad (upstream-engine, draft-untested).
+PASS README upstream license section byte-identical and README/build/performance local links exist.
