@@ -4,7 +4,7 @@
   "name": "ETPad",
   "game": "Wolfenstein: Enemy Territory through ET: Legacy",
   "kind": "upstream-engine",
-  "status": "draft-untested",
+  "status": "experimental",
   "inputs": [
     {
       "type": "official-download",
