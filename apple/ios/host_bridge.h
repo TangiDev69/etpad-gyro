@@ -25,3 +25,5 @@ void etpad_set_suspend_look(int suspend);
 int etpad_take_mouse_activity(void);
 int etpad_client_state(void);
 int etpad_local_server(void);
+int etpad_text_input_active(void);
+const char *etpad_text_input_preview(void);

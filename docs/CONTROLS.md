@@ -59,6 +59,10 @@ The quick-chat wheel accepts every input at once: a stick points (right or left)
 
 On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects. In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. In ET's own menus the left stick moves the cursor, A clicks and B goes back.
 
+## Typing without a hardware keyboard
+
+When ET is editing one of its own text fields (profile name, chat, server password, search boxes) or the console is open, and no hardware keyboard is connected, ETPad raises the iPad keyboard. Typed characters go straight to the game field; Delete, Return and the bar's Done (Enter) and Cancel (Escape) act as keys. The bar above the keyboard shows the field's current text, because ET's chat box can sit under the keyboard. The keyboard closes when the field loses focus. The UI module answers a private ETPAD_VM_UI_TEXT_EDITING query, so detection follows ET's actual edit state.
+
 ## Native three-dot menu
 
 The ••• menu holds actions only. In a match: Team & Class…, Chat ▸ (quick-chat wheel, say to team, say to everyone), Vote ▸, Command Map and Game Menu; then Play Elsewhere ▸ (Find a Server, Practice with Bots, Join by Address), Settings… and Help ▸; and Leave Match alone at the bottom. Outside a match: Find a Server, Practice with Bots ▸ and Join by Address…, then Settings… and Help ▸.

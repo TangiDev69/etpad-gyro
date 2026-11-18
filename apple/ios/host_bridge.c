@@ -64,3 +64,28 @@ EXPORT int etpad_take_mouse_activity(void) { int seen = etpad_mouse_activity; et
 // 0 disconnected ... CA_ACTIVE in play; see connstate_t.
 EXPORT int etpad_client_state(void) { return cls.state; }
 EXPORT int etpad_local_server(void) { return com_sv_running && com_sv_running->integer; }
+// 1 while ET expects typed text: a UI text field (profile, chat, password) or the console. The
+// host then shows the iPad keyboard when no hardware keyboard is attached.
+EXPORT int etpad_text_input_active(void)
+{
+	int catcher = Key_GetCatcher();
+	if (catcher & KEYCATCH_CONSOLE)
+	{
+		return 1;
+	}
+	if ((catcher & KEYCATCH_UI) && uivm)
+	{
+		return (int)VM_Call(uivm, ETPAD_VM_UI_TEXT_EDITING) != 0;
+	}
+	return 0;
+}
+// Current text of the field being typed into, shown above the iPad keyboard
+// because ET's chat box sits low enough to be covered by it.
+EXPORT const char *etpad_text_input_preview(void)
+{
+	if (Key_GetCatcher() & KEYCATCH_CONSOLE)
+	{
+		return g_consoleField.buffer;
+	}
+	return Cvar_VariableString("ui_textfield_temp");
+}

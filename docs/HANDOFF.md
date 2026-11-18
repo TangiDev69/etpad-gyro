@@ -226,3 +226,7 @@ Chris's touch feedback: the movement stick should be invisible and appear under 
 - External display: SceneDelegate now applies the application scene's new bounds to SDL's window whenever the scene resizes, rotates or changes display, and logs screen connects, completing parity with DarkPad b98eded/192d21b (scene ownership and per-frame drawable sizing were already in place). Physical display still untested.
 
 SDL's own view controller also requests pointer lock while ET's mouse is in relative mode; the device log showed a lock in controller mode at startup. Mouse input works through it, but if Chris sees the trackpad cursor vanish during touch play, gating SDL's lock is the next step.
+
+### iPad keyboard for ET text fields (2026-11-18)
+
+Chris could not rename his profile: tapping ET's text fields raised no keyboard without a hardware keyboard. The UI module now reports when a text field is being edited (private VM command), and the host shows the iPad keyboard for UI text fields and the console, mirroring the field text in a bar with Cancel and Done. Device check: messagemode raised the keyboard and the bar showed the field's text. The profile rename screen uses the same edit-field path but was not opened by the agent.

@@ -18,7 +18,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
     private let prompts=UIButton(type:.system),menu=MenuButton(type:.system)
-    private let wheel=CommsWheel(frame:.zero),back=UIButton(type:.system)
+    private let wheel=CommsWheel(frame:.zero),back=UIButton(type:.system),textInput=GameTextInput(frame:.zero)
     private var keyboardHintUntil:Double=0
     private var wheelFromController=false
     private let launcher=LauncherView(frame:.zero)
@@ -107,6 +107,9 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         wheel.onOpen = { [weak self] in self?.releaseInputs();etpad_set_suspend_look(1) }
         wheel.onClose = { [weak self] in self?.wheelFromController=false;etpad_set_suspend_look(0) }
         view.addSubview(wheel)
+        textInput.onCharacter = { [weak self] scalar in if self?.engineReady == true { etpad_character(Int32(scalar.value)) } }
+        textInput.onKey = { [weak self] key in if self?.engineReady == true { etpad_key(key,1);etpad_key(key,0) } }
+        view.addSubview(textInput)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
         overlay.onMove = { [weak self] value in if self?.engineReady == true { etpad_touch_move(Float(value.x),Float(value.y)) } }
         overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32((value.x*1.5).rounded()),Int32((value.y*1.5).rounded())) } }
@@ -200,7 +203,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         if !host.isKeyWindow && !menu.showing { host.makeKeyAndVisible() }
         if UIApplication.shared.applicationState == .active { displayLink?.isPaused=false }
         view.bringSubviewToFront(menu)
-        if presentedViewController==nil { becomeFirstResponder() }
+        if presentedViewController==nil && !textInput.isFirstResponder { becomeFirstResponder() }
     }
     private func updateLauncher(){
         guard !started else { return }
@@ -368,6 +371,14 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         }
     }
     // Controller look speed and inversion, applied to ET's joystick scales.
+    // ET's text fields (profile name, chat, passwords, console) get the iPad
+    // keyboard when no hardware keyboard is attached.
+    private func updateSoftwareKeyboard(){
+        let wants=engineReady && presentedViewController==nil && GCKeyboard.coalesced==nil && etpad_text_input_active() != 0
+        if wants && !textInput.isFirstResponder { _=textInput.becomeFirstResponder() }
+        else if !wants && textInput.isFirstResponder { _=textInput.resignFirstResponder();becomeFirstResponder() }
+        if wants,let preview=etpad_text_input_preview() { textInput.showPreview(String(cString:preview)) }
+    }
     @objc private func pointerHover(_ gesture:UIHoverGestureRecognizer){
         guard gesture.state == .began || gesture.state == .changed else { return }
         if #available(iOS 16.1,*), gesture.zOffset>0 { return } // Apple Pencil hover
@@ -488,6 +499,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         pollMenuController()
         if engineReady { pollGameMenuCursor();pollComms() }
         updateTouchVisibility()
+        updateSoftwareKeyboard()
         guard engineReady else { return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
         frameTimes.append(engineMilliseconds)
