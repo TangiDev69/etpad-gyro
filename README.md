@@ -115,7 +115,7 @@ On iPad, the left thumb drives a floating movement stick (push it well past the 
 
 Every input works at any time. Touch controls hide while a controller or keyboard is in use and come back on the first touch, which never reaches the game as a shot. During play with a mouse or trackpad attached the pointer locks for mouse look; in menus it clicks normally.
 
-The ••• menu reads top to bottom: **This Match** (Team & Class, Game Menu, Command Map, Chat, Vote), **Play** (Who's Playing Now, Practice with Bots, Join by Address), **Settings** (Touch Controls, Controller Buttons, Graphics, Player Name, Game Data) and **Help**, with Leave Match last. On the launcher and server list a controller's D-pad moves the highlight, A selects and B goes back. [CONTROLS.md](docs/CONTROLS.md) has the full reference.
+The ••• menu keeps a short top level (match actions in a game, ways to play otherwise) with Settings and Help folders and Leave Match last. In ET menus the left stick moves the cursor, A clicks and B goes back; on the launcher and server list the D-pad moves the highlight. [CONTROLS.md](docs/CONTROLS.md) has the full reference.
 
 ## Online and local bots
 

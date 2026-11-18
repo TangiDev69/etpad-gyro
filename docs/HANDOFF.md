@@ -184,3 +184,14 @@ Chris asked for a local build on a second Mac, a WWII launcher, better touch con
 **Verified on the iPad (screenshots via devicectl; no physical tapping by the agent).** Launcher missing-data and ready states; Practice with Bots on Oasis and Goldrush with ten bots and automatic Limbo; Allied engineer spawn with the new touch layout; Who's Playing Now listing eight populated servers with live ping from Japan; a public join to XG|Legacy 24/7 (51.83.7.204:27960) reaching "Connected to a pure server" and downloading legacy_v2.86.2.pk3 at about 100 KB/s ([download](evidence/ios-device/online-2.jpg)). Another server (TeamMuppet) refused with "You are excluded from this server", its own policy.
 
 **Not yet verified.** Real thumb feel of the rings, drag-to-aim and push-to-sprint; Xbox controller play and handoff; keyboard, trackpad pointer lock and click delivery; external display mirroring; the full Simulator regression. No tag, release or PadMint catalog change.
+
+### Controller and hosting fixes after first hands-on test (2026-11-18)
+
+Chris reported the Xbox controller did nothing in play, could not drive menus, Host Game failed with "Failed to locate cgame_mac for pure server mode", and the ••• menu felt meandering.
+
+- **Controller in play.** `joystickInfo` on the iPad showed joystick 0 was "iOS Accelerometer" (Is Gamepad: No), so ET opened it instead of the Xbox pad. SDL's accelerometer joystick is now disabled on iOS and Apple builds prefer the first real game controller. After the fix the same command reports "Xbox Wireless Controller … Is Gamepad: Yes".
+- **Controller in ET menus.** The left stick now moves ET's cursor, A clicks and B goes back in the main menu, Limbo and other ET screens.
+- **Hosting.** iPad embeds cgame in the signed app, so a pure listen server skips the cgame pak reference instead of dropping.
+- **Menu.** Shorter top level with Play Elsewhere, Settings and Help folders; see [CONTROLS.md](CONTROLS.md#native-three-dot-menu).
+
+Controller movement/fire and the menu cursor still need Chris's hands-on confirmation; the agent can verify device detection but cannot press the controller.

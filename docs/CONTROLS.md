@@ -45,19 +45,11 @@ The input used last decides whether touch controls show (Settings › Touch Cont
 
 With a mouse or trackpad connected, the pointer locks during play: SDL delivers mouse look, left click fires and right click is alternate fire. In menus, the launcher and native sheets the pointer is unlocked and clicks through UIKit; SDL's duplicate mouse events are ignored then, so one click is one click.
 
-On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects (Practice starts the last practice map). In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. B also closes guides and settings sheets.
+In ET's own menus (main menu, Limbo team/class selection, Host Game, server browser) the left stick moves ET's mouse cursor with a curved speed response, A clicks and B sends Escape to go back. On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects (Practice starts the last practice map). In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. B also closes guides and settings sheets.
 
 ## Native three-dot menu
 
-The menu reads top to bottom, following TribesPad's order:
-
-- **This Match** (in a game): Team & Class…, Game Menu, Command Map, Chat (say, team say, quick chat), Vote.
-- **Play**: Who's Playing Now, Practice with Bots (maps and bot count), Join by Address…, plus Game Menu when ET's main menu is showing.
-- **Settings**: Touch Controls (show, hide during other input, size/opacity/look speed, move buttons), Controller Buttons…, Graphics (render resolution, field of view, FPS counter), Player Name…, Game Data.
-- **Help**: How to Play, Console and Keyboard, Report a Problem…, ETPad on GitHub.
-- **Leave Match** (in a game), last and destructive, with a confirmation.
-
-Submenus carry a subtitle with their current state. Game Menu opens ET's own rendered UI; native pointers enter the built-in UI/cgame frameworks through the engine's VM context.
+The top level stays short. In a match it shows Team & Class…, Game Menu, Chat ▸, Vote ▸ and Command Map; elsewhere it shows Find a Server, Practice with Bots ▸ and Join by Address…. Below that come three folders: **Play Elsewhere** (in a match only: Find a Server, Practice, Join by Address), **Settings** (Touch Controls, Controller Buttons, Graphics, Player Name, Game Data) and **Help** (How to Play, Console, Game Keyboard, Report a Problem, GitHub). **Leave Match** sits alone at the bottom with a confirmation.
 
 ## Scoreboard and intermission
 

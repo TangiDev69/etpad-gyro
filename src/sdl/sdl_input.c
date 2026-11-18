@@ -864,6 +864,11 @@ static void IN_InitJoystick(void)
 
 	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
 	{
+#ifdef ETPAD_IOS
+		// SDL otherwise lists the iPad accelerometer as joystick 0, ahead of
+		// any real controller.
+		SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+#endif
 		if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
 		{
 			Com_Printf(S_COLOR_RED "Joystick initialization failed: %s\n", SDL_GetError());
@@ -896,6 +901,21 @@ static void IN_InitJoystick(void)
 	{
 		Cvar_Set("in_joystickNo", "0");
 	}
+#ifdef __APPLE__
+	// Prefer the first real game controller over other joystick devices.
+	if (!SDL_IsGameController(in_joystickNo->integer))
+	{
+		int index;
+		for (index = 0; index < total; index++)
+		{
+			if (SDL_IsGameController(index))
+			{
+				Cvar_Set("in_joystickNo", va("%i", index));
+				break;
+			}
+		}
+	}
+#endif
 
 	#ifdef __APPLE__
 	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "1", CVAR_ARCHIVE);

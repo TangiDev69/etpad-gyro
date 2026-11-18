@@ -27,6 +27,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private var pendingBots=false
     private var pendingCommand:String?
     private var padPrevious:[String:Bool]=[:]
+    // ET's own menus (main menu, Limbo, Host Game) take a mouse cursor. With a
+    // controller the left stick moves it, A clicks and B goes back.
+    private var menuCursor=CGPoint(x:0.5,y:0.5),cursorShown=false,cursorClickHeld=false
     private var lastPracticeMap:String { UserDefaults.standard.string(forKey:"etpad.lastPractice") ?? "oasis" }
     private var frameTimes:[Double]=[],intervals:[Double]=[],hostTimes:[Double]=[],callbackTimes:[Double]=[]
     private var lastFrameTime:Double=0
@@ -82,7 +85,10 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32((value.x*1.5).rounded()),Int32((value.y*1.5).rounded())) } }
         overlay.onTouch = { [weak self] in self?.setInputMode(.touch) }
         overlay.onConfigurationChanged = { [weak self] in self?.refreshMenu() }
-        surface.pointer = { [weak self] point,edge in if self?.engineReady == true { etpad_pointer(Float(point.x),Float(point.y),edge) } }
+        surface.pointer = { [weak self] point,edge in
+            guard let self=self,self.engineReady else { return }
+            self.menuCursor=point;etpad_pointer(Float(point.x),Float(point.y),edge)
+        }
         surface.claimDirectTouch = { [weak self] in
             // During play with touch controls hidden by another input, the
             // first finger restores them and never reaches the game as a click.
@@ -272,6 +278,33 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         else if let presented=presentedViewController { if b { presented.dismiss(animated:true) } }
         else if !started { launcher.controller(move:right || down ? 1:(left || up ? -1:0),activate:a) }
     }
+    private func pollGameMenuCursor(){
+        guard presentedViewController==nil,!gameplayActive,clientState==0 || clientState==1 || clientState==8,
+              let pad=GCController.controllers().first?.extendedGamepad else {
+            if cursorClickHeld { cursorClickHeld=false;etpad_pointer(Float(menuCursor.x),Float(menuCursor.y),0) }
+            cursorShown=false;return
+        }
+        func edge(_ name:String,_ on:Bool)->Bool { let was=padPrevious[name] ?? false;padPrevious[name]=on;return on != was }
+        var x=CGFloat(pad.leftThumbstick.xAxis.value),y=CGFloat(pad.leftThumbstick.yAxis.value)
+        let length=hypot(x,y)
+        if length<0.18 { x=0;y=0 } else {
+            // Curved response: fine control near center, fast at full tilt.
+            let speed=pow((min(1,length)-0.18)/0.82,1.7)*0.022
+            x=x/length*speed;y=y/length*speed
+        }
+        let aChanged=edge("game.a",pad.buttonA.isPressed),bChanged=edge("game.b",pad.buttonB.isPressed)
+        if x != 0 || y != 0 || !cursorShown {
+            let aspect=view.bounds.width/max(1,view.bounds.height)
+            menuCursor=CGPoint(x:max(0,min(1,menuCursor.x+x/aspect)),y:max(0,min(1,menuCursor.y-y)))
+            if x != 0 || y != 0 || aChanged { cursorShown=true;setInputMode(.controller) }
+            if cursorShown { etpad_pointer(Float(menuCursor.x),Float(menuCursor.y),-1) }
+        }
+        if aChanged {
+            cursorShown=true;cursorClickHeld=pad.buttonA.isPressed
+            etpad_pointer(Float(menuCursor.x),Float(menuCursor.y),pad.buttonA.isPressed ? 1:0)
+        }
+        if bChanged && pad.buttonB.isPressed { etpad_key(27,1);etpad_key(27,0) }
+    }
     private func refreshPrompts(){
         hasMouse = !GCMouse.mice().isEmpty
         guard let controller=GCController.controllers().first else {
@@ -349,6 +382,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             pollInputSources()
         }
         pollMenuController()
+        if engineReady { pollGameMenuCursor() }
         updateTouchVisibility()
         guard engineReady else { return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
@@ -372,56 +406,62 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         refreshMenu()
     }
     private func group(_ children:[UIMenuElement],_ title:String="")->UIMenu { UIMenu(title:title,options:.displayInline,children:children) }
-    // One flat menu read top to bottom: This Match (in a game), Play,
-    // Settings, Help, then Leave Match on its own at the end.
+    // Short top level: what you do right now, then three folders.
+    //   In a match: Team & Class · Game Menu · Chat ▸ · Vote ▸ · Command Map
+    //   Otherwise:  Find a Server · Practice with Bots ▸ · Join by Address
+    //   Then:       Play Elsewhere ▸ (in a match) · Settings ▸ · Help ▸
+    //   Last:       Leave Match (in a match)
     private func refreshMenu(){
         // Layout restore/import also changes this one canonical setting.
         UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
-        var sections:[UIMenuElement]=[]
-        if inMatch { sections.append(group(matchItems(),"This Match")) }
-
-        let servers=action("Who's Playing Now",icon:"globe"){[weak self] in self?.showServers()}
-        servers.subtitle=inMatch ? "Live servers; joining leaves this match":"Live servers, join with one tap"
+        let servers=action("Find a Server",icon:"globe"){[weak self] in self?.showServers()}
+        servers.subtitle=inMatch ? "Leaves this match when you join":"Live servers with players"
         let practice=UIMenu(title:"Practice with Bots",image:UIImage(systemName:"person.3.sequence"),children:practiceItems())
-        practice.subtitle=inMatch ? "Leaves this match first":"Offline on six classic maps"
-        var play:[UIMenuElement]=[servers,practice,action("Join by Address…",icon:"link"){[weak self] in self?.joinAddress()}]
-        if engineReady && !inMatch { play.append(action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")}) }
-        sections.append(group(play,"Play"))
-
-        let hideItem=action("Hide During Controller or Keyboard Play",icon:"eye.slash",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}
-        hideItem.subtitle="Touch the screen to bring them back"
+        practice.subtitle=inMatch ? "Leaves this match":"\(botCount-1) bots, offline"
+        let address=action("Join by Address…",icon:"link"){[weak self] in self?.joinAddress()}
+        var sections:[UIMenuElement]=[]
+        if inMatch {
+            sections.append(group(matchItems()))
+            let elsewhere=UIMenu(title:"Play Elsewhere",image:UIImage(systemName:"arrow.triangle.swap"),children:[servers,practice,address])
+            sections.append(group([elsewhere,settingsMenu(),helpMenu()]))
+            sections.append(group([action("Leave Match",icon:"rectangle.portrait.and.arrow.right",attributes:.destructive){[weak self] in self?.leaveMatch()}]))
+        } else {
+            sections.append(group([servers,practice,address]))
+            sections.append(group([settingsMenu(),helpMenu()]))
+        }
+        menu.menu=UIMenu(title:"",children:sections)
+        updateLauncher()
+        updateTouchVisibility()
+    }
+    private func settingsMenu()->UIMenu {
+        let hideItem=action("Hide When Using a Controller",icon:"eye.slash",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}
+        hideItem.subtitle="Or a keyboard. Touch the screen to bring them back."
         let touch=UIMenu(title:"Touch Controls",image:UIImage(systemName:"hand.tap"),children:[
             group([action("Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},hideItem]),
             group([action("Size, Opacity and Look Speed…",icon:"slider.horizontal.3"){[weak self] in self?.touchSettings()},
                 action(overlay.arranging ? "Done Moving Buttons":"Move Buttons",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])])
-        touch.subtitle = !showTouch ? "Hidden":(autoHide ? "Hide while a controller or keyboard is used":"Always shown")
         let controller=action("Controller Buttons…",icon:"gamecontroller"){[weak self] in self?.mapping()}
-        controller.subtitle=GCController.controllers().first.map { $0.vendorName ?? "Controller connected" } ?? "Xbox, PlayStation or MFi"
+        controller.subtitle=GCController.controllers().first.map { $0.vendorName ?? "Connected" } ?? "No controller connected"
         let width=UserDefaults.standard.integer(forKey:"etpad.renderWidth")
         let graphics=UIMenu(title:"Graphics",image:UIImage(systemName:"display"),children:[
-            UIMenu(title:"Render Resolution",image:UIImage(systemName:"rectangle.expand.vertical"),children:[960,1280,1600,1920].map { w in action("\(w) pixels wide",state:(width==0 ? 1280:width)==w){[weak self] in self?.resolution(w)} }),
-            action("Field of View…",icon:"viewfinder"){[weak self] in self?.fieldOfView()},
-            action("Show FPS Counter",icon:"speedometer",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])
-        graphics.subtitle="\(width==0 ? 1280:width) pixels wide"
+            UIMenu(title:"Resolution",options:.displayInline,children:[960,1280,1600,1920].map { w in action("\(w) pixels wide",state:(width==0 ? 1280:width)==w){[weak self] in self?.resolution(w)} }),
+            group([action("Field of View…",icon:"viewfinder"){[weak self] in self?.fieldOfView()},
+                action("Show FPS Counter",icon:"speedometer",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])])
         let name=action("Player Name…",icon:"person.crop.circle"){[weak self] in self?.playerName()}
         name.subtitle=UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer"
         let data=UIMenu(title:"Game Data",image:UIImage(systemName:"folder"),children:[
             group([action("Download Free Game Data",icon:"arrow.down.circle"){[weak self] in self?.downloadData()},
                 action("Import pak Files…",icon:"square.and.arrow.down"){[weak self] in self?.importData()}]),
             group([action("Remove Stored Game Data",icon:"trash",attributes:.destructive){[weak self] in self?.removeData()}])])
-        data.subtitle=dataReady ? "Original files verified":"Needed to play"
-        sections.append(group([touch,controller,graphics,name,data],"Settings"))
-
-        let tools=UIMenu(title:"Console and Keyboard",image:UIImage(systemName:"terminal"),children:[
-            action("Console…",icon:"terminal"){[weak self] in self?.console()},
-            action("Game Keyboard…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}])
-        sections.append(group([action("How to Play",icon:"book"){[weak self] in self?.showGuide()},tools,
-            action("Report a Problem…",icon:"exclamationmark.bubble"){[weak self] in self?.reportProblem()},
-            action("ETPad on GitHub",icon:"safari"){ UIApplication.shared.open(URL(string:"https://github.com/chrissotraidis/etpad")!) }],"Help"))
-        if inMatch { sections.append(group([action("Leave Match",icon:"rectangle.portrait.and.arrow.right",attributes:.destructive){[weak self] in self?.leaveMatch()}])) }
-        menu.menu=UIMenu(title:"",children:sections)
-        updateLauncher()
-        updateTouchVisibility()
+        return UIMenu(title:"Settings",image:UIImage(systemName:"gearshape"),children:[group([touch,controller]),group([graphics,name]),group([data])])
+    }
+    private func helpMenu()->UIMenu {
+        UIMenu(title:"Help",image:UIImage(systemName:"questionmark.circle"),children:[
+            group([action("How to Play",icon:"book"){[weak self] in self?.showGuide()}]),
+            group([action("Console…",icon:"terminal"){[weak self] in self?.console()},
+                action("Game Keyboard…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}]),
+            group([action("Report a Problem…",icon:"exclamationmark.bubble"){[weak self] in self?.reportProblem()},
+                action("ETPad on GitHub",icon:"safari"){ UIApplication.shared.open(URL(string:"https://github.com/chrissotraidis/etpad")!) }])])
     }
     private func matchItems()->[UIMenuElement]{
         let quick=[("Medic!","vsay_team Medic"),("Need Ammo","vsay_team NeedAmmo"),("Need Backup","vsay_team NeedBackup"),("Need an Engineer","vsay_team NeedEngineer"),
@@ -435,8 +475,8 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             action("Vote No",icon:"hand.thumbsdown"){[weak self] in self?.command("vote no")}])
         return [action("Team & Class…",icon:"person.2"){[weak self] in self?.command("openlimbomenu")},
                 action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")},
-                action("Command Map",icon:"map"){[weak self] in self?.command("ToggleAutoMap")},
-                chat,vote]
+                chat,vote,
+                action("Command Map",icon:"map"){[weak self] in self?.command("ToggleAutoMap")}]
     }
     private func chat(_ verb:String){
         prompt(verb=="say" ? "Say to Everyone":"Say to Team",placeholder:"Message",submit:"Send"){[weak self] text in
