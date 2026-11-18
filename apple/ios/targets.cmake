@@ -6,7 +6,7 @@ foreach(pair "etl:ETPadEngine" "renderer_es:ETPadRenderer" "renderer_vulkan:ETPa
     if(TARGET ${target})
         set_target_properties(${target} PROPERTIES FRAMEWORK TRUE FRAMEWORK_VERSION A
             OUTPUT_NAME "${name}" PREFIX "" SUFFIX ""
-            MACOSX_FRAMEWORK_IDENTIFIER "com.etpad.${name}"
+            MACOSX_FRAMEWORK_IDENTIFIER "com.chrissotraidis.etpad.${name}"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/frameworks"
             LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/frameworks"
             INSTALL_NAME_DIR "@rpath"

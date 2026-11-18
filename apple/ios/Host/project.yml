@@ -1,6 +1,6 @@
 name: ETPad
 options:
-  bundleIdPrefix: com.etpad
+  bundleIdPrefix: com.chrissotraidis
   deploymentTarget:
     iOS: '16.0'
 settings:
@@ -16,6 +16,9 @@ targets:
   ETPad:
     type: application
     platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chrissotraidis.etpad
     sources:
       - path: ${ETPAD_ROOT}/apple/ios/Host
         excludes: [project.yml]
@@ -44,7 +47,7 @@ targets:
       path: ${ETPAD_ROOT}/build/ios-host-content/Info.plist
       properties:
         CFBundleDisplayName: ETPad
-        CFBundleShortVersionString: '0.1'
+        CFBundleShortVersionString: '0.1.0'
         CFBundleVersion: '1'
         UILaunchScreen: {}
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]

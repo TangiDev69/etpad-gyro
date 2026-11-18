@@ -109,7 +109,7 @@ def build(platform):
     shutil.copy2(out / 'cmake/MoltenVK/libMoltenVK.1.4.2.dylib', binary)
     subprocess.run(['install_name_tool', '-id', '@rpath/MoltenVK.framework/MoltenVK', str(binary)], check=True)
     with (framework / 'Info.plist').open('wb') as file:
-        plistlib.dump(dict(CFBundleIdentifier='com.etpad.MoltenVK', CFBundleExecutable='MoltenVK',
+        plistlib.dump(dict(CFBundleIdentifier='com.chrissotraidis.etpad.MoltenVK', CFBundleExecutable='MoltenVK',
                            CFBundleName='MoltenVK', CFBundlePackageType='FMWK',
                            CFBundleShortVersionString=VERSION, CFBundleVersion=VERSION,
                            MinimumOSVersion='16.0',
