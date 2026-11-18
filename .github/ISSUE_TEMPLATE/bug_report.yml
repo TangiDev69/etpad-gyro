@@ -1,0 +1,58 @@
+name: Bug report
+description: Something in ETPad doesn't work or looks wrong
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing ETPad. If the problem also happens in desktop ET: Legacy, please report it to [ET: Legacy](https://github.com/etlegacy/etlegacy/issues) too. Keep game files, saves and passwords out of this report.
+  - type: input
+    id: version
+    attributes:
+      label: ETPad version
+      description: The release you installed, or the commit you built.
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and OS version
+      placeholder: iPad Pro 12.9-inch (6th generation), iPadOS 26.1
+    validations:
+      required: true
+  - type: dropdown
+    id: input
+    attributes:
+      label: How were you playing?
+      multiple: true
+      options:
+        - Touch
+        - Xbox controller
+        - PlayStation controller
+        - Other controller
+        - Keyboard and mouse or trackpad
+        - External display
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Where did it happen?
+      multiple: true
+      options:
+        - Launcher or game data setup
+        - Online server
+        - Practice with Bots
+        - ET's own menus
+        - Settings or ••• menu
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead. Include the server name or map if it matters. A screenshot or screen recording helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Report from the app
+      description: Open ••• → Help → Report a Problem, review it, and paste or attach it here. It contains device information and a short log.

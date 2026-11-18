@@ -95,7 +95,7 @@
     ]
   },
   "publication": {
-    "public_binaries": false,
-    "reason": "Experimental port; device and gameplay acceptance pending. Original game media excluded."
+    "public_binaries": true,
+    "reason": "ETPad is GPLv3 (ET: Legacy) and releases publish an unsigned IPA with no original Wolfenstein: Enemy Territory data; players download the free official data in the app."
   }
 }

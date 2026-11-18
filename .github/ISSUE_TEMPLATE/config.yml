@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Chat on Discord
+    url: https://discord.gg/xwHfUD2bxW
+    about: Questions, help installing, and finding people to play with.
+  - name: Gameplay bugs that also happen on desktop
+    url: https://github.com/etlegacy/etlegacy/issues
+    about: ET: Legacy's own game rules and engine behavior are unchanged in ETPad.
