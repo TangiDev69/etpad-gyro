@@ -31,10 +31,12 @@ original game data is never included.
 5. Bump `CFBundleShortVersionString` and `CFBundleVersion` in
    `apple/ios/Host/project.yml`, update the README badge and notes, and write
    `docs/releases/vX.Y.Z.md`.
-6. Create a draft GitHub release for `vX.Y.Z` targeting `main`, marked as a
-   pre-release, with `ETPad-unsigned.ipa`, `padmint.json` attached as
+6. Create a draft GitHub release for `vX.Y.Z` targeting `main`, with
+   `ETPad-unsigned.ipa`, `padmint.json` attached as
    `ETPad-vX.Y.Z-padmint.json`, and a `SHA256SUMS` file listing both. PadMint
-   only builds a release that publishes its recipe this way.
+   only builds a release that publishes its recipe this way. Leave
+   **Set as a pre-release** off: PadMint finds the build through
+   `/releases/latest`, which skips pre-releases. Call it a preview in the notes.
 
 The ET: Legacy workflows inherited from upstream (ETLBuild, CI, Coverity Scan,
 Snapcraft) are disabled in this repository's Actions settings. ETLBuild runs on
