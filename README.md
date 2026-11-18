@@ -1,5 +1,7 @@
 # ETPad
 
+<img src="apple/ios/Host/Assets.xcassets/AppIcon.appiconset/icon-1024.png" alt="ETPad wartime poster app icon" width="128" height="128">
+
 **Wolfenstein: Enemy Territory on Apple silicon Mac and iPad, built on ET: Legacy.**
 
 Controller-first play, native iPad touch controls and settings, local bots, and interoperability with existing Legacy servers. ETPad preserves upstream history and adds Apple integration under [`apple/`](apple/).

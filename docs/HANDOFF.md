@@ -161,3 +161,8 @@ Final source checkpoint: `a40f4ad01`. Default ANGLE simulator, optional Vulkan s
 ## Selected app icon — 2026-11-17
 
 Chris approved the 1940s poster portrait. The full-bleed opaque master, iPad/marketing sizes and XcodeGen AppIcon selection are now included; [APP-ICON.md](APP-ICON.md) records generation/edit provenance and validation. Default simulator and unsigned device builds plus strict audits pass (9 Mach-O binaries, 3,258 and 3,249 files respectively). Home-screen/dock icon visually verified using the single reserved simulator, then shut down. This changes artwork/resources only; prior gameplay acceptance remains applicable. Optional Vulkan picks up the same catalog on its next build; its existing artifact predates this artwork.
+
+
+## Mac icon and README — 2026-11-17
+
+The approved poster artwork now also ships as `apple/macos/ETPad.icns`; the native CMake bundle selects and embeds it. README displays the shared 1024-pixel artwork. Public Mac rebuild and strict package audit pass (5 Mach-O binaries, 29 files). The exported plist and byte-identical ICNS resource are verified. See [APP-ICON.md](APP-ICON.md). No gameplay code changed.
