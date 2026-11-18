@@ -41,6 +41,11 @@
 #include "../client/client.h"
 #include "../sys/sys_local.h"
 
+#ifdef ETPAD_IOS
+extern int etpad_pointer_locked;
+extern int etpad_mouse_activity;
+#endif
+
 static cvar_t *in_keyboardDebug = NULL;
 
 static cvar_t *in_mouse = NULL;
@@ -1686,6 +1691,14 @@ static void IN_ProcessEvents(void)
 			break;
 #endif
 		case SDL_MOUSEMOTION:
+#ifdef ETPAD_IOS
+			// Unlocked iPad pointers are delivered by the native host.
+			if (!etpad_pointer_locked)
+			{
+				break;
+			}
+			etpad_mouse_activity = 1;
+#endif
 			if (mouseActive)
 			{
 				if (!e.motion.xrel && !e.motion.yrel)
@@ -1700,6 +1713,13 @@ static void IN_ProcessEvents(void)
 		{
 			int b;
 
+#ifdef ETPAD_IOS
+			if (!etpad_pointer_locked)
+			{
+				break;
+			}
+			etpad_mouse_activity = 1;
+#endif
 			switch (e.button.button)
 			{
 			case SDL_BUTTON_LEFT:      b = K_MOUSE1;

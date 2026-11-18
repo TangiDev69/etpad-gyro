@@ -4,15 +4,27 @@
 import UIKit
 final class GameSurfaceInputView:UIView {
     var pointer:((CGPoint,Int32)->Void)?
+    // Asked when a finger (not a trackpad or mouse) lands. Returning true
+    // claims the whole touch, e.g. to bring touch controls back during play.
+    var claimDirectTouch:(()->Bool)?
+    private weak var claimed:UITouch?
     override init(frame:CGRect){
         super.init(frame:frame);isMultipleTouchEnabled=false;isOpaque=false;backgroundColor = .clear
         addGestureRecognizer(UIHoverGestureRecognizer(target:self,action:#selector(hover(_:))))
     }
     required init?(coder:NSCoder){fatalError("init(coder:)")}
     private func normalized(_ p:CGPoint)->CGPoint { CGPoint(x:max(0,min(1,p.x/max(1,bounds.width))),y:max(0,min(1,p.y/max(1,bounds.height)))) }
-    override func touchesBegan(_ touches:Set<UITouch>,with event:UIEvent?){if let t=touches.first { pointer?(normalized(t.location(in:self)),1) }}
-    override func touchesMoved(_ touches:Set<UITouch>,with event:UIEvent?){if let t=touches.first { pointer?(normalized(t.location(in:self)),-1) }}
-    override func touchesEnded(_ touches:Set<UITouch>,with event:UIEvent?){if let t=touches.first { pointer?(normalized(t.location(in:self)),0) }}
+    override func touchesBegan(_ touches:Set<UITouch>,with event:UIEvent?){
+        guard let t=touches.first else { return }
+        if t.type == .direct && claimDirectTouch?() == true { claimed=t;return }
+        pointer?(normalized(t.location(in:self)),1)
+    }
+    override func touchesMoved(_ touches:Set<UITouch>,with event:UIEvent?){if let t=touches.first,t !== claimed { pointer?(normalized(t.location(in:self)),-1) }}
+    override func touchesEnded(_ touches:Set<UITouch>,with event:UIEvent?){
+        guard let t=touches.first else { return }
+        if t === claimed { claimed=nil;return }
+        pointer?(normalized(t.location(in:self)),0)
+    }
     override func touchesCancelled(_ touches:Set<UITouch>,with event:UIEvent?){touchesEnded(touches,with:event)}
     @objc private func hover(_ gesture:UIHoverGestureRecognizer){pointer?(normalized(gesture.location(in:self)),-1)}
 }

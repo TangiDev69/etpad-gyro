@@ -12,7 +12,7 @@ Controller-first play, native iPad touch controls and settings, local bots, and 
 
 *Actual macOS Oasis gameplay. Original game media is acquired separately and excluded from the repository and exported apps.*
 
-> **Experimental source preview.** Mac and iPad Simulator gameplay have recorded acceptance; physical iPad play and physical controller feel remain unverified. The device IPA is unsigned and requires signing before installation. Local exports are development artifacts, not published release downloads.
+> **Experimental preview.** Mac, iPad Simulator and a physical iPad Pro have recorded runs. Touch feel, physical controllers, keyboard/trackpad and external displays still need a hands-on pass. Public IPAs are unsigned; personal installs use your own development signing. Local exports are development artifacts, not published release downloads.
 
 ## Current status
 
@@ -20,7 +20,7 @@ Controller-first play, native iPad touch controls and settings, local bots, and 
 | --- | --- | --- |
 | **macOS · arm64** | Source-built engine/renderer/Legacy modules, Oasis and Goldrush bot rounds, sustained public play with map change and reconnect | Injected gameplay input; physical controller play untested. Optional bot core is a separate prebuilt macOS dependency. |
 | **iPad Simulator · arm64** | Native data setup, touch menus, assisted Oasis bot round through intermission, landscape/resume, public map rotations and reconnect | Objective travel used developer positioning and god mode. Physical multi-touch, controller, keyboard and trackpad feel untested. |
-| **Physical iPad · arm64** | Bot-enabled unsigned app/IPA and package audits | Packaging only: no device/signing identity was available, so installation and runtime are untested. |
+| **Physical iPad · arm64** | Development-signed install on iPad Pro 12.9-inch (6th gen): launcher, in-app data detection, bot rounds on Oasis and Goldrush, live server list and a public server join with map download | Touch was checked by screenshot only (no physical tapping); Xbox controller, keyboard/trackpad and external display still need a hands-on pass. |
 
 Exact test procedures, logs, package audits and remaining gates live in [HANDOFF.md](docs/HANDOFF.md). [PadMint preparation](padmint.json) is validated but remains `experimental` / `draft-untested`, without a catalog listing.
 
@@ -111,13 +111,17 @@ Download/import checks SHA-256 before installing the complete set and never runs
 
 Letters describe Xbox positions; PlayStation/MFi equivalents share the actions. Defaults load once per profile, remapping persists, and disconnect clears held inputs. [CONTROLS.md](docs/CONTROLS.md) contains every layer binding, native remapping and validation limits.
 
-On iPad, movement/look areas accompany an icon-and-label combat group with Use and weapon cycling near Fire. Score/Menu use a narrow HUD gutter; scoreboard state hides combat controls. Left-handed defaults account for the fixed health/killfeed HUD. Black translucent resting controls gain color only while pressed. The native three-dot menu groups **Play**, **Settings** and **Tools**, including a direct **Team & Class** shortcut, touch visibility/size/opacity/layouts, display settings, data management and console. The [design record](docs/UI-DESIGN.md) shows the inspected layouts and remaining physical usability checks.
+On iPad, the left thumb drives a floating movement stick (push it well past the rim, forward, to sprint) and the right thumb looks. FIRE is the large red button; hold it and slide to aim while firing. Jump, Reload, Alt and Crouch form an even inner ring around FIRE, with Use, weapon Next/Prev and Prone on an outer ring, all clear of ET's ammo and health HUD. Controls scale with the screen like ET's HUD. Score and Menu sit in the top-left gutter beside the ••• menu.
+
+Every input works at any time. Touch controls hide while a controller or keyboard is in use and come back on the first touch, which never reaches the game as a shot. During play with a mouse or trackpad attached the pointer locks for mouse look; in menus it clicks normally.
+
+The ••• menu reads top to bottom: **This Match** (Team & Class, Game Menu, Command Map, Chat, Vote), **Play** (Who's Playing Now, Practice with Bots, Join by Address), **Settings** (Touch Controls, Controller Buttons, Graphics, Player Name, Game Data) and **Help**, with Leave Match last. On the launcher and server list a controller's D-pad moves the highlight, A selects and B goes back. [CONTROLS.md](docs/CONTROLS.md) has the full reference.
 
 ## Online and local bots
 
-Mac and Simulator sessions have passed public Legacy joins, automatic map changes and reconnect. **iPad supports only the built-in Legacy mod**: executable modules are embedded with the app, and downloaded PK3 files supply data, never downloaded native code. Unsupported native mods are rejected. Compatibility evidence is specific to the [recorded sessions](docs/HANDOFF.md), rather than every server/mod/anti-cheat combination.
+The launcher's **Play Online** opens **Who's Playing Now**: ETPad asks the official ET masters, probes every server and lists the ET: Legacy ones with human and bot counts, map, version and ping. Tap a server to join (password prompt when needed), swipe to favorite it, or join by address. **iPad supports only the built-in Legacy mod**: executable modules are embedded with the app, and downloaded PK3 files supply data, never downloaded native code. First joins download the server's data packs through ET's own UDP download, limited by each server's rate.
 
-For offline play, Mac uses a separately prepared official Omni-bot 0.93 runtime. iPad bundles a source-built pinned bot framework and verified script/navigation data. See [Mac bot setup](docs/BUILDING.md#local-native-bots-macos) or [iPad bot setup](docs/BUILDING.md#local-native-bots-ipad).
+**Practice with Bots** starts an offline round on Oasis, Goldrush, Radar, Battery, Fuel Dump or Rail Gun with 5, 9 or 15 bots, then opens team selection. Mac uses a separately prepared official Omni-bot 0.93 runtime; iPad bundles a source-built pinned bot framework and verified script/navigation data. See [Mac bot setup](docs/BUILDING.md#local-native-bots-macos) or [iPad bot setup](docs/BUILDING.md#local-native-bots-ipad).
 
 ## Documentation
 

@@ -3,13 +3,20 @@
 import UIKit
 @main final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, configurationForConnecting session: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        UISceneConfiguration(name: "ETPad", sessionRole: session.role)
+        // Only the app's own scene runs the game. An external display gets a
+        // configuration without a delegate, so iPadOS keeps mirroring (or the
+        // extended desktop) and never starts a second engine on that screen.
+        guard session.role == .windowApplication else {
+            NSLog("ETPad external scene left to the system: %@", session.role.rawValue)
+            return UISceneConfiguration(name: nil, sessionRole: session.role)
+        }
+        return UISceneConfiguration(name: "ETPad", sessionRole: session.role)
     }
 }
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
-        guard let scene = scene as? UIWindowScene else { return }
+        guard let scene = scene as? UIWindowScene, session.role == .windowApplication, window == nil else { return }
         let window = UIWindow(windowScene: scene)
         window.rootViewController = GameViewController()
         self.window = window

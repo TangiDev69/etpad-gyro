@@ -8,27 +8,25 @@ other_booted() {
   xcrun simctl list devices booted -j | python3 -c 'import json,sys; d=json.load(sys.stdin); allowed=sys.argv[1]; print("\n".join(x["udid"] for a in d["devices"].values() for x in a if x.get("state")=="Booted" and x["udid"]!=allowed))' "${udid:-}"
 }
 udid=$(cat "$state" 2>/dev/null || true)
-# The tracked reservation survives build-folder cleanup. Never allocate a second device.
-if [[ -z "$udid" && -f docs/SIMULATOR.md ]]; then
- udid=$(sed -n 's/^UDID: `\([^`]*\)`.*/\1/p' docs/SIMULATOR.md)
- [[ -n "$udid" ]] || { echo 'Simulator reservation exists but its UDID is unreadable.' >&2; exit 1; }
- printf '%s\n' "$udid" > "$state"
-fi
+# One reserved simulator per Mac, kept in ignored build/simulator-udid. A UDID
+# from another machine is dropped so init can reserve a local device.
+if [[ -n "$udid" ]] && ! xcrun simctl list devices | grep -q "$udid"; then udid=; rm -f "$state"; fi
 if [[ -n "$(other_booted)" ]]; then echo 'Refusing: another simulator is booted.' >&2; exit 1; fi
 case "${1:-}" in
  inventory) xcrun simctl list devicetypes;;
  init)
   if [[ -z "$udid" ]]; then
-   udid=$(xcrun simctl create 'ETPad iPad' com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-16GB com.apple.CoreSimulator.SimRuntime.iOS-26-5)
+   runtime=$(xcrun simctl list runtimes -j | python3 -c 'import json,sys; r=[x for x in json.load(sys.stdin)["runtimes"] if x["platform"]=="iOS" and x["isAvailable"]]; print(r[-1]["identifier"] if r else "")')
+   [[ -n "$runtime" ]] || { echo 'No available iOS simulator runtime; install one in Xcode.' >&2; exit 1; }
+   udid=$(xcrun simctl create 'ETPad iPad' com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-16GB "$runtime")
    printf '%s\n' "$udid" > "$state"
-   printf '# ETPad simulator\n\nUDID: `%s`\n\nDevice: iPad Pro 11-inch (M5). Runtime: iOS 26.5 (newest installed at initialization).\n\nUse only `scripts/sim.sh`; never create a replacement.\n' "$udid" > docs/SIMULATOR.md
   fi
   printf '%s\n' "$udid";;
  test)
   [[ -n "$udid" ]] || { echo 'Run scripts/sim.sh init first.' >&2; exit 1; }
   [[ $# -ge 3 ]] || { echo 'Usage: scripts/sim.sh test APP BUNDLE_ID [launch arguments...]' >&2; exit 2; }
   if pgrep -f 'ET Legacy.app/Contents/MacOS/ET Legacy|(^|/)etl($| )' >/dev/null; then echo 'Stop the macOS game first.' >&2; exit 1; fi
-  trap 'xcrun simctl shutdown "$udid" >/dev/null 2>&1 || true; osascript -e '\''tell application "Simulator" to quit'\'' >/dev/null 2>&1 || true' EXIT
+  trap 'xcrun simctl shutdown "$udid" >/dev/null 2>&1 || true; osascript -e '\''tell application "Simulator" to quit'\'' >/dev/null 2>&1 || true; osascript -e '\''tell application "DeviceHub" to quit'\'' >/dev/null 2>&1 || true' EXIT
   xcrun simctl shutdown all
   xcrun simctl boot "$udid"
   xcrun simctl bootstatus "$udid" -b
@@ -42,7 +40,8 @@ case "${1:-}" in
    mkdir -p "$container/Documents/ETPad/etmain"
    cp game-data/etmain/pak[012].pk3 "$container/Documents/ETPad/etmain/"
   fi
-  if [[ "${ETPAD_SIM_VISIBLE:-0}" = 1 ]]; then open -a Simulator --args -CurrentDeviceUDID "$udid"; fi
+  # Xcode 27 replaces Simulator.app with DeviceHub.app.
+  if [[ "${ETPAD_SIM_VISIBLE:-0}" = 1 ]]; then open -a Simulator --args -CurrentDeviceUDID "$udid" 2>/dev/null || open -a DeviceHub; fi
   xcrun simctl launch --terminate-running-process --console "$udid" "$bundle" "$@" > build/ios-engine-sim/runtime-console.log 2>&1 &
   console_pid=$!
   duration=${ETPAD_SIM_HOLD_SECONDS:-10}

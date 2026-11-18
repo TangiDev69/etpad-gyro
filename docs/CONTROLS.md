@@ -26,42 +26,38 @@ Controller validation: the SDL virtual-controller component test passes bank cha
 
 ## iPad touch controls
 
-The HUD-aware source update keeps movement on the left and look on the right, removing the former left-side utility diamond. USE now sits beside the right-thumb FIRE group, with PREV/NEXT beside weapon actions. SCORE and MENU occupy a fixed upper-left HUD gutter with the native ellipsis during active play. The resulting normal layout is visually verified in active Oasis gameplay; the corrected small left-handed layout is verified on Fuel Dump.
+The left thumb drives a floating stick. Its resting ring sits right of ET's portrait and slot HUD to show where to start; a touch anywhere on the left half moves it under the finger. Pushing well past the rim while mostly forward holds Sprint (the stick turns brass and shows SPRINT); Touch Settings can turn this off. The right thumb looks from anywhere on the right half, scaled by Look Speed.
 
-| Default control | Safe-area placement at normal size |
-| --- | --- |
-| Native ellipsis during active gameplay | Rectangle x=12–76, y=12–56 |
-| SCORE | Center (44, 88), fixed 64×44 points |
-| MENU | Center (44, 142), fixed 64×44 points |
-| USE | 172 points from the right, 190 from the bottom; 56-point face |
-| PREV | 250 from the right, 263 from the bottom; 48-point face |
-| NEXT | 250 from the right, 190 from the bottom; 48-point face |
+FIRE is a 104-point red button above-left of ET's ammo and weapon HUD. Holding it fires, and sliding the same finger aims. Two even rings surround it, placed from angles so every gap matches:
 
-Gameplay positions respond to viewport and Size. Left-handed mode mirrors the combat/movement/look sides, but the **default HUD gutter stays left**, because the game's HUD does not mirror. Default left-handed combat positions also move **180 UIKit points upward** to clear the fixed health/class HUD and two-line killfeed; an initial naive mirror overlapped that HUD and was corrected before acceptance. This lift applies only to defaults. Explicitly saved custom centers retain their chosen coordinates and prior mirroring behavior. Restore Default Layout adopts the new defaults. Rendered ET main/Limbo menus retain the native ellipsis's upper-right anchor.
+| Ring | Buttons (counter-clockwise from upper right) | Size |
+| --- | --- | --- |
+| Inner (radius 98) | JUMP, RELOAD, ALT, CROUCH | 62 |
+| Outer (radius 172) | USE, NEXT, PREV, PRONE | 52 |
 
-Controls use SF Symbols with short labels, a larger primary FIRE button and compact secondary/utility buttons. Resting faces are black/translucent; only pressed controls receive action color. Opacity changes the face without fading the white icon/label. Move/look guides appear only during a gesture or Arrange Controls. The implementation clamps final button width/height to at least 44 UIKit points, including at Size 0.7; this is a code property, not physical comfort certification.
+Sizes and distances are in points for an 11-inch iPad and scale with the screen the same way ET's 640×480 HUD does (about 1.19× on 12.9-inch). Size multiplies them further. SCORE (hold) and MENU stay in the fixed top-left gutter beside the ••• capsule. Left-handed mode mirrors the stick and rings and lifts default combat buttons 150 points above the health HUD; saved custom positions keep their coordinates. Older saved configurations and named layouts load unchanged.
 
-Open the white three-dot capsule → **Controls**:
+Resting faces are smoked black with a cream ring; pressed buttons turn brass, and FIRE turns oxblood. Opacity changes faces only.
 
-| Item | Behavior |
-| --- | --- |
-| Show Controls | Show or hide the touch overlay |
-| Auto-Hide Controls | Hide touch controls while a controller is connected |
-| Touch Settings… | Opacity, size, left-handed mode, controller hiding, saved layouts and defaults |
-| Arrange Controls | Enter layout editing; finish with Done Arranging Controls or MENU |
-| Button Mapping… | View/edit controller bindings and restore defaults |
+## Switching between touch, controller and keyboard
 
-**Auto-Hide Controls** and **Touch Settings → Hide with controller** edit one shared preference; their states stay consistent. Touch configuration, named layouts and controller bindings persist. The connected-controller prompt also opens button mapping. Its new gameplay hint lasts eight seconds after connection and hides for scoreboard/intermission; host-only setup keeps the hint available. Button mapping remains accessible from the native menu afterward. The final simulator build renders Button Mapping… and the visibility/touch-setting labels on single lines. Opening Button Mapping… presents the proper mapping sheet; Done returns to the game.
+The input used last decides whether touch controls show (Settings › Touch Controls › Hide During Controller or Keyboard Play, on by default). Connecting a controller or pressing any of its buttons switches to controller mode; any key or locked-mouse movement switches to keyboard mode; the next finger on the screen restores touch controls and is not delivered to the game. Hiding the overlay releases only commands touch was holding, so the controller press that caused the switch keeps working.
+
+With a mouse or trackpad connected, the pointer locks during play: SDL delivers mouse look, left click fires and right click is alternate fire. In menus, the launcher and native sheets the pointer is unlocked and clicks through UIKit; SDL's duplicate mouse events are ignored then, so one click is one click.
+
+On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects (Practice starts the last practice map). In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. B also closes guides and settings sheets.
 
 ## Native three-dot menu
 
-The menu groups immediate **Play** actions separately from **Settings** and **Tools**:
+The menu reads top to bottom, following TribesPad's order:
 
-- Play: Game Menu, Team & Class…, Toggle Map. Team & Class opens ET's Limbo selection directly.
-- Settings: Controls, Display, Online, Game Data & Saves.
-- Tools: Console and Game Keyboard. Report a Problem remains separately identifiable.
+- **This Match** (in a game): Team & Class…, Game Menu, Command Map, Chat (say, team say, quick chat), Vote.
+- **Play**: Who's Playing Now, Practice with Bots (maps and bot count), Join by Address…, plus Game Menu when ET's main menu is showing.
+- **Settings**: Touch Controls (show, hide during other input, size/opacity/look speed, move buttons), Controller Buttons…, Graphics (render resolution, field of view, FPS counter), Player Name…, Game Data.
+- **Help**: How to Play, Console and Keyboard, Report a Problem…, ETPad on GitHub.
+- **Leave Match** (in a game), last and destructive, with a confirmation.
 
-Game Menu opens ET's existing rendered UI; the native menu does not replace it. Native touch/hover pointers enter the built-in UI/cgame frameworks through the engine's VM context. SDL handles GameController keyboard/mouse devices; UIKit hardware-key fallback avoids duplicate delivery when GCKeyboard is present.
+Submenus carry a subtitle with their current state. Game Menu opens ET's own rendered UI; native pointers enter the built-in UI/cgame frameworks through the engine's VM context.
 
 ## Scoreboard and intermission
 

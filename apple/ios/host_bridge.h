@@ -20,3 +20,7 @@ void etpad_pointer(float x, float y, int edge);
 void etpad_hardware_key(int usage, int down);
 
 void etpad_character(int codepoint);
+void etpad_set_pointer_locked(int locked);
+int etpad_take_mouse_activity(void);
+int etpad_client_state(void);
+int etpad_local_server(void);

@@ -166,3 +166,21 @@ Chris approved the 1940s poster portrait. The full-bleed opaque master, iPad/mar
 ## Mac icon and README — 2026-11-17
 
 The approved poster artwork now also ships as `apple/macos/ETPad.icns`; the native CMake bundle selects and embeds it. README displays the shared 1024-pixel artwork. Public Mac rebuild and strict package audit pass (5 Mach-O binaries, 29 files). The exported plist and byte-identical ICNS resource are verified. See [APP-ICON.md](APP-ICON.md). No gameplay code changed.
+
+## iPad release preparation — 2026-11-18
+
+Chris asked for a local build on a second Mac, a WWII launcher, better touch controls, a consistent ••• menu, working online play, the external-display fix, and seamless controller/touch/keyboard-and-mouse handoff, tested on his iPad.
+
+**Hardware now available.** iPad Pro 12.9-inch (6th gen) is paired and Xcode holds team VKDH2T9UTF, so builds are development-signed and installed with `ETPAD_TEAM` (see [BUILDING.md](BUILDING.md#personal-ipad-install-development-signing)). Second-Mac build problems and fixes are recorded there.
+
+**Changes.**
+- Launcher: original poster artwork ([launcher](evidence/ios-device/launcher-2.jpg)), data setup state, Play Online, Practice with Bots (map menu, 5/9/15 bots, then team selection) and Main Menu. The engine still starts once per process.
+- Online: native Who's Playing Now list from the ET masters with one-tap join, favorites, passwords and join by address ([list](evidence/ios-device/servers-1.jpg)).
+- Touch: two even rings around a large FIRE that also aims while held, floating stick with push-to-sprint, look speed, screen-scaled sizes, decoding that keeps old saved layouts ([gameplay](evidence/ios-device/play-4.jpg)).
+- Input handoff: last-used input decides touch visibility; a hiding overlay releases only touch-held commands so a controller trigger is not cancelled; the first finger restores touch without firing; pointer lock during play with a mouse; SDL mouse events are ignored while unlocked so a click is not delivered twice; controller navigation on the launcher and server list.
+- ••• menu: This Match, Play, Settings, Help, Leave Match last (TribesPad order and subtitles).
+- External displays: only the app's own scene runs the game; an external display gets no delegate and keeps system mirroring, and SDL's window attaches to the application scene. Same rule as the Nov. 13–16 fixes in PeonPad, RaTouch, MaskPad, Montezuma's Return and RingPad.
+
+**Verified on the iPad (screenshots via devicectl; no physical tapping by the agent).** Launcher missing-data and ready states; Practice with Bots on Oasis and Goldrush with ten bots and automatic Limbo; Allied engineer spawn with the new touch layout; Who's Playing Now listing eight populated servers with live ping from Japan; a public join to XG|Legacy 24/7 (51.83.7.204:27960) reaching "Connected to a pure server" and downloading legacy_v2.86.2.pk3 at about 100 KB/s ([download](evidence/ios-device/online-2.jpg)). Another server (TeamMuppet) refused with "You are excluded from this server", its own policy.
+
+**Not yet verified.** Real thumb feel of the rings, drag-to-aim and push-to-sprint; Xbox controller play and handoff; keyboard, trackpad pointer lock and click delivery; external display mirroring; the full Simulator regression. No tag, release or PadMint catalog change.

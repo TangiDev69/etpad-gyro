@@ -5,26 +5,42 @@ import GameController
 import UniformTypeIdentifiers
 
 final class GameViewController:UIViewController,UIDocumentPickerDelegate {
+    // The last input used decides whether touch controls show. A controller or
+    // keyboard/mouse hides them (when Auto-Hide is on); a finger brings them back.
+    private enum InputMode { case touch,controller,keyboard }
     private var started=false,engineReady=false,checking=false,dataReady=false
     private var showTouch=true
     private var autoHide:Bool { overlay.configuration.hideWithController }
     private var displayLink:CADisplayLink?
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
-    private let status=UILabel(),prompts=UIButton(type:.system),menu=UIButton(type:.system)
-    private let downloadButton=UIButton(type:.system),importButton=UIButton(type:.system),playButton=UIButton(type:.system)
+    private let prompts=UIButton(type:.system),menu=UIButton(type:.system)
+    private let launcher=LauncherView(frame:.zero)
     private let overlay=GoldenPadTouchOverlay(frame:.zero),surface=GameSurfaceInputView(frame:.zero)
     private var gameHome:URL { dataManager.home }
     private let hostOnly=ProcessInfo.processInfo.arguments.contains("--etpad-host-only")
-    private var controllerConnected=false,gameplayActive=false
+    private var controllerConnected=false,gameplayActive=false,hasMouse=false
+    private var inputMode:InputMode = .touch
+    private var lastPadEvent:Double=0
+    private var wantsPointerLock=false
+    private var clientState:Int32=0
+    private var pendingBots=false
+    private var pendingCommand:String?
+    private var padPrevious:[String:Bool]=[:]
+    private var lastPracticeMap:String { UserDefaults.standard.string(forKey:"etpad.lastPractice") ?? "oasis" }
     private var frameTimes:[Double]=[],intervals:[Double]=[],hostTimes:[Double]=[],callbackTimes:[Double]=[]
     private var lastFrameTime:Double=0
     private var controllerHintUntil:Double=0
     private weak var promptController:GCController?
     private var inFrame=false
+    private var inMatch:Bool { engineReady && clientState>=5 }
+    static let practiceMaps=[("Oasis","oasis","Allies breach the walls of an old desert city"),("Goldrush","goldrush","Steal the gold from the Axis bank"),
+        ("Radar","radar","Allies destroy two radar arrays"),("Battery","battery","Storm a coastal gun battery"),
+        ("Fuel Dump","fueldump","Escort the tank to the Axis fuel depot"),("Rail Gun","railgun","Disable an Axis railway gun")]
     override var supportedInterfaceOrientations:UIInterfaceOrientationMask { .landscape }
     override var prefersStatusBarHidden:Bool { true }
     override var prefersHomeIndicatorAutoHidden:Bool { true }
+    override var prefersPointerLocked:Bool { wantsPointerLock }
     override var canBecomeFirstResponder:Bool { true }
     override func viewDidLoad(){
         super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black
@@ -33,23 +49,23 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         let legacyAutoHide=UserDefaults.standard.object(forKey:"etpad.autoHide") as? Bool ?? true
         overlay.configuration.hideWithController=legacyAutoHide && overlay.configuration.hideWithController
         UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
-        view.addSubview(surface);view.addSubview(overlay)
-        status.text="ETPad\nChecking original game data…";status.textColor = .white;status.numberOfLines=0;status.textAlignment = .center
-        status.font = .systemFont(ofSize:18,weight:.medium);view.addSubview(status)
+        view.addSubview(surface);view.addSubview(overlay);view.addSubview(launcher)
         var controllerStyle=UIButton.Configuration.plain()
         controllerStyle.image=UIImage(systemName:"gamecontroller.fill");controllerStyle.imagePadding=7
-        controllerStyle.baseForegroundColor = .white;controllerStyle.cornerStyle = .capsule
-        controllerStyle.background.backgroundColor=UIColor(white:0.06,alpha:0.72)
+        controllerStyle.baseForegroundColor=ETPadTheme.cream;controllerStyle.cornerStyle = .capsule
+        controllerStyle.background.backgroundColor=ETPadTheme.ink.withAlphaComponent(0.72)
         controllerStyle.contentInsets=NSDirectionalEdgeInsets(top:7,leading:12,bottom:7,trailing:12)
         controllerStyle.titleTextAttributesTransformer=UIConfigurationTextAttributesTransformer { incoming in
             var outgoing=incoming;outgoing.font=UIFont.systemFont(ofSize:12,weight:.semibold);return outgoing
         }
         prompts.configuration=controllerStyle;prompts.addTarget(self,action:#selector(mapping),for:.touchUpInside)
         prompts.accessibilityHint="Opens controller button mapping";view.addSubview(prompts)
-        for (button,title,action) in [(downloadButton,"Download Free Game Data",#selector(downloadData)),(importButton,"Import Game Data",#selector(importData)),(playButton,"Play ETPad",#selector(play))] {
-            button.setTitle(title,for:.normal);button.backgroundColor=UIColor.white.withAlphaComponent(0.1);button.layer.cornerRadius=12
-            button.addTarget(self,action:action,for:.touchUpInside);view.addSubview(button)
-        }
+        launcher.onPlayOnline = { [weak self] in self?.showServers() }
+        launcher.onMainMenu = { [weak self] in self?.launch([]) }
+        launcher.onDownload = { [weak self] in self?.downloadData() }
+        launcher.onImport = { [weak self] in self?.importData() }
+        launcher.onHelp = { [weak self] in self?.showGuide() }
+        launcher.onQuickPractice = { [weak self] in guard let self=self else { return };self.practice(self.lastPracticeMap) }
         // Capsule appearance adapted from Kartpad apple/ios/KartPadMenuButton.h,
         // commit 90647e905db8afd10b4dde8e18ed4e44f234c6fc (read-only reference).
         var menuStyle=UIButton.Configuration.plain()
@@ -63,24 +79,41 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         menu.showsMenuAsPrimaryAction=true;menu.accessibilityLabel="ETPad menu";view.addSubview(menu)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
         overlay.onMove = { [weak self] value in if self?.engineReady == true { etpad_touch_move(Float(value.x),Float(value.y)) } }
-        overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32(value.x*1.5),Int32(value.y*1.5)) } }
+        overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32((value.x*1.5).rounded()),Int32((value.y*1.5).rounded())) } }
+        overlay.onTouch = { [weak self] in self?.setInputMode(.touch) }
         overlay.onConfigurationChanged = { [weak self] in self?.refreshMenu() }
         surface.pointer = { [weak self] point,edge in if self?.engineReady == true { etpad_pointer(Float(point.x),Float(point.y),edge) } }
-        dataManager.onProgress = { [weak self] message in self?.status.isHidden=false;self?.status.text=message;self?.updateDataButtons() }
+        surface.claimDirectTouch = { [weak self] in
+            // During play with touch controls hidden by another input, the
+            // first finger restores them and never reaches the game as a click.
+            guard let self=self,self.gameplayActive,self.inputMode != .touch,self.showTouch else { return false }
+            self.setInputMode(.touch);return true
+        }
+        dataManager.onProgress = { [weak self] message in self?.launcher.setState(.busy(message)) }
         dataManager.onComplete = { [weak self] result in
             guard let self=self else { return }
             switch result {
-            case .success:self.dataReady=true;self.status.text="Original game data verified. Ready to play.";NSLog("ETPad DATA verified download/import complete")
-            case .failure(let error):self.status.text=error.localizedDescription;self.alert("Game Data",error.localizedDescription)
+            case .success:self.dataReady=true;NSLog("ETPad DATA verified download/import complete")
+            case .failure(let error):self.alert("Game Data",error.localizedDescription)
             }
-            self.updateDataButtons();self.refreshMenu()
+            self.updateLauncher();self.refreshMenu()
         }
-        for name in [UIWindow.didBecomeKeyNotification,UIApplication.didBecomeActiveNotification,.GCControllerDidConnect,.GCControllerDidDisconnect] {
-            observers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { [weak self] _ in self?.restoreHost();self?.refreshPrompts() })
+        for name in [UIWindow.didBecomeKeyNotification,UIApplication.didBecomeActiveNotification,.GCControllerDidConnect,.GCControllerDidDisconnect,.GCMouseDidConnect,.GCMouseDidDisconnect,.GCKeyboardDidConnect] {
+            observers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { [weak self] note in
+                guard let self=self else { return }
+                if note.name == .GCControllerDidConnect { self.setInputMode(.controller) }
+                if note.name == .GCControllerDidDisconnect && GCController.controllers().isEmpty && self.inputMode == .controller { self.setInputMode(.touch) }
+                self.restoreHost();self.refreshPrompts()
+            })
         }
+        observers.append(NotificationCenter.default.addObserver(forName:UIPointerLockState.didChangeNotification,object:nil,queue:.main) { [weak self] _ in
+            let locked=self?.view.window?.windowScene?.pointerLockState?.isLocked ?? false
+            etpad_set_pointer_locked(locked ? 1:0);NSLog("ETPad pointer lock %@",locked ? "on":"off")
+        })
         observers.append(NotificationCenter.default.addObserver(forName:UIApplication.willResignActiveNotification,object:nil,queue:.main) { [weak self] _ in
             guard let self=self else { return };self.releaseInputs();self.displayLink?.isPaused=true;self.lastFrameTime=0;NSLog("ETPad lifecycle paused")
         })
+        if !GCController.controllers().isEmpty { inputMode = .controller }
         displayLink=CADisplayLink(target:self,selector:#selector(frame));displayLink?.preferredFrameRateRange=CAFrameRateRange(minimum:30,maximum:60,preferred:60);displayLink?.add(to:.main,forMode:.common)
         refreshMenu();refreshPrompts()
     }
@@ -92,21 +125,24 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         }
         dataManager.checkInstalled { [weak self] ready in
             guard let self=self else { return };self.dataReady=ready
-            self.status.text=ready ? "ETPad\nOriginal game data verified." : "ETPad\nOriginal game data is missing.\nDownload the free release or import pak0.pk3, pak1.pk3 and pak2.pk3.\nGame data remains under its original EULA."
-            self.updateDataButtons()
-            if ready && !self.hostOnly { self.play() }
+            self.updateLauncher();self.refreshMenu()
+            // Test hooks run the same paths as the launcher buttons.
+            let arguments=ProcessInfo.processInfo.arguments
+            func value(_ flag:String)->String? { arguments.firstIndex(of:flag).flatMap { $0+1<arguments.count ? arguments[$0+1]:nil } }
+            guard ready else { return }
+            self.pendingCommand=value("--etpad-command")
+            if arguments.contains("--etpad-oasis") { self.launch(["+set","sv_pure","0","+set","g_gametype","2","+devmap","oasis"]) }
+            else if let map=value("--etpad-practice") { self.practice(map) }
+            else if let address=value("--etpad-connect") { self.join(address,password:nil) }
+            else if arguments.contains("--etpad-servers") { self.showServers() }
         }
     }
     override func viewDidLayoutSubviews(){
-        super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay)
+        super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay);setFrame(view.bounds,for:launcher)
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         layoutMenu(in:safe)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
         setFrame(CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44),for:prompts)
-        setFrame(CGRect(x:safe.midX-350,y:safe.midY-140,width:700,height:150),for:status)
-        setFrame(CGRect(x:safe.midX-160,y:safe.midY+20,width:320,height:48),for:downloadButton)
-        setFrame(CGRect(x:safe.midX-160,y:safe.midY+80,width:320,height:48),for:importButton)
-        setFrame(CGRect(x:safe.midX-160,y:safe.midY+140,width:320,height:48),for:playButton)
         restoreHost()
     }
     func restoreHost(){
@@ -124,11 +160,52 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         view.bringSubviewToFront(menu)
         if presentedViewController==nil { becomeFirstResponder() }
     }
-    private func updateDataButtons(){
-        downloadButton.isHidden=engineReady;importButton.isHidden=engineReady;playButton.isHidden=engineReady || !dataReady
-        downloadButton.isEnabled = !dataManager.busy;importButton.isEnabled = !dataManager.busy;playButton.isEnabled = !dataManager.busy
+    private func updateLauncher(){
+        guard !started else { return }
+        if dataManager.busy { return }
+        launcher.setState(dataReady ? .ready:.missing)
+        launcher.practiceMenu=UIMenu(title:"Practice with Bots",children:practiceItems())
     }
-    @objc private func play(){guard dataReady && !started else { return };started=true;status.isHidden=true;downloadButton.isHidden=true;importButton.isHidden=true;playButton.isHidden=true;waitForLandscape(attempt:0)}
+    // Start the engine once. Later choices run as engine commands instead.
+    private func launch(_ extra:[String]){
+        guard dataReady && !started else { return }
+        started=true;launcher.setState(.starting);waitForLandscape(attempt:0,extra:extra)
+    }
+    private func showServers(){
+        releaseInputs()
+        let browser=ServerBrowserViewController()
+        browser.onJoin = { [weak self] address,password in self?.join(address,password:password) }
+        let navigation=UINavigationController(rootViewController:browser)
+        navigation.modalPresentationStyle = .formSheet;navigation.preferredContentSize=CGSize(width:720,height:640)
+        navigation.overrideUserInterfaceStyle = .dark
+        present(navigation,animated:true)
+    }
+    private func join(_ address:String,password:String?){
+        NSLog("ETPad joining %@",address)
+        if engineReady {
+            command((password.map { "set password \"\($0)\";" } ?? "")+"connect \(address)")
+        } else {
+            launch((password.map { ["+set","password",$0] } ?? [])+["+connect",address])
+        }
+    }
+    private func practice(_ map:String){
+        pendingBots=true;UserDefaults.standard.set(map,forKey:"etpad.lastPractice")
+        let setup=["+set","omnibot_enable","1","+set","g_gametype","2","+set","sv_pure","0"]
+        if engineReady { command("set omnibot_enable 1;set g_gametype 2;set sv_pure 0;map \(map)") } else { launch(setup+["+map",map]) }
+    }
+    private var botCount:Int { let n=UserDefaults.standard.integer(forKey:"etpad.botCount");return [6,10,16].contains(n) ? n:10 }
+    private func practiceItems()->[UIMenuElement]{
+        let maps=Self.practiceMaps.map { name,map,detail -> UIMenuElement in
+            let item=action(name,icon:"map"){[weak self] in self?.practice(map)}
+            item.subtitle=detail;return item
+        }
+        let counts=[(6,"Small: 5 bots"),(10,"Medium: 9 bots"),(16,"Large: 15 bots")].map { count,title -> UIMenuElement in
+            action(title,state:botCount==count){[weak self] in UserDefaults.standard.set(count,forKey:"etpad.botCount");self?.refreshMenu()}
+        }
+        let size=UIMenu(title:"Bot Count",image:UIImage(systemName:"person.3.sequence"),children:counts)
+        size.subtitle="\(botCount-1) bots join you"
+        return [UIMenu(options:.displayInline,children:maps),UIMenu(options:.displayInline,children:[size])]
+    }
     @objc private func downloadData(){releaseInputs();dataManager.download()}
     @objc private func importData(){
         guard !dataManager.busy else { return };releaseInputs()
@@ -137,6 +214,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     }
     func documentPicker(_ controller:UIDocumentPickerViewController,didPickDocumentsAt urls:[URL]){dataManager.importPaks(urls)}
     override func pressesBegan(_ presses:Set<UIPress>,with event:UIPressesEvent?) {
+        if engineReady && presentedViewController==nil && presses.contains(where:{ $0.key != nil }) { setInputMode(.keyboard) }
         if engineReady && presentedViewController==nil && GCKeyboard.coalesced==nil {
             for press in presses { if let key=press.key { etpad_hardware_key(Int32(key.keyCode.rawValue),1) } }
         }
@@ -160,7 +238,42 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         else if pressed { command(action) }
     }
     private func releaseInputs(){overlay.releaseAll();if engineReady { etpad_release_inputs() }}
+    private func setInputMode(_ mode:InputMode){
+        guard mode != inputMode else { return }
+        inputMode=mode;NSLog("ETPad input mode %@",String(describing:mode))
+        if mode == .controller { controllerHintUntil=CACurrentMediaTime()+8 }
+        updateTouchVisibility()
+    }
+    // Cheap per-frame checks: GameController exposes the last event time, and
+    // the engine reports SDL mouse use while the pointer is locked.
+    private func pollInputSources(){
+        if let controller=GCController.controllers().first {
+            let profile=controller.physicalInputProfile
+            if profile.lastEventTimestamp != lastPadEvent {
+                lastPadEvent=profile.lastEventTimestamp
+                if profile.allButtons.contains(where:{ $0.isPressed }) || profile.allDpads.contains(where:{ hypot($0.xAxis.value,$0.yAxis.value)>0.4 }) { setInputMode(.controller) }
+            }
+        }
+        if GCKeyboard.coalesced?.keyboardInput?.isAnyKeyPressed == true || etpad_take_mouse_activity() != 0 { setInputMode(.keyboard) }
+    }
+    // Native screens (launcher, server list, guides) are UIKit, which does not
+    // move focus with a gamepad on iPadOS. Read edges here instead; the game
+    // itself keeps reading the controller through SDL.
+    private func pollMenuController(){
+        let browser=(presentedViewController as? UINavigationController)?.viewControllers.first as? ServerBrowserViewController
+        guard !engineReady || presentedViewController != nil,let pad=GCController.controllers().first?.extendedGamepad else { return }
+        func edge(_ name:String,_ on:Bool)->Bool { let was=padPrevious[name] ?? false;padPrevious[name]=on;return on && !was }
+        let x=pad.dpad.xAxis.value+pad.leftThumbstick.xAxis.value,y=pad.dpad.yAxis.value+pad.leftThumbstick.yAxis.value
+        let left=edge("left",x < -0.5),right=edge("right",x>0.5),up=edge("up",y>0.5),down=edge("down",y < -0.5)
+        let a=edge("a",pad.buttonA.isPressed),b=edge("b",pad.buttonB.isPressed),refresh=edge("y",pad.buttonY.isPressed)
+        guard left || right || up || down || a || b || refresh else { return }
+        setInputMode(.controller)
+        if let browser=browser { browser.controller(move:down ? 1:(up ? -1:0),activate:a,back:b,refresh:refresh) }
+        else if let presented=presentedViewController { if b { presented.dismiss(animated:true) } }
+        else if !started { launcher.controller(move:right || down ? 1:(left || up ? -1:0),activate:a) }
+    }
     private func refreshPrompts(){
+        hasMouse = !GCMouse.mice().isEmpty
         guard let controller=GCController.controllers().first else {
             controllerConnected=false;setHidden(true,for:prompts);promptController=nil;controllerHintUntil=0;updateTouchVisibility();return
         }
@@ -183,8 +296,11 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private func layoutMenu(in safe:CGRect){
         // Layout callbacks reuse the last completed host-state snapshot. They
         // can occur inside SDL's nested UIKit loop while Com_Frame is running.
+        // On the launcher the capsule shares the header row and right margin
+        // with How to Play; over ET's own menus it keeps the corner anchor.
         let frame=gameplayActive ? CGRect(x:safe.minX+12,y:safe.minY+12,width:64,height:44)
-            : CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44)
+            : (!started ? CGRect(x:safe.maxX-48-48,y:safe.minY+26,width:48,height:44)
+            : CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44))
         setFrame(frame,for:menu)
     }
     private func updateTouchVisibility(){
@@ -192,18 +308,35 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         // membership changes are captured by refreshPrompts on lifecycle and
         // connect/disconnect notifications, including the initial refresh.
         gameplayActive=engineReady && etpad_gameplay() != 0
+        let state=engineReady ? etpad_client_state():0
+        if (state>=5) != (clientState>=5) { clientState=state;refreshMenu() } else { clientState=state }
+        if pendingBots && state==8 && etpad_local_server() != 0 {
+            // Omni-bot counts the player; open team selection once bots join.
+            pendingBots=false;command("bot maxbots \(botCount)")
+            DispatchQueue.main.asyncAfter(deadline:.now()+1.5) { [weak self] in
+                guard let self=self else { return }
+                if let test=self.pendingCommand { self.pendingCommand=nil;self.command(test) }
+                // openlimbomenu toggles; ET may already show team selection.
+                else if etpad_gameplay() != 0 { self.command("openlimbomenu") }
+            }
+        } else if let test=pendingCommand,!pendingBots,state==8 {
+            pendingCommand=nil;DispatchQueue.main.asyncAfter(deadline:.now()+1.5) { [weak self] in self?.command(test) }
+        }
         let hudFlags=engineReady ? etpad_hud_flags():0
         let scoreboard=(hudFlags & 3) != 0
         if overlay.scoreboardVisible != scoreboard { overlay.scoreboardVisible=scoreboard }
-        setHidden(!controllerConnected || (!hostOnly && (scoreboard || CACurrentMediaTime()>controllerHintUntil)),for:prompts)
+        setHidden(!controllerConnected || inputMode != .controller || (!hostOnly && (scoreboard || CACurrentMediaTime()>controllerHintUntil)),for:prompts)
         layoutMenu(in:view.bounds.inset(by:view.safeAreaInsets))
-        let controllerHides=autoHide && controllerConnected
+        let otherInput=autoHide && inputMode != .touch
         let active=hostOnly || gameplayActive
-        let hidden = !overlay.arranging && (!showTouch || controllerHides || !active)
+        let hidden = !overlay.arranging && (!showTouch || otherInput || !active)
         if hidden != overlay.isHidden {
             if hidden { overlay.releaseAll() }
             overlay.isHidden=hidden
         }
+        // Lock the pointer for mouse look only during play with a mouse attached.
+        let lock=engineReady && gameplayActive && hasMouse && presentedViewController==nil && !overlay.arranging
+        if lock != wantsPointerLock { wantsPointerLock=lock;setNeedsUpdateOfPrefersPointerLocked() }
     }
     @objc private func frame(){
         guard UIApplication.shared.applicationState == .active && !inFrame else { return }
@@ -213,7 +346,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         if engineReady {
             etpad_frame();engineMilliseconds=(CACurrentMediaTime()-start)*1000
             if lastFrameTime>0 { intervals.append((start-lastFrameTime)*1000) };lastFrameTime=start
+            pollInputSources()
         }
+        pollMenuController()
         updateTouchVisibility()
         guard engineReady else { return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
@@ -236,41 +371,97 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         overlay.configuration.hideWithController=enabled
         refreshMenu()
     }
+    private func group(_ children:[UIMenuElement],_ title:String="")->UIMenu { UIMenu(title:title,options:.displayInline,children:children) }
+    // One flat menu read top to bottom: This Match (in a game), Play,
+    // Settings, Help, then Leave Match on its own at the end.
     private func refreshMenu(){
         // Layout restore/import also changes this one canonical setting.
         UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
-        let visibility=UIMenu(options:.displayInline,children:[
-            action("Show Controls",icon:"hand.tap",fullTitle:"Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},
-            action("Auto-Hide Controls",icon:"eye.slash",fullTitle:"Auto-Hide Touch Controls",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}])
-        let layout=UIMenu(options:.displayInline,children:[
-            action("Touch Settings…",icon:"slider.horizontal.3",fullTitle:"Touch Control Settings…"){[weak self] in self?.touchSettings()},
-            action(overlay.arranging ? "Done Arranging Controls":"Arrange Controls",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])
-        let controls=UIMenu(title:"Controls",image:UIImage(systemName:"gamecontroller"),children:[visibility,layout,
-            UIMenu(options:.displayInline,children:[action("Button Mapping…",icon:"gamecontroller",fullTitle:"Controller Button Mapping…"){[weak self] in self?.mapping()}])])
-        let display=UIMenu(title:"Display",image:UIImage(systemName:"display"),children:[
-            UIMenu(title:"Render Resolution",image:UIImage(systemName:"rectangle.expand.vertical"),children:[960,1280,1600,1920].map { width in action("\(width) pixels wide",state:UserDefaults.standard.integer(forKey:"etpad.renderWidth")==width){[weak self] in self?.resolution(width)} }),
+        var sections:[UIMenuElement]=[]
+        if inMatch { sections.append(group(matchItems(),"This Match")) }
+
+        let servers=action("Who's Playing Now",icon:"globe"){[weak self] in self?.showServers()}
+        servers.subtitle=inMatch ? "Live servers; joining leaves this match":"Live servers, join with one tap"
+        let practice=UIMenu(title:"Practice with Bots",image:UIImage(systemName:"person.3.sequence"),children:practiceItems())
+        practice.subtitle=inMatch ? "Leaves this match first":"Offline on six classic maps"
+        var play:[UIMenuElement]=[servers,practice,action("Join by Address…",icon:"link"){[weak self] in self?.joinAddress()}]
+        if engineReady && !inMatch { play.append(action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")}) }
+        sections.append(group(play,"Play"))
+
+        let hideItem=action("Hide During Controller or Keyboard Play",icon:"eye.slash",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}
+        hideItem.subtitle="Touch the screen to bring them back"
+        let touch=UIMenu(title:"Touch Controls",image:UIImage(systemName:"hand.tap"),children:[
+            group([action("Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},hideItem]),
+            group([action("Size, Opacity and Look Speed…",icon:"slider.horizontal.3"){[weak self] in self?.touchSettings()},
+                action(overlay.arranging ? "Done Moving Buttons":"Move Buttons",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])])
+        touch.subtitle = !showTouch ? "Hidden":(autoHide ? "Hide while a controller or keyboard is used":"Always shown")
+        let controller=action("Controller Buttons…",icon:"gamecontroller"){[weak self] in self?.mapping()}
+        controller.subtitle=GCController.controllers().first.map { $0.vendorName ?? "Controller connected" } ?? "Xbox, PlayStation or MFi"
+        let width=UserDefaults.standard.integer(forKey:"etpad.renderWidth")
+        let graphics=UIMenu(title:"Graphics",image:UIImage(systemName:"display"),children:[
+            UIMenu(title:"Render Resolution",image:UIImage(systemName:"rectangle.expand.vertical"),children:[960,1280,1600,1920].map { w in action("\(w) pixels wide",state:(width==0 ? 1280:width)==w){[weak self] in self?.resolution(w)} }),
             action("Field of View…",icon:"viewfinder"){[weak self] in self?.fieldOfView()},
             action("Show FPS Counter",icon:"speedometer",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])
-        let online=UIMenu(title:"Online",image:UIImage(systemName:"network"),children:[
-            action("Player Name…",icon:"person.crop.circle"){[weak self] in self?.playerName()},
-            action("Favorite Servers",icon:"star"){[weak self] in self?.favorites()}])
-        let data=UIMenu(title:"Game Data & Saves",image:UIImage(systemName:"folder"),children:[
-            UIMenu(options:.displayInline,children:[
-                action("Download Free Game Data",icon:"arrow.down.circle"){[weak self] in self?.downloadData()},
-                action("Import or Reimport Game Data",icon:"square.and.arrow.down"){[weak self] in self?.importData()}]),
-            UIMenu(options:.displayInline,children:[action("Remove Stored Game Data",icon:"trash",attributes:.destructive){[weak self] in self?.removeData()}])])
-        let tools=UIMenu(title:"Tools",image:UIImage(systemName:"wrench.and.screwdriver"),children:[
+        graphics.subtitle="\(width==0 ? 1280:width) pixels wide"
+        let name=action("Player Name…",icon:"person.crop.circle"){[weak self] in self?.playerName()}
+        name.subtitle=UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer"
+        let data=UIMenu(title:"Game Data",image:UIImage(systemName:"folder"),children:[
+            group([action("Download Free Game Data",icon:"arrow.down.circle"){[weak self] in self?.downloadData()},
+                action("Import pak Files…",icon:"square.and.arrow.down"){[weak self] in self?.importData()}]),
+            group([action("Remove Stored Game Data",icon:"trash",attributes:.destructive){[weak self] in self?.removeData()}])])
+        data.subtitle=dataReady ? "Original files verified":"Needed to play"
+        sections.append(group([touch,controller,graphics,name,data],"Settings"))
+
+        let tools=UIMenu(title:"Console and Keyboard",image:UIImage(systemName:"terminal"),children:[
             action("Console…",icon:"terminal"){[weak self] in self?.console()},
             action("Game Keyboard…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}])
-        let play=UIMenu(title:"Play",options:.displayInline,children:[
-            action("Game Menu",icon:"pause.rectangle",attributes:engineReady ? []:.disabled){[weak self] in self?.command("togglemenu")},
-            action("Team & Class…",icon:"person.2",attributes:engineReady ? []:.disabled){[weak self] in self?.command("openlimbomenu")},
-            action("Toggle Map",icon:"map",attributes:engineReady ? []:.disabled){[weak self] in self?.command("ToggleAutoMap")}])
-        menu.menu=UIMenu(title:"ETPad",children:[play,
-            UIMenu(title:"Settings",options:.displayInline,children:[controls,display,online,data]),
-            UIMenu(options:.displayInline,children:[tools]),
-            UIMenu(options:.displayInline,children:[action("Report a Problem…",icon:"questionmark.circle"){[weak self] in self?.reportProblem()}])])
+        sections.append(group([action("How to Play",icon:"book"){[weak self] in self?.showGuide()},tools,
+            action("Report a Problem…",icon:"exclamationmark.bubble"){[weak self] in self?.reportProblem()},
+            action("ETPad on GitHub",icon:"safari"){ UIApplication.shared.open(URL(string:"https://github.com/chrissotraidis/etpad")!) }],"Help"))
+        if inMatch { sections.append(group([action("Leave Match",icon:"rectangle.portrait.and.arrow.right",attributes:.destructive){[weak self] in self?.leaveMatch()}])) }
+        menu.menu=UIMenu(title:"",children:sections)
+        updateLauncher()
         updateTouchVisibility()
+    }
+    private func matchItems()->[UIMenuElement]{
+        let quick=[("Medic!","vsay_team Medic"),("Need Ammo","vsay_team NeedAmmo"),("Need Backup","vsay_team NeedBackup"),("Need an Engineer","vsay_team NeedEngineer"),
+                   ("Cover Me","vsay_team CoverMe"),("Affirmative","vsay_team Affirmative"),("Negative","vsay_team Negative"),("Thanks","vsay Thanks"),("Great Shot","vsay GreatShot")]
+        let chat=UIMenu(title:"Chat",image:UIImage(systemName:"bubble.left.and.bubble.right"),children:[
+            group([action("Say to Everyone…",icon:"bubble.left.and.bubble.right"){[weak self] in self?.chat("say")},
+                action("Say to Team…",icon:"bubble.left"){[weak self] in self?.chat("say_team")}]),
+            group(quick.map { title,cmd in action(title){[weak self] in self?.command(cmd)} },"Quick Chat")])
+        let vote=UIMenu(title:"Vote",image:UIImage(systemName:"hand.raised"),children:[
+            action("Vote Yes",icon:"hand.thumbsup"){[weak self] in self?.command("vote yes")},
+            action("Vote No",icon:"hand.thumbsdown"){[weak self] in self?.command("vote no")}])
+        return [action("Team & Class…",icon:"person.2"){[weak self] in self?.command("openlimbomenu")},
+                action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")},
+                action("Command Map",icon:"map"){[weak self] in self?.command("ToggleAutoMap")},
+                chat,vote]
+    }
+    private func chat(_ verb:String){
+        prompt(verb=="say" ? "Say to Everyone":"Say to Team",placeholder:"Message",submit:"Send"){[weak self] text in
+            let clean=String(text.filter { $0 != "\"" && $0 != ";" && $0 != "\n" }.prefix(150))
+            if !clean.isEmpty { self?.command("\(verb) \"\(clean)\"") }
+        }
+    }
+    private func leaveMatch(){
+        let alert=UIAlertController(title:"Leave this match?",message:"You return to the main menu.",preferredStyle:.alert)
+        alert.addAction(UIAlertAction(title:"Stay",style:.cancel))
+        alert.addAction(UIAlertAction(title:"Leave",style:.destructive){[weak self] _ in self?.command("disconnect")})
+        present(alert,animated:true)
+    }
+    private func joinAddress(){
+        prompt("Join by Address",placeholder:"host:27960",submit:"Join"){[weak self] address in
+            let trimmed=address.trimmingCharacters(in:.whitespaces)
+            guard ServerBrowserViewController.validAddress(trimmed) else { self?.alert("Join by Address","Enter a hostname or IPv4 address, optionally with :port.");return }
+            self?.join(trimmed,password:nil)
+        }
+    }
+    private func showGuide(){
+        releaseInputs()
+        let navigation=UINavigationController(rootViewController:GuideViewController())
+        navigation.modalPresentationStyle = .formSheet;navigation.preferredContentSize=CGSize(width:640,height:620)
+        present(navigation,animated:true)
     }
     private func alert(_ title:String,_ message:String){let alert=UIAlertController(title:title,message:message,preferredStyle:.alert);alert.addAction(UIAlertAction(title:"OK",style:.default));present(alert,animated:true)}
     private func prompt(_ title:String,placeholder:String,value:String="",submit:String="Save",completion:@escaping(String)->Void){
@@ -286,7 +477,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             .slider("Opacity",0.25,1,Float(overlay.configuration.opacity)){[weak self] in self?.overlay.configuration.opacity=Double($0)},
             .slider("Size",0.7,1.3,Float(overlay.configuration.size)){[weak self] in self?.overlay.configuration.size=Double($0)},
             .toggle("Left-handed",overlay.configuration.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
-            .toggle("Hide with controller",autoHide){[weak self] in self?.setAutoHide($0)},
+            .slider("Look Speed",0.4,2.5,Float(overlay.configuration.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
+            .toggle("Push stick forward to sprint",overlay.configuration.sprintByPush){[weak self] in self?.overlay.configuration.sprintByPush=$0},
+            .toggle("Hide while a controller or keyboard is used",autoHide){[weak self] in self?.setAutoHide($0)},
             .button("Arrange Controls"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
             .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
             .button("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}])
@@ -335,15 +528,6 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private func playerName(){prompt("Player Name",placeholder:"Player name",value:UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer"){[weak self] name in
         let safe=String(name.unicodeScalars.filter{CharacterSet.alphanumerics.contains($0) || " _-^".unicodeScalars.contains($0)}.prefix(32));UserDefaults.standard.set(safe,forKey:"etpad.name");self?.command("set name \"\(safe)\"")
     }}
-    private func favorites(){
-        let servers=UserDefaults.standard.stringArray(forKey:"etpad.favorites") ?? []
-        var rows:[HostSettingsViewController.Row]=[.button("Add Favorite Server…"){[weak self] in self?.prompt("Favorite Server",placeholder:"hostname:27960") { address in
-            guard address.range(of:"^[A-Za-z0-9.-]+:[0-9]{1,5}$",options:.regularExpression) != nil,let port=Int(address.split(separator:":").last ?? ""),(1...65535).contains(port) else {self?.alert("Favorite Server","Enter a hostname or IPv4 address and port.");return}
-            var list=servers;if !list.contains(address){list.append(address)};UserDefaults.standard.set(list,forKey:"etpad.favorites")
-        }}]
-        for address in servers { rows.append(.button(address){[weak self] in self?.command("connect \(address)")}) }
-        presentSettings("Favorite Servers",rows:rows)
-    }
     private func console(){prompt("Console",placeholder:"ET command",submit:"Run"){[weak self] text in self?.command(text)}}
     private func gameKeyboard(){prompt("Game Keyboard",placeholder:"Text for the selected game field",submit:"Type"){[weak self] text in guard self?.engineReady == true else{return};for scalar in text.unicodeScalars {etpad_character(Int32(scalar.value))}}}
     private func removeData(){
@@ -352,7 +536,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         let alert=UIAlertController(title:"Remove Stored Game Data",message:message,preferredStyle:.alert);alert.addAction(UIAlertAction(title:"Cancel",style:.cancel))
         alert.addAction(UIAlertAction(title:"Remove Game Data",style:.destructive){[weak self] _ in guard let self=self else{return}
             if self.engineReady {UserDefaults.standard.set(true,forKey:"etpad.removeDataOnLaunch");self.alert("Game Data","Removal is scheduled for the next app launch.")}
-            else {do{try self.dataManager.removeInstalled();self.dataReady=false;self.status.text="Game data removed. Download or import it to play.";self.updateDataButtons()}catch{self.alert("Game Data",error.localizedDescription)}}
+            else {do{try self.dataManager.removeInstalled();self.dataReady=false;self.updateLauncher()}catch{self.alert("Game Data",error.localizedDescription)}}
         });present(alert,animated:true)
     }
     private func reportProblem(){
@@ -373,14 +557,14 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         let url=FileManager.default.temporaryDirectory.appendingPathComponent("ETPad-report-\(UUID().uuidString.prefix(8)).txt")
         do{try text.write(to:url,atomically:true,encoding:.utf8);let share=UIActivityViewController(activityItems:[url],applicationActivities:nil);share.popoverPresentationController?.sourceView=menu;share.popoverPresentationController?.sourceRect=menu.bounds;present(share,animated:true)}catch{self.alert("Report Unavailable",error.localizedDescription)}
     }
-    private func waitForLandscape(attempt:Int) {
+    private func waitForLandscape(attempt:Int,extra:[String]) {
         if view.window?.windowScene?.interfaceOrientation.isLandscape == true && view.bounds.width > view.bounds.height {
-            startEngine()
+            startEngine(extra:extra)
         } else if attempt < 40 {
-            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { [weak self] in self?.waitForLandscape(attempt:attempt+1) }
-        } else { status.isHidden=false;status.text="ETPad could not enter landscape. Rotate the iPad and reopen the app." }
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { [weak self] in self?.waitForLandscape(attempt:attempt+1,extra:extra) }
+        } else { started=false;updateLauncher();alert("Rotate to Landscape","ETPad could not enter landscape. Rotate the iPad and try again.") }
     }
-    private func startEngine() {
+    private func startEngine(extra:[String]) {
         view.backgroundColor = .clear
         let profile = gameHome.appendingPathComponent("legacy/profiles/ETPad")
         try? FileManager.default.createDirectory(at:profile,withIntermediateDirectories:true)
@@ -396,7 +580,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
                     "+set","cg_fov",String(Int(UserDefaults.standard.object(forKey:"etpad.fov") as? Double ?? 90)),
                     "+set","cg_drawFPS",UserDefaults.standard.bool(forKey:"etpad.fps") ? "1":"0"]
         args += ["+set","cl_renderer",ProcessInfo.processInfo.arguments.contains("--etpad-vulkan") ? "vulkan":"opengles"]
-        if ProcessInfo.processInfo.arguments.contains("--etpad-oasis") { args += ["+set","sv_pure","0","+set","g_gametype","2","+devmap","oasis"] }
+        args += extra
         let pointers = args.map { strdup($0) }
         defer { pointers.forEach { free($0) } }
         var mutable = pointers + [nil]
@@ -407,7 +591,30 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             if Self.controllerKeys.contains(where:{$0.1==key}) && Self.bindingActions.contains(where:{$0.1==value}) { command("bind \(key) \"\(value)\"") }
         }
         restoreHost()
-        updateDataButtons()
+        // The engine now renders beneath the host window; retire the launcher.
+        UIView.animate(withDuration:0.35,animations:{ self.launcher.alpha=0 }) { _ in self.launcher.removeFromSuperview() }
     }
 
+}
+
+// Short controls guide for touch, controller and keyboard/mouse play.
+private final class GuideViewController:UIViewController {
+    override func viewDidLoad(){
+        super.viewDidLoad();title="How to Play";overrideUserInterfaceStyle = .dark;view.backgroundColor=ETPadTheme.ink
+        navigationItem.rightBarButtonItem=UIBarButtonItem(barButtonSystemItem:.done,target:self,action:#selector(done))
+        let text=UITextView();text.isEditable=false;text.backgroundColor = .clear;text.textContainerInset=UIEdgeInsets(top:20,left:22,bottom:28,right:22)
+        let body=NSMutableAttributedString()
+        func heading(_ s:String){body.append(NSAttributedString(string:s.uppercased()+"\n",attributes:[.font:ETPadTheme.stencil(17),.kern:1.6,.foregroundColor:ETPadTheme.brass]))}
+        func line(_ s:String){body.append(NSAttributedString(string:s+"\n",attributes:[.font:UIFont.systemFont(ofSize:15),.foregroundColor:ETPadTheme.cream]))}
+        func gap(){body.append(NSAttributedString(string:"\n",attributes:[.font:UIFont.systemFont(ofSize:8)]))}
+        heading("Getting into a game");line("Play Online lists live ET: Legacy servers with people on them. Tap one to join; maps download the first time.");line("Practice with Bots starts an offline round on a classic map. Choose a team and class when the Limbo menu opens.");gap()
+        heading("Touch");line("Left thumb: drag anywhere on the left to move. Push the stick well past its rim, forward, to sprint.");line("Right thumb: drag anywhere on the right to look. Hold FIRE and slide your thumb to aim while firing.");line("JUMP, CROUCH, PRONE, RELOAD, ALT (scope or alternate fire) and USE sit around FIRE. ‹ › change weapons.");line("SCORE (hold) and MENU sit at the top left beside the ••• menu. Arrange Controls lets you move any button.");gap()
+        heading("Controller");line("Left stick moves, right stick looks. RT fires, LT alternate fire. A jump, B crouch, X reload, Y use. L3 sprint, R3 prone.");line("Back shows scores, Start opens the game menu. D-pad: map, Limbo, previous and next weapon.");line("Hold LB for lean, votes and quick chat; hold RB for weapon banks. Options › Controls › Controller Buttons shows and changes every binding.");gap()
+        heading("Keyboard and mouse");line("ET's standard keys work: W A S D to move, Space jump, C crouch, X prone, Shift sprint, Q and E lean, R reload, F use, 1–0 weapons, Tab scores, Esc menu, ~ console.");line("During play the pointer locks for mouse look: left click fires, right click is alternate fire. In menus the pointer clicks normally.");gap()
+        heading("Switching");line("Use any input at any time. Touch controls hide while a controller or keyboard is in use and return when you touch the screen. Turn this off in Options › Controls.")
+        text.attributedText=body
+        text.translatesAutoresizingMaskIntoConstraints=false;view.addSubview(text)
+        NSLayoutConstraint.activate([text.leadingAnchor.constraint(equalTo:view.leadingAnchor),text.trailingAnchor.constraint(equalTo:view.trailingAnchor),text.topAnchor.constraint(equalTo:view.topAnchor),text.bottomAnchor.constraint(equalTo:view.bottomAnchor)])
+    }
+    @objc private func done(){dismiss(animated:true)}
 }
