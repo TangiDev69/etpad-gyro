@@ -2081,9 +2081,10 @@ void IN_Init(void)
 
 #ifdef __APPLE__
 	in_joystick          = Cvar_Get("in_joystick", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
-	if (!Cvar_Get("etpad_bindingsVersion", "0", CVAR_ARCHIVE)->integer)
+	// Version 2: grenade on Y, Use on LB, weapons and class gear on the D-pad.
+	if (Cvar_Get("etpad_bindingsVersion", "0", CVAR_ARCHIVE)->integer < 2)
 	{
-		Cbuf_AddText("exec etpad-controller.cfg\nset etpad_bindingsVersion 1\n");
+		Cbuf_AddText("exec etpad-controller.cfg\nset etpad_bindingsVersion 2\n");
 	}
 #else
 	in_joystick          = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);

@@ -203,3 +203,12 @@ Controller movement/fire and the menu cursor still need Chris's hands-on confirm
 - **Repeating audio during stalls.** The engine mixes on the main thread; when it stalls (••• menu, asset loads) the SDL audio callback kept replaying the ring buffer. The callback now plays silence once it passes the mixer's painted horizon (s_paintedtime − s_soundtime at each submit). The host also stops reasserting key-window focus while the ••• menu is on screen.
 
 Device check: joystickInfo reports Xbox Wireless Controller as gamepad 0 and j_yaw/j_pitch read −0.007/0.0055 after start. Stick feel, the wheel and the audio fix still need Chris's hands-on confirmation.
+
+### Controller layout v2 and wheel redesign (2026-11-18)
+
+After playing Battery, Chris asked for a clearer layout: grenade on Y, D-pad right cycling everything and D-pad left swapping guns, a better quick-chat design, removal of a top-left bubble on RB, and a keyboard/mouse check.
+
+- New defaults (bindings version 2): Y grenade, LB use, D-pad right next weapon, left last weapon, up class tool, down class item. Hidden hold-LB/RB layers removed. Existing profiles pick this up automatically.
+- Quick chat is a radial wheel with brass wedge highlight and a center label saying who hears the message; touch sends with one tap.
+- Controller presses no longer reach UIKit (GCEventViewController), the likely source of the top-left highlight; Chris should confirm it is gone.
+- Device check on Battery: etpad_bindingsVersion 2, PAD0_Y weaponbank 4, PAD0_LEFTSHOULDER +activate, PAD0_DPAD_LEFT weaplastused, PAD0_DPAD_UP weaponbank 5; keyboard/mouse binds w, SPACE, MOUSE1, MOUSE2, v, f present; wheel screenshot inspected.

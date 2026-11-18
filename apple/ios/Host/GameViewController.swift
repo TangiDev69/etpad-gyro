@@ -4,7 +4,10 @@ import UIKit
 import GameController
 import UniformTypeIdentifiers
 
-final class GameViewController:UIViewController,UIDocumentPickerDelegate {
+// GCEventViewController keeps controller presses away from UIKit (which
+// otherwise highlights on-screen buttons); the game and host read them
+// through SDL and GameController instead.
+final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     // The last input used decides whether touch controls show. A controller or
     // keyboard/mouse hides them (when Auto-Hide is on); a finger brings them back.
     private enum InputMode { case touch,controller,keyboard }
@@ -48,7 +51,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     override var prefersPointerLocked:Bool { wantsPointerLock }
     override var canBecomeFirstResponder:Bool { true }
     override func viewDidLoad(){
-        super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black
+        super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black;controllerUserInteractionEnabled=false
         showTouch=UserDefaults.standard.object(forKey:"etpad.showTouch") as? Bool ?? true
         // Migrate the two older switches without changing effective visibility.
         let legacyAutoHide=UserDefaults.standard.object(forKey:"etpad.autoHide") as? Bool ?? true
@@ -328,6 +331,12 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         padPrevious["rb"]=rb
     }
     // Controller look speed and inversion, applied to ET's joystick scales.
+    // Launch-hook commands; "etpad_comms" opens the quick-chat wheel.
+    private func runTest(_ text:String){
+        for part in text.split(separator:";").map({ $0.trimmingCharacters(in:.whitespaces) }) {
+            if part=="etpad_comms" { wheel.show(tap:true) } else { command(part) }
+        }
+    }
     private func applyPadLook(){
         let speed=UserDefaults.standard.object(forKey:"etpad.padLook") as? Double ?? 1
         let invert=UserDefaults.standard.bool(forKey:"etpad.padInvert")
@@ -347,7 +356,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         let profile=controller.physicalInputProfile
         let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
         let family=playStation ? "PlayStation" : profile is GCXboxGamepad ? "Xbox" : "Controller"
-        let quickBindings=playStation ? "R2 Fire · ✕ Jump · □ Reload" : "RT Fire · A Jump · X Reload"
+        let quickBindings=playStation ? "R2 Fire · △ Grenade · R1 Quick chat" : "RT Fire · Y Grenade · RB Quick chat"
         prompts.setTitle(quickBindings,for:.normal)
         prompts.accessibilityLabel="\(controller.vendorName ?? family) connected. Controller Button Mapping"
         setHidden(false,for:prompts);view.setNeedsLayout();updateTouchVisibility()
@@ -380,12 +389,12 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             pendingBots=false;command("bot maxbots \(botCount)")
             DispatchQueue.main.asyncAfter(deadline:.now()+1.5) { [weak self] in
                 guard let self=self else { return }
-                if let test=self.pendingCommand { self.pendingCommand=nil;self.command(test) }
+                if let test=self.pendingCommand { self.pendingCommand=nil;self.runTest(test) }
                 // openlimbomenu toggles; ET may already show team selection.
                 else if etpad_gameplay() != 0 { self.command("openlimbomenu") }
             }
         } else if let test=pendingCommand,!pendingBots,state==8 {
-            pendingCommand=nil;DispatchQueue.main.asyncAfter(deadline:.now()+1.5) { [weak self] in self?.command(test) }
+            pendingCommand=nil;DispatchQueue.main.asyncAfter(deadline:.now()+1.5) { [weak self] in self?.runTest(test) }
         }
         let hudFlags=engineReady ? etpad_hud_flags():0
         let scoreboard=(hudFlags & 3) != 0
@@ -567,7 +576,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         presentSettings("Saved Layouts",rows:rows)
     }
     @objc private func mapping(){
-        let text="Left stick Move · Right stick Look\nRT Fire · LT Alt fire / scope\nA Jump · B Crouch · X Reload · Y Use\nL3 Sprint · R3 Prone\nView Scores · Menu Game menu\nD-pad: ↑ Map · ↓ Team & Class · ←/→ Weapons\n\nHold RB: quick-chat wheel. Point the right stick, release RB to send.\n\nHold LB: A/B Lean left/right · X/Y Vote yes/no\nView Console · Menu Team · L3 Class\nD-pad: Medic, Need Ammo, Thanks, Affirmative\n\nIn ET menus: left stick moves the cursor, A clicks, B goes back."
+        let text="Left stick Move · Right stick Look\nRT Fire · LT Alt fire / scope\nA Jump · B Crouch · X Reload · Y Grenade\nLB Use (doors, objectives, ladders)\nHold RB Quick-chat wheel\nL3 Sprint · R3 Prone\nView Scores · Menu Game menu (Team & Class)\n\nD-pad\n→ Next weapon (cycles everything)\n← Last weapon (swap back)\n↑ Class tool: syringe, pliers, smoke\n↓ Class item: health, ammo, dynamite\n\nIn ET menus: left stick moves the cursor, A clicks, B goes back."
         var rows:[HostSettingsViewController.Row]=[.button("View Default Mapping"){[weak self] in self?.alert("Default Controller Mapping",text)}]
         let saved=UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:]
         for (label,key,standard) in Self.controllerKeys {
@@ -579,15 +588,20 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         presentSettings("Controller Button Mapping",rows:rows)
     }
     private static let controllerKeys:[(String,String,String)]=[
-        ("A / Cross","PAD0_A","+moveup"),("B / Circle","PAD0_B","+movedown"),("X / Square","PAD0_X","+reload"),("Y / Triangle","PAD0_Y","+activate"),
-        ("Right Trigger","PAD0_RIGHTTRIGGER","+attack"),("Left Trigger","PAD0_LEFTTRIGGER","weapalt"),("Left Stick Click","PAD0_LEFTSTICK_CLICK","+sprint"),("Right Stick Click","PAD0_RIGHTSTICK_CLICK","+prone"),
-        ("Back / Share","PAD0_BACK","+scores"),("Start / Options","PAD0_START","togglemenu"),
-        ("D-pad Up","PAD0_DPAD_UP","+mapexpand"),("D-pad Down","PAD0_DPAD_DOWN","openlimbomenu"),("D-pad Left","PAD0_DPAD_LEFT","weapprev"),("D-pad Right","PAD0_DPAD_RIGHT","weapnext")]
+        ("Right Trigger","PAD0_RIGHTTRIGGER","+attack"),("Left Trigger","PAD0_LEFTTRIGGER","weapalt"),
+        ("A / Cross","PAD0_A","+moveup"),("B / Circle","PAD0_B","+movedown"),("X / Square","PAD0_X","+reload"),("Y / Triangle","PAD0_Y","weaponbank 4"),
+        ("Left Bumper","PAD0_LEFTSHOULDER","+activate"),
+        ("Left Stick Click","PAD0_LEFTSTICK_CLICK","+sprint"),("Right Stick Click","PAD0_RIGHTSTICK_CLICK","+prone"),
+        ("View / Share","PAD0_BACK","+scores"),("Menu / Options","PAD0_START","togglemenu"),
+        ("D-pad Right","PAD0_DPAD_RIGHT","weapnext"),("D-pad Left","PAD0_DPAD_LEFT","weaplastused"),("D-pad Up","PAD0_DPAD_UP","weaponbank 5"),("D-pad Down","PAD0_DPAD_DOWN","weaponbank 6")]
     private static let bindingActions:[(String,String)]=[
-        ("Fire","+attack"),("Alt Fire","weapalt"),("Reload","+reload"),("Jump","+moveup"),("Crouch","+movedown"),("Prone","+prone"),("Sprint","+sprint"),
-        ("Lean Left","+leanleft"),("Lean Right","+leanright"),("Use","+activate"),("Previous Weapon","weapprev"),("Next Weapon","weapnext"),("Scoreboard","+scores"),("Limbo","openlimbomenu"),("Team Menu","teammenu"),("Class Menu","classmenu"),("Map","+mapexpand"),("Vote Yes","vote yes"),("Vote No","vote no"),("Console","toggleconsole"),("Game Menu","togglemenu"),
+        ("Fire","+attack"),("Alt Fire / Scope","weapalt"),("Reload","+reload"),("Jump","+moveup"),("Crouch","+movedown"),("Prone","+prone"),("Sprint","+sprint"),("Use","+activate"),
+        ("Grenade","weaponbank 4"),("Class Tool (syringe, pliers, smoke)","weaponbank 5"),("Class Item (health, ammo, dynamite)","weaponbank 6"),("Mines / Adrenaline","weaponbank 7"),("Binoculars","weaponbank 8"),
+        ("Knife","weaponbank 1"),("Pistol","weaponbank 2"),("Main Weapon","weaponbank 3"),
+        ("Next Weapon","weapnext"),("Previous Weapon","weapprev"),("Last Weapon","weaplastused"),
+        ("Lean Left","+leanleft"),("Lean Right","+leanright"),("Scoreboard","+scores"),("Command Map","+mapexpand"),("Team & Class","openlimbomenu"),("Game Menu","togglemenu"),
+        ("Vote Yes","vote yes"),("Vote No","vote no"),("Console","toggleconsole"),
         ("Medic Quick Chat","vsay_team Medic"),("Ammo Quick Chat","vsay_team NeedAmmo"),("Thanks Quick Chat","vsay_team Thanks"),("Affirmative Quick Chat","vsay_team Affirmative"),("Unbound","")]
-        + (1...10).map { ("Weapon Bank \($0)","weaponbank \($0)") }
     private func editBinding(label:String,key:String,current:String){
         presentSettings(label,rows:Self.bindingActions.map { name,value in .button((value==current ? "✓ ":"")+name){[weak self] in
             guard let self=self else{return};self.releaseInputs()
@@ -686,7 +700,7 @@ private final class GuideViewController:UIViewController {
         func gap(){body.append(NSAttributedString(string:"\n",attributes:[.font:UIFont.systemFont(ofSize:8)]))}
         heading("Getting into a game");line("Play Online lists live ET: Legacy servers with people on them. Tap one to join; maps download the first time.");line("Practice with Bots starts an offline round on a classic map. Choose a team and class when the Limbo menu opens.");gap()
         heading("Touch");line("Left thumb: drag anywhere on the left to move. Push the stick well past its rim, forward, to sprint.");line("Right thumb: drag anywhere on the right to look. Hold FIRE and slide your thumb to aim while firing.");line("JUMP, CROUCH, PRONE, RELOAD, ALT (scope or alternate fire) and USE sit around FIRE. ‹ › change weapons.");line("SCORE (hold), MENU and CHAT (the quick-chat wheel) sit at the top left under the ••• menu. Settings › Touch Controls › Move Buttons lets you move any button.");gap()
-        heading("Controller");line("Left stick moves, right stick looks. RT fires, LT alternate fire or scope. A jump, B crouch, X reload, Y use. L3 sprint, R3 prone.");line("View shows scores, Menu opens the game menu. D-pad: up map, down team and class, left and right change weapon.");line("Hold RB for the quick-chat wheel: point the right stick at Medic!, Need Ammo, Cover Me and more, then let go. Hold LB for lean and votes.");line("In ET's menus the left stick moves the cursor, A clicks and B goes back. Settings › Controller has look speed, invert look and every button.");gap()
+        heading("Controller");line("Left stick moves, right stick looks. RT fires, LT is alternate fire or scope.");line("A jump · B crouch · X reload · Y grenade (then RT to throw) · LB use for doors, ladders and objectives · L3 sprint · R3 prone.");line("D-pad: right cycles every weapon, left swaps back to your last one, up picks your class tool (syringe, pliers, smoke) and down your class item (health, ammo, dynamite).");line("Hold RB for the quick-chat wheel: point the right stick and let go. View holds the scoreboard; Menu opens the game menu, where Team & Class is first.");line("In ET menus the left stick moves the cursor, A clicks and B goes back. Settings › Controller has look speed, invert look and every button.");gap()
         heading("Keyboard and mouse");line("ET's standard keys work: W A S D to move, Space jump, C crouch, X prone, Shift sprint, Q and E lean, R reload, F use, 1–0 weapons, Tab scores, Esc menu, ~ console.");line("During play the pointer locks for mouse look: left click fires, right click is alternate fire. In menus the pointer clicks normally.");gap()
         heading("Switching");line("Use any input at any time. Touch controls hide while a controller or keyboard is in use and return when you touch the screen. Turn this off in Options › Controls.")
         text.attributedText=body

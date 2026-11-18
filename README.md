@@ -102,15 +102,16 @@ Download/import checks SHA-256 before installing the complete set and never runs
 | Controller input | Default action |
 | --- | --- |
 | Left / right stick | Analog movement / look |
-| RT / LT | Fire / alternate weapon |
-| A / B / X / Y | Jump / crouch / reload / use |
-| L3 / R3 | Sprint / prone |
-| Back / Start | Scoreboard / game menu |
-| D-pad up / down / left / right | Map / limbo / previous / next weapon |
+| RT / LT | Fire / alternate fire or scope |
+| A / B / X / Y | Jump / crouch / reload / grenade |
+| LB | Use (doors, ladders, objectives) |
 | Hold RB | Quick-chat wheel: point the right stick, release to send |
-| Hold LB | Lean, votes, console and four quick chats on the D-pad |
+| L3 / R3 | Sprint / prone |
+| View / Menu | Scoreboard / game menu (Team & Class first) |
+| D-pad right / left | Next weapon (cycles all) / last weapon |
+| D-pad up / down | Class tool (syringe, pliers, smoke) / class item (health, ammo, dynamite) |
 
-Letters describe Xbox positions; PlayStation/MFi equivalents share the actions. Defaults load once per profile, remapping persists, and disconnect clears held inputs. [CONTROLS.md](docs/CONTROLS.md) contains every layer binding, native remapping and validation limits.
+Letters describe Xbox positions; PlayStation/MFi equivalents share the actions. Defaults load once per profile, remapping persists, and disconnect clears held inputs. [CONTROLS.md](docs/CONTROLS.md) contains every binding, the quick-chat wheel, keyboard and mouse, native remapping and validation limits.
 
 On iPad, the left thumb drives a floating movement stick (push it well past the rim, forward, to sprint) and the right thumb looks. FIRE is the large red button; hold it and slide to aim while firing. Jump, Reload, Alt and Crouch form an even inner ring around FIRE, with Use, weapon Next/Prev and Prone on an outer ring, all clear of ET's ammo and health HUD. Controls scale with the screen like ET's HUD. Score and Menu sit in the top-left gutter beside the ••• menu.
 

@@ -1,7 +1,8 @@
-/* ETPad controller layers. Copyright (C) 2026 ETPad contributors.
+/* ETPad controller input. Copyright (C) 2026 ETPad contributors.
  * SPDX-License-Identifier: GPL-3.0-or-later
  * Included by sdl_input.c after its controller state declarations.
- * Key releases retain the bank selected at press, even if a shoulder changes.
+ * Every button is one plain key (no hidden layers) so binds stay predictable.
+ * Releases reuse the key sent at press.
  */
 static int etpadHeldKeys[32];
 static int etpadSentAxes[4];
@@ -29,15 +30,10 @@ static int ETPad_ControllerKey(int source, int baseKey, qboolean pressed)
 		etpadHeldKeys[source] = baseKey;
 		return baseKey;
 	}
-	if (source == SDL_CONTROLLER_BUTTON_LEFTSHOULDER || source == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
+	/* Right shoulder belongs to the native quick-chat wheel. */
+	if (source == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
 	{
 		return 0;
-	}
-	/* Left shoulder: lean, votes and menus. Right shoulder opens the native
-	 * quick-chat wheel and changes no other button. */
-	if (source < 15 && SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
-	{
-		key = K_AUX1 + source;
 	}
 	etpadHeldKeys[source] = key;
 	return key;

@@ -2,26 +2,31 @@
 
 ## Controller defaults
 
-SDL GameController supplies family-independent physical positions for supported MFi, Xbox and PlayStation controllers. Apple builds enable this by default and execute `etpad-controller.cfg` once per profile (versioned preference). To restore the defaults, execute that file again. Bindings remain editable through ET's console; iOS offers native button mapping and family prompts; macOS bindings use the console.
+SDL GameController supplies family-independent physical positions for Xbox, PlayStation and MFi controllers. \`etpad-controller.cfg\` runs once per profile (\`etpad_bindingsVersion\` 2); every button is one plain key with no hidden layers.
 
 | Input | Action |
 | --- | --- |
-| Left stick | Analog movement |
-| Right stick | Analog look |
-| RT / LT | Fire / alternate weapon |
-| A / B / X / Y | Jump / crouch / reload / use |
+| Left / right stick | Move / look (analog, see below) |
+| RT / LT | Fire / alternate fire or scope |
+| A / B / X / Y | Jump / crouch / reload / grenade (weaponbank 4, then RT throws) |
+| LB | Use: doors, ladders, objectives (+activate) |
+| Hold RB | Quick-chat wheel |
 | L3 / R3 | Sprint / prone |
-| Back / Start | Scoreboard / game menu |
-| D-pad up / down / left / right | Map / limbo / previous / next weapon |
-| Hold LB + A / B | Lean left / right |
-| Hold LB + X / Y | Vote yes / no |
-| Hold LB + Back / Start / L3 | Console / team / class menu |
-| Hold LB + D-pad up / down / left / right | Medic / need ammo / thanks / affirmative team quick chat |
-| Hold RB | Quick-chat wheel (Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me, Affirmative): point the right stick, release RB to send |
+| View / Menu | Scoreboard (hold) / game menu, whose first item is Team & Class |
+| D-pad right | Next weapon, cycling everything including tools |
+| D-pad left | Last weapon (weaplastused): rifle ↔ pistol, or back from a grenade |
+| D-pad up | Class tool, bank 5: syringe, pliers, smoke marker |
+| D-pad down | Class item, bank 6: dynamite, health pack, ammo pack, satchel |
 
-Letters describe Xbox positions; PlayStation bottom/right/left/top and MFi equivalents use the same actions. iOS prompts distinguish Xbox, PlayStation and generic MFi-style labels. Trigger actions remain available while holding a shoulder. A held action releases using its original binding even when the shoulder is released first. Detachment releases held actions and clears movement axes.
+Landmines/adrenaline (bank 7) and binoculars (bank 8) are reached with D-pad right, and every button can be reassigned in Settings › Controller › Buttons, which also lists knife, pistol, main weapon, lean, command map and votes. Command map and votes are also in the ••• menu. Version 2 replaced the former hold-LB/hold-RB layers, which players found hard to discover.
 
-Controller validation: the SDL virtual-controller component test passes bank changes, release ordering, disabling the option while held, trigger routing and disconnect cleanup. This is component evidence, not physical-controller play. Simulator prompts use a virtual Gamepad; no physical MFi/Xbox/PlayStation controller was available.
+The quick-chat wheel holds Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me and Affirmative. Point the right stick (it stops turning the view while the wheel is open) and release RB to send; the center shows whether the team or everyone hears it. On touch, CHAT opens it and one tap sends. Keyboard players keep ET's own V quick-message menu.
+
+The game view controller is a GCEventViewController with controller user interaction disabled, so controller presses no longer reach UIKit, which had highlighted on-screen buttons such as the top-left ••• capsule.
+
+## Keyboard and mouse
+
+ET's default binds apply (checked on the iPad profile): W A S D move, Space jump, C crouch, X prone, Shift sprint, R reload, F use, Q/E lean, 1–0 weapon banks, mouse wheel weapons, Tab scores, V quick messages, Esc menu, ~ console. Left click fires, right click is alternate fire.
 
 ## Stick handling (Apple builds)
 
