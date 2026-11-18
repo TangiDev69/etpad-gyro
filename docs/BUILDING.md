@@ -87,7 +87,7 @@ Console: `bot maxbots 4` (three bots plus the player), `team b 2 8`. After the w
 
 ```sh
 scripts/build-etpad.sh --platform simulator --output build/output
-ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.etpad.ETPad --etpad-oasis
+ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.chrissotraidis.etpad --etpad-oasis
 # In a second terminal, end the bounded block early:
 touch build/simulator-stop
 # Device build (unsigned; not an installable signed release):
@@ -108,17 +108,17 @@ ETPAD_TEAM=YOURTEAMID scripts/build-etpad.sh --platform device --output build/ou
 xcrun devicectl device install app --device <UDID> build/output/ETPad-device.app
 ```
 
-`ETPAD_BUNDLE_ID` overrides `com.etpad.ETPad` if that identifier is unavailable to your team. Signed builds cannot produce `--ipa`; public IPAs stay unsigned. The package audit accepts the root `embedded.mobileprovision` only for these signed builds.
+`ETPAD_BUNDLE_ID` overrides `com.chrissotraidis.etpad` if that identifier is unavailable to your team. Signed builds cannot produce `--ipa`; public IPAs stay unsigned. The package audit accepts the root `embedded.mobileprovision` only for these signed builds.
 
 Launch hooks for testing on hardware (they run the same code as the launcher buttons):
 
 ```sh
-xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-practice oasis --etpad-command 'team b 2 8;openlimbomenu'
-xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-servers
-xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-connect host:27960
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.chrissotraidis.etpad --etpad-practice oasis --etpad-command 'team b 2 8;openlimbomenu'
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.chrissotraidis.etpad --etpad-servers
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.chrissotraidis.etpad --etpad-connect host:27960
 ```
 
-Copy verified paks into a fresh install without tapping: `xcrun devicectl device copy to --device <UDID> --source game-data/etmain/pak0.pk3 --destination Documents/ETPad/etmain/pak0.pk3 --domain-type appDataContainer --domain-identifier com.etpad.ETPad` (repeat for pak1/pak2). `xcrun devicectl device capture screenshot` grabs the screen.
+Copy verified paks into a fresh install without tapping: `xcrun devicectl device copy to --device <UDID> --source game-data/etmain/pak0.pk3 --destination Documents/ETPad/etmain/pak0.pk3 --domain-type appDataContainer --domain-identifier com.chrissotraidis.etpad` (repeat for pak1/pak2). `xcrun devicectl device capture screenshot` grabs the screen.
 
 ## Building on a second Mac (Xcode 27.2, 2026-11-18)
 
@@ -159,7 +159,7 @@ ANGLE/GL4ES remains the default. To build the optional source-built Vulkan rende
 ETPAD_RENDERER=vulkan scripts/build-etpad.sh --platform simulator --output build/output
 ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=1800 \
   scripts/sim.sh test "$PWD/build/output/ETPad-simulator-vulkan.app" \
-  com.etpad.ETPad --etpad-vulkan --etpad-oasis
+  com.chrissotraidis.etpad --etpad-vulkan --etpad-oasis
 ```
 
 This variant embeds ETPadVulkanRenderer.framework and MoltenVK.framework alongside the default engine/bot/ANGLE frameworks. Its strict package audit passes architectures/platforms, bundled/system dependencies, runtime search paths, signatures, notices and media exclusions. The source-built bot core and its script/navigation setup are the same as above. Device Vulkan runtime is not tested.
@@ -188,7 +188,7 @@ Use the single guarded simulator for a bounded hour when a public round can last
 
 ```sh
 ETPAD_SIM_VISIBLE=1 ETPAD_SIM_HOLD_SECONDS=3600 \
-  scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.etpad.ETPad
+  scripts/sim.sh test "$PWD/build/output/ETPad-simulator.app" com.chrissotraidis.etpad
 ```
 
 Set Device → Orientation → Landscape Right/Left. In native **Tools → Console**, run `connect 87.116.30.113:27960`; select a team/class and exercise movement, Fire and Reload. Let the server change maps normally. After the second map loads, exercise gameplay again, then run `disconnect;wait 120;reconnect`. Here `wait 120` means engine frames, not 120 seconds. Re-select team/class and confirm gameplay again without restarting the app. Do not send votes, chat, admin or server-configuration commands. End with `touch build/simulator-stop`. The wrapper accepts 10–3600 seconds and always shuts down/quits the same reserved simulator.

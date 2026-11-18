@@ -59,6 +59,6 @@ case "${1:-}" in
   xcrun simctl io "$udid" screenshot "docs/evidence/ios-sim/${2:-latest}.png";;
  logs)
   [[ -n "$udid" ]] || exit 1
-  xcrun simctl spawn "$udid" log show --last 5m --style compact --predicate 'process == "ETPad" OR eventMessage CONTAINS "com.etpad.ETPad"';;
+  xcrun simctl spawn "$udid" log show --last 5m --style compact --predicate 'process == "ETPad" OR eventMessage CONTAINS "com.chrissotraidis.etpad"';;
  *) echo 'Usage: scripts/sim.sh init | test APP BUNDLE_ID [arguments...]' >&2; exit 2;;
 esac
