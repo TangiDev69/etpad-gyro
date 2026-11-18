@@ -1,7 +1,5 @@
 # ETPad simulator
 
-UDID: `672DC5A6-8C79-465E-8ABC-50E57C8F7B80`
+Each Mac reserves one simulator, recorded in ignored `build/simulator-udid`. Run `scripts/sim.sh init` once; it creates "ETPad iPad" (iPad Pro 11-inch M5) on the newest installed iOS runtime. A UDID from another machine is ignored.
 
-Device: iPad Pro 11-inch (M5). Runtime: iOS 26.5 (newest installed at initialization).
-
-Use only `scripts/sim.sh`; never create a replacement.
+Use only `scripts/sim.sh`; never create a second device.

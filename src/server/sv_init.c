@@ -682,6 +682,12 @@ void SV_TouchCGameDLL(void)
 	}
 	else if (sv_pure->integer)
 	{
+#ifdef ETPAD_IOS
+		// iPad embeds cgame in the signed app; the data-only Legacy pack has
+		// no native module to reference. Hosting a pure game stays allowed.
+		Com_DPrintf("ETPad: %s is embedded; skipping the pure cgame reference.\n", filename);
+		return;
+#endif
 		Com_Error(ERR_DROP, "Failed to locate %s for pure server mode. "
 		                    "You'll probably need cgame for other platforms too.", filename);
 	}

@@ -56,6 +56,11 @@ static int               dmapos    = 0;
 static int               dmasize   = 0;
 static SDL_AudioDeviceID device_id = 0;
 static Uint8             silence   = 0;
+// Bytes played since the mixer last submitted, and how far ahead it paints.
+// If the game thread stalls (loading, a system menu) past that horizon, the
+// ring buffer only holds old audio; play silence instead of looping it.
+static int playedSinceSubmit = 0;
+static int paintedAheadBytes = -1; // -1 until the mixer first submits
 
 /**
  * @brief SNDDMA_AudioCallback
@@ -104,6 +109,19 @@ static void SNDDMA_AudioCallback(void *userdata, Uint8 *stream, int len)
 		{
 			Com_Memset(stream, silence, len);
 		}
+		else if (paintedAheadBytes >= 0)
+		{
+			int fresh = paintedAheadBytes - playedSinceSubmit;
+			if (fresh < 0)
+			{
+				fresh = 0;
+			}
+			if (fresh < len)
+			{
+				Com_Memset(stream + fresh, silence, len - fresh);
+			}
+		}
+		playedSinceSubmit += len;
 	}
 
 	if (dmapos >= dmasize)
@@ -416,6 +434,12 @@ void SNDDMA_Shutdown(void)
  */
 void SNDDMA_Submit(void)
 {
+	// Called with the device locked, right after the mixer painted ahead of
+	// the play position (both counters are in sample frames).
+	extern int s_soundtime, s_paintedtime;
+	int ahead = s_paintedtime - s_soundtime;
+	paintedAheadBytes = (ahead > 0 ? ahead : 0) * dma.channels * (dma.samplebits / 8);
+	playedSinceSubmit = 0;
 	SDL_UnlockAudioDevice(device_id);
 }
 

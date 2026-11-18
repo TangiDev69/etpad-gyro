@@ -167,6 +167,8 @@ Q_EXPORT intptr_t vmMain(intptr_t command, intptr_t arg0, intptr_t arg1, intptr_
 	case ETPAD_VM_ABSOLUTE_POINTER:
 		etpad_module_pointer((float)arg0 / ETPAD_POINTER_SCALE, (float)arg1 / ETPAD_POINTER_SCALE);
 		return 0;
+	case ETPAD_VM_UI_TEXT_EDITING:
+		return g_editingField && g_editItem && TEXTFIELD(g_editItem->type);
 #endif
 	case UI_KEY_EVENT:
 		UI_KeyEvent(arg0, (qboolean) arg1);

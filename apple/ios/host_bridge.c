@@ -49,3 +49,43 @@ EXPORT void etpad_hardware_key(int usage,int down)
 }
 
 EXPORT void etpad_character(int codepoint) { Com_QueueEvent(0,SE_CHAR,codepoint,0,0,NULL); }
+
+// iPad pointer handoff. While UIKit locks the pointer for gameplay, SDL's
+// GCMouse deltas and buttons drive look/fire. Unlocked pointers (menus,
+// launcher) arrive through the native UIKit pointer path instead, so SDL's
+// copies are dropped there to avoid a second click.
+int etpad_pointer_locked = 0;
+int etpad_mouse_activity = 0;
+// Set while the quick-chat wheel uses the right stick to pick a message.
+int etpad_suspend_look = 0;
+EXPORT void etpad_set_suspend_look(int suspend) { etpad_suspend_look = suspend != 0; }
+EXPORT void etpad_set_pointer_locked(int locked) { etpad_pointer_locked = locked != 0; }
+EXPORT int etpad_take_mouse_activity(void) { int seen = etpad_mouse_activity; etpad_mouse_activity = 0; return seen; }
+// 0 disconnected ... CA_ACTIVE in play; see connstate_t.
+EXPORT int etpad_client_state(void) { return cls.state; }
+EXPORT int etpad_local_server(void) { return com_sv_running && com_sv_running->integer; }
+// 1 while ET expects typed text: a UI text field (profile, chat, password) or the console. The
+// host then shows the iPad keyboard when no hardware keyboard is attached.
+EXPORT int etpad_text_input_active(void)
+{
+	int catcher = Key_GetCatcher();
+	if (catcher & KEYCATCH_CONSOLE)
+	{
+		return 1;
+	}
+	if ((catcher & KEYCATCH_UI) && uivm)
+	{
+		return (int)VM_Call(uivm, ETPAD_VM_UI_TEXT_EDITING) != 0;
+	}
+	return 0;
+}
+// Current text of the field being typed into, shown above the iPad keyboard
+// because ET's chat box sits low enough to be covered by it.
+EXPORT const char *etpad_text_input_preview(void)
+{
+	if (Key_GetCatcher() & KEYCATCH_CONSOLE)
+	{
+		return g_consoleField.buffer;
+	}
+	return Cvar_VariableString("ui_textfield_temp");
+}

@@ -117,3 +117,7 @@ gradle/
 
 # ETPad build and simulator entry points
 !/scripts/*.sh
+
+# Scratch Simulator captures written by scripts/sim.sh
+/docs/evidence/ios-sim/final.png
+/docs/evidence/ios-sim/latest.png

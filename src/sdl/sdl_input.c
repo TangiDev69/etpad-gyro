@@ -41,6 +41,12 @@
 #include "../client/client.h"
 #include "../sys/sys_local.h"
 
+#ifdef ETPAD_IOS
+extern int etpad_pointer_locked;
+extern int etpad_mouse_activity;
+extern int etpad_suspend_look;
+#endif
+
 static cvar_t *in_keyboardDebug = NULL;
 
 static cvar_t *in_mouse = NULL;
@@ -859,6 +865,11 @@ static void IN_InitJoystick(void)
 
 	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
 	{
+#ifdef ETPAD_IOS
+		// SDL otherwise lists the iPad accelerometer as joystick 0, ahead of
+		// any real controller.
+		SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+#endif
 		if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
 		{
 			Com_Printf(S_COLOR_RED "Joystick initialization failed: %s\n", SDL_GetError());
@@ -891,6 +902,21 @@ static void IN_InitJoystick(void)
 	{
 		Cvar_Set("in_joystickNo", "0");
 	}
+#ifdef __APPLE__
+	// Prefer the first real game controller over other joystick devices.
+	if (!SDL_IsGameController(in_joystickNo->integer))
+	{
+		int index;
+		for (index = 0; index < total; index++)
+		{
+			if (SDL_IsGameController(index))
+			{
+				Cvar_Set("in_joystickNo", va("%i", index));
+				break;
+			}
+		}
+	}
+#endif
 
 	#ifdef __APPLE__
 	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "1", CVAR_ARCHIVE);
@@ -1078,6 +1104,13 @@ static void IN_GamepadMove(void)
 	// check axes
 	for (i = 0; i < SDL_CONTROLLER_AXIS_MAX; i++)
 	{
+#ifdef __APPLE__
+		// Sticks are handled as true analog axes below; only triggers here.
+		if (i < SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+		{
+			continue;
+		}
+#endif
 		int axis    = SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_LEFTX + i);
 		int oldAxis = stick_state.oldaaxes[i];
 
@@ -1190,6 +1223,9 @@ static void IN_GamepadMove(void)
 			}
 		}
 	}
+#ifdef __APPLE__
+	ETPad_StickAxes();
+#endif
 }
 
 /**
@@ -1686,6 +1722,14 @@ static void IN_ProcessEvents(void)
 			break;
 #endif
 		case SDL_MOUSEMOTION:
+#ifdef ETPAD_IOS
+			// Unlocked iPad pointers are delivered by the native host.
+			if (!etpad_pointer_locked)
+			{
+				break;
+			}
+			etpad_mouse_activity = 1;
+#endif
 			if (mouseActive)
 			{
 				if (!e.motion.xrel && !e.motion.yrel)
@@ -1700,6 +1744,13 @@ static void IN_ProcessEvents(void)
 		{
 			int b;
 
+#ifdef ETPAD_IOS
+			if (!etpad_pointer_locked)
+			{
+				break;
+			}
+			etpad_mouse_activity = 1;
+#endif
 			switch (e.button.button)
 			{
 			case SDL_BUTTON_LEFT:      b = K_MOUSE1;
@@ -1810,6 +1861,10 @@ static void IN_ProcessEvents(void)
 			}
 			break;
 		case SDL_CONTROLLERAXISMOTION:
+#ifdef __APPLE__
+			// Apple builds poll both sticks in ETPad_StickAxes.
+			break;
+#endif
 			if (!e.caxis.axis && !e.caxis.value)
 			{
 				break;
@@ -2026,9 +2081,10 @@ void IN_Init(void)
 
 #ifdef __APPLE__
 	in_joystick          = Cvar_Get("in_joystick", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
-	if (!Cvar_Get("etpad_bindingsVersion", "0", CVAR_ARCHIVE)->integer)
+	// Version 2: grenade on Y, Use on LB, weapons and class gear on the D-pad.
+	if (Cvar_Get("etpad_bindingsVersion", "0", CVAR_ARCHIVE)->integer < 2)
 	{
-		Cbuf_AddText("exec etpad-controller.cfg\nset etpad_bindingsVersion 1\n");
+		Cbuf_AddText("exec etpad-controller.cfg\nset etpad_bindingsVersion 2\n");
 	}
 #else
 	in_joystick          = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);

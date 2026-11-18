@@ -88,6 +88,12 @@ def main():
     run('xcodegen','generate','--spec',spec,'--project',project,'--project-root',project,env=env)
     destination='generic/platform=iOS Simulator' if args.platform=='simulator' else 'generic/platform=iOS'
     signing=['CODE_SIGN_IDENTITY=-','CODE_SIGNING_ALLOWED=YES'] if args.platform=='simulator' else ['CODE_SIGNING_ALLOWED=NO']
+    # Optional personal install: ETPAD_TEAM=<team id> signs the device app with
+    # Xcode's automatic development signing (ETPAD_BUNDLE_ID overrides the ID).
+    team=os.environ.get('ETPAD_TEAM','')
+    if team and args.platform=='device':
+        signing=['-allowProvisioningUpdates','DEVELOPMENT_TEAM='+team,'CODE_SIGN_STYLE=Automatic','CODE_SIGNING_ALLOWED=YES']
+        if os.environ.get('ETPAD_BUNDLE_ID'): signing.append('PRODUCT_BUNDLE_IDENTIFIER='+os.environ['ETPAD_BUNDLE_ID'])
     derived=ROOT/('build/DerivedData-ETPad-'+args.platform+variant)
     run('xcodebuild','-project',project/'ETPad.xcodeproj','-scheme','ETPad','-configuration','Release',
         '-sdk',sdkname,'-destination',destination,'-derivedDataPath',derived,'-jobs',jobs,*signing,'build',env=env)
@@ -96,10 +102,11 @@ def main():
     args.output.mkdir(parents=True,exist_ok=True)
     exported=args.output/('ETPad-'+args.platform+variant+'.app')
     copytree(app,exported)
-    run('/usr/bin/python3','scripts/check-apple-package.py','--platform',args.platform,exported)
+    run('/usr/bin/python3','scripts/check-apple-package.py','--platform',args.platform,exported,*(['--allow-development-profile'] if team and args.platform=='device' else []))
     if args.zip:
         args.zip.parent.mkdir(parents=True,exist_ok=True)
         run('ditto','-c','-k','--keepParent',exported,args.zip)
+    if args.ipa and team: parser.error('--ipa is for unsigned public packages; omit ETPAD_TEAM')
     if args.ipa:
         stage=ROOT/'build/ipa-stage'
         if stage.exists(): shutil.rmtree(stage)
@@ -108,5 +115,6 @@ def main():
         args.ipa.parent.mkdir(parents=True,exist_ok=True)
         run('ditto','-c','-k','--norsrc','--keepParent',payload,args.ipa)
     print('Experimental app: '+str(exported))
-    if args.platform=='device': print('Unsigned device build: requires signing before installation; device not tested.')
+    if args.platform=='device' and not team: print('Unsigned device build: requires signing before installation.')
+    if args.platform=='device' and team: print('Development-signed device build for team '+team+'. Install: xcrun devicectl device install app --device <UDID> '+str(exported))
 if __name__=='__main__': main()

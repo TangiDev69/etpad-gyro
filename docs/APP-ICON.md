@@ -13,3 +13,7 @@ Artwork was created with the built-in imagegen tool. The approved portrait was f
 Validation: default simulator and unsigned device builds pass strict package audits; both compiled app manifests select `AppIcon`. The installed icon is visually verified on the reserved iPad Simulator home screen and dock: [screenshot](evidence/ios-sim/app-icon-home.png). Physical-device installation remains untested.
 
 Mac validation: public build script and strict package audit pass (5 Mach-O binaries, 29 files); exported `CFBundleIconFile` selects `ETPad.icns` and the bundled file is byte-identical to the checked-in ICNS. This is a resource/packaging change; gameplay behavior is unchanged.
+
+## Launcher artwork
+
+`apple/ios/Host/Assets.xcassets/LauncherArt.imageset/LauncherArt.jpg` is original artwork made with the built-in image generation tool on 2026-11-18 to match the poster icon, then saved as a 1672×941 JPEG. It is decorative, not a game screenshot, and contains no insignia or text. Prompt summary: a 1940s wartime propaganda poster scene in oxblood, cream and olive, an Allied squad advancing over rubble toward a ruined town under crossing searchlights, with dark negative space on the left for the title and buttons. `LauncherIcon` is the approved icon master resized to 160 pixels.

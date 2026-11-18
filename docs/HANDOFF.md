@@ -166,3 +166,69 @@ Chris approved the 1940s poster portrait. The full-bleed opaque master, iPad/mar
 ## Mac icon and README — 2026-11-17
 
 The approved poster artwork now also ships as `apple/macos/ETPad.icns`; the native CMake bundle selects and embeds it. README displays the shared 1024-pixel artwork. Public Mac rebuild and strict package audit pass (5 Mach-O binaries, 29 files). The exported plist and byte-identical ICNS resource are verified. See [APP-ICON.md](APP-ICON.md). No gameplay code changed.
+
+## iPad release preparation — 2026-11-18
+
+Chris asked for a local build on a second Mac, a WWII launcher, better touch controls, a consistent ••• menu, working online play, the external-display fix, and seamless controller/touch/keyboard-and-mouse handoff, tested on his iPad.
+
+**Hardware now available.** iPad Pro 12.9-inch (6th gen) is paired and Xcode holds team VKDH2T9UTF, so builds are development-signed and installed with `ETPAD_TEAM` (see [BUILDING.md](BUILDING.md#personal-ipad-install-development-signing)). Second-Mac build problems and fixes are recorded there.
+
+**Changes.**
+- Launcher: original poster artwork ([launcher](evidence/ios-device/launcher-2.jpg)), data setup state, Play Online, Practice with Bots (map menu, 5/9/15 bots, then team selection) and Main Menu. The engine still starts once per process.
+- Online: native Who's Playing Now list from the ET masters with one-tap join, favorites, passwords and join by address ([list](evidence/ios-device/servers-1.jpg)).
+- Touch: two even rings around a large FIRE that also aims while held, floating stick with push-to-sprint, look speed, screen-scaled sizes, decoding that keeps old saved layouts ([gameplay](evidence/ios-device/play-4.jpg)).
+- Input handoff: last-used input decides touch visibility; a hiding overlay releases only touch-held commands so a controller trigger is not cancelled; the first finger restores touch without firing; pointer lock during play with a mouse; SDL mouse events are ignored while unlocked so a click is not delivered twice; controller navigation on the launcher and server list.
+- ••• menu: This Match, Play, Settings, Help, Leave Match last (TribesPad order and subtitles).
+- External displays: only the app's own scene runs the game; an external display gets no delegate and keeps system mirroring, and SDL's window attaches to the application scene. Same rule as the Nov. 13–16 fixes in PeonPad, RaTouch, MaskPad, Montezuma's Return and RingPad.
+
+**Verified on the iPad (screenshots via devicectl; no physical tapping by the agent).** Launcher missing-data and ready states; Practice with Bots on Oasis and Goldrush with ten bots and automatic Limbo; Allied engineer spawn with the new touch layout; Who's Playing Now listing eight populated servers with live ping from Japan; a public join to XG|Legacy 24/7 (51.83.7.204:27960) reaching "Connected to a pure server" and downloading legacy_v2.86.2.pk3 at about 100 KB/s ([download](evidence/ios-device/online-2.jpg)). Another server (TeamMuppet) refused with "You are excluded from this server", its own policy.
+
+**Not yet verified.** Real thumb feel of the rings, drag-to-aim and push-to-sprint; Xbox controller play and handoff; keyboard, trackpad pointer lock and click delivery; external display mirroring; the full Simulator regression. No tag, release or PadMint catalog change.
+
+### Controller and hosting fixes after first hands-on test (2026-11-18)
+
+Chris reported the Xbox controller did nothing in play, could not drive menus, Host Game failed with "Failed to locate cgame_mac for pure server mode", and the ••• menu felt meandering.
+
+- **Controller in play.** `joystickInfo` on the iPad showed joystick 0 was "iOS Accelerometer" (Is Gamepad: No), so ET opened it instead of the Xbox pad. SDL's accelerometer joystick is now disabled on iOS and Apple builds prefer the first real game controller. After the fix the same command reports "Xbox Wireless Controller … Is Gamepad: Yes".
+- **Controller in ET menus.** The left stick now moves ET's cursor, A clicks and B goes back in the main menu, Limbo and other ET screens.
+- **Hosting.** iPad embeds cgame in the signed app, so a pure listen server skips the cgame pak reference instead of dropping.
+- **Menu.** Shorter top level with Play Elsewhere, Settings and Help folders; see [CONTROLS.md](CONTROLS.md#native-three-dot-menu).
+
+Controller movement/fire and the menu cursor still need Chris's hands-on confirmation; the agent can verify device detection but cannot press the controller.
+
+### Controller pass and audio stalls (2026-11-18)
+
+- **Right stick did nothing.** SDL controller axis events produced abs(value/8000) × j_yaw, which truncates to zero, and replaced the polled look value. Apple builds now ignore that event path and read both sticks as true analog axes each frame (radial dead zone, linear movement, curved look). Look Speed and Invert Look live under Settings › Controller and are applied on start.
+- **Quick chat on the controller.** Hold RB for an eight-way wheel (Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me, Affirmative); point the right stick and release to send ET's own vsay. The RB weapon-bank layer is removed; the D-pad still cycles weapons. A CHAT touch button opens the same wheel for tapping. All eight names exist in pak0's voice scripts.
+- **Repeating audio during stalls.** The engine mixes on the main thread; when it stalls (••• menu, asset loads) the SDL audio callback kept replaying the ring buffer. The callback now plays silence once it passes the mixer's painted horizon (s_paintedtime − s_soundtime at each submit). The host also stops reasserting key-window focus while the ••• menu is on screen.
+
+Device check: joystickInfo reports Xbox Wireless Controller as gamepad 0 and j_yaw/j_pitch read −0.007/0.0055 after start. Stick feel, the wheel and the audio fix still need Chris's hands-on confirmation.
+
+### Controller layout v2 and wheel redesign (2026-11-18)
+
+After playing Battery, Chris asked for a clearer layout: grenade on Y, D-pad right cycling everything and D-pad left swapping guns, a better quick-chat design, removal of a top-left bubble on RB, and a keyboard/mouse check.
+
+- New defaults (bindings version 2): Y grenade, LB use, D-pad right next weapon, left last weapon, up class tool, down class item. Hidden hold-LB/RB layers removed. Existing profiles pick this up automatically.
+- Quick chat is a radial wheel with brass wedge highlight and a center label saying who hears the message; touch sends with one tap.
+- Controller presses no longer reach UIKit (GCEventViewController), the likely source of the top-left highlight; Chris should confirm it is gone.
+- Device check on Battery: etpad_bindingsVersion 2, PAD0_Y weaponbank 4, PAD0_LEFTSHOULDER +activate, PAD0_DPAD_LEFT weaplastused, PAD0_DPAD_UP weaponbank 5; keyboard/mouse binds w, SPACE, MOUSE1, MOUSE2, v, f present; wheel screenshot inspected.
+
+### Touch, input-mode and menu pass (2026-11-18)
+
+Chris's touch feedback: the movement stick should be invisible and appear under the thumb; SCORE should not need holding; MENU left touch players stuck in ET's menu; the ••• menu still meandered; keyboard and mouse should be detected and switched to; quick chat broke when switching from touch to controller; and ETPad should carry the latest external-display patch.
+
+- Stick invisible at rest, appears at the thumb (device screenshot of active touch layout with no resting ring).
+- SCORE toggles; open scoreboard hides other column buttons and ••• and moves SCORE to the bottom-left (device screenshot, tables unobstructed).
+- Back capsule over ET menus during a match sends Escape (device screenshot over the in-game menu).
+- ••• menu holds actions only; a single Settings sheet with ordered sections replaces nested submenus (device screenshot).
+- Keyboard and mouse mode on keyboard/mouse connect, key press, pointer hover (Pencil ignored) or locked-mouse movement; pointer lock only in that mode; mouse sensitivity and invert settings.
+- Quick-chat wheel accepts stick, A, B, RB release and taps together; controller presses are withheld from the game while it is open.
+- External display: SceneDelegate now applies the application scene's new bounds to SDL's window whenever the scene resizes, rotates or changes display, and logs screen connects, completing parity with DarkPad b98eded/192d21b (scene ownership and per-frame drawable sizing were already in place). Physical display still untested.
+
+SDL's own view controller also requests pointer lock while ET's mouse is in relative mode; the device log showed a lock in controller mode at startup. Mouse input works through it, but if Chris sees the trackpad cursor vanish during touch play, gating SDL's lock is the next step.
+
+### iPad keyboard for ET text fields (2026-11-18)
+
+Chris could not rename his profile: tapping ET's text fields raised no keyboard without a hardware keyboard. The UI module now reports when a text field is being edited (private VM command), and the host shows the iPad keyboard for UI text fields and the console, mirroring the field text in a bar with Cancel and Done. Device check: messagemode raised the keyboard and the bar showed the field's text. The profile rename screen uses the same edit-field path but was not opened by the agent.
+
+Follow-up: Backspace did nothing in the profile field because ET's UI text fields delete on the Ctrl-H character, not the K_BACKSPACE key, and the software keyboard sent only the key. Delete now sends both. Device check: typed "Chrisxyz" into messagemode, three Deletes left "Chris", and the field stayed in edit mode. Hardware typing is no longer delivered twice, and a keyboard case connecting no longer switches to keyboard mode until a key is pressed.

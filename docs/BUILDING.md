@@ -99,6 +99,37 @@ XcodeGen is required. Driver pins ANGLE binary inputs and builds GL4ES plus nati
 Simulator Device → Orientation → Landscape Right/Left sets the sensor; the toolbar Rotate alone can rotate the bezel without updating it. Screenshot raw framebuffers may be portrait with rotated content. Only the documented saved UDID is used. Data can be acquired in the actual app, or optionally staged as a hash-checked local fixture with ETPAD_SIM_DATA_DIR=/path/to/etmain. It is never staged into exported apps.
 
 
+## Personal iPad install (development signing)
+
+With Xcode signed in to your team, sign the device app and install it on a paired iPad:
+
+```sh
+ETPAD_TEAM=YOURTEAMID scripts/build-etpad.sh --platform device --output build/output
+xcrun devicectl device install app --device <UDID> build/output/ETPad-device.app
+```
+
+`ETPAD_BUNDLE_ID` overrides `com.etpad.ETPad` if that identifier is unavailable to your team. Signed builds cannot produce `--ipa`; public IPAs stay unsigned. The package audit accepts the root `embedded.mobileprovision` only for these signed builds.
+
+Launch hooks for testing on hardware (they run the same code as the launcher buttons):
+
+```sh
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-practice oasis --etpad-command 'team b 2 8;openlimbomenu'
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-servers
+xcrun devicectl device process launch --device <UDID> --terminate-existing com.etpad.ETPad --etpad-connect host:27960
+```
+
+Copy verified paks into a fresh install without tapping: `xcrun devicectl device copy to --device <UDID> --source game-data/etmain/pak0.pk3 --destination Documents/ETPad/etmain/pak0.pk3 --domain-type appDataContainer --domain-identifier com.etpad.ETPad` (repeat for pak1/pak2). `xcrun devicectl device capture screenshot` grabs the screen.
+
+## Building on a second Mac (Xcode 27.2, 2026-11-18)
+
+A clean clone built device, simulator and the signed app on Xcode 27.2 with no source changes; the 712 compiler warnings are all upstream or third-party (Omni-bot, Boost, GL4ES, SDL). The first device build fetches Omni-bot, Boost, GL4ES, SDL and ANGLE inputs, so it needs network access. Problems found and fixed:
+
+- `scripts/sim.sh` read a simulator UDID recorded on the other Mac and created devices with a hard-coded iOS 26.5 runtime. The reservation is now per machine in ignored `build/simulator-udid`, and `init` uses the newest installed iOS runtime.
+- Xcode 27 renames Simulator.app to DeviceHub.app, so `open -a Simulator` failed and the guarded test exited. `sim.sh` now falls back to DeviceHub.
+- The device package audit rejected development-signed apps because of `embedded.mobileprovision`; signed builds now pass `--allow-development-profile`.
+- Computer Use could not drive DeviceHub on this Mac (it times out), so interactive checks used the physical iPad with the launch hooks above.
+
+
 ## Local native bots (iPad)
 
 The iOS build automatically builds the pinned Omni-bot core and embeds it as `ETPadOmnibot.framework`. The loader accepts only this exact bundled framework path. Bot script/navigation data comes from the hash-verified official Omni-bot 0.93 distribution; the distribution's downloaded native executable is excluded. Generated bot configuration/navigation stays in the writable app sandbox, outside the signed framework.

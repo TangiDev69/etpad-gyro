@@ -45,15 +45,22 @@ void ETPad_MetalDrawable(void *pointer,int width,int height)
 void ETPad_AttachRenderWindow(void *pointer)
 {
     UIWindow *window=(UIWindow *)pointer;
+    // Attach to the scene that owns the native host window. An external
+    // display's scene can also be foreground-active and must never own SDL's
+    // window, or the game would take that screen's size and orientation.
+    UIWindowScene *owner=nil;
     for(UIScene *candidate in UIApplication.sharedApplication.connectedScenes){
-        if(![candidate isKindOfClass:UIWindowScene.class] || candidate.activationState!=UISceneActivationStateForegroundActive)continue;
+        if(![candidate isKindOfClass:UIWindowScene.class] || ![candidate.session.role isEqualToString:UIWindowSceneSessionRoleApplication])continue;
         UIWindowScene *scene=(UIWindowScene *)candidate;
+        if(!owner || scene.activationState==UISceneActivationStateForegroundActive)owner=scene;
+    }
+    if(owner){
+        UIWindowScene *scene=owner;
         window.windowScene=scene;
         window.frame=scene.coordinateSpace.bounds;
         window.userInteractionEnabled=NO;
         [window.rootViewController setNeedsUpdateOfSupportedInterfaceOrientations];
         [window layoutIfNeeded];
         NSLog(@"ETPad renderer attached before Metal: frame=%@ bounds=%@ root=%@ orientation=%ld",NSStringFromCGRect(window.frame),NSStringFromCGRect(window.bounds),NSStringFromCGRect(window.rootViewController.view.frame),(long)scene.interfaceOrientation);
-        break;
     }
 }

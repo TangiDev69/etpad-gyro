@@ -2,66 +2,72 @@
 
 ## Controller defaults
 
-SDL GameController supplies family-independent physical positions for supported MFi, Xbox and PlayStation controllers. Apple builds enable this by default and execute `etpad-controller.cfg` once per profile (versioned preference). To restore the defaults, execute that file again. Bindings remain editable through ET's console; iOS offers native button mapping and family prompts; macOS bindings use the console.
+SDL GameController supplies family-independent physical positions for Xbox, PlayStation and MFi controllers. \`etpad-controller.cfg\` runs once per profile (\`etpad_bindingsVersion\` 2); every button is one plain key with no hidden layers.
 
 | Input | Action |
 | --- | --- |
-| Left stick | Analog movement |
-| Right stick | Analog look |
-| RT / LT | Fire / alternate weapon |
-| A / B / X / Y | Jump / crouch / reload / use |
+| Left / right stick | Move / look (analog, see below) |
+| RT / LT | Fire / alternate fire or scope |
+| A / B / X / Y | Jump / crouch / reload / grenade (weaponbank 4, then RT throws) |
+| LB | Use: doors, ladders, objectives (+activate) |
+| Hold RB | Quick-chat wheel |
 | L3 / R3 | Sprint / prone |
-| Back / Start | Scoreboard / game menu |
-| D-pad up / down / left / right | Map / limbo / previous / next weapon |
-| Hold LB + A / B | Lean left / right |
-| Hold LB + X / Y | Vote yes / no |
-| Hold LB + Back / Start / L3 | Console / team / class menu |
-| Hold LB + D-pad up / down / left / right | Medic / need ammo / thanks / affirmative team quick chat |
-| Hold RB + L3 / R3 / D-pad up / down | Weapon banks 1 / 2 / 3 / 4 |
-| Hold RB + A / B / X / Y / Back / Start | Weapon banks 5 / 6 / 7 / 8 / 9 / 10 |
+| View / Menu | Scoreboard (hold) / game menu, whose first item is Team & Class |
+| D-pad right | Next weapon, cycling everything including tools |
+| D-pad left | Last weapon (weaplastused): rifle ↔ pistol, or back from a grenade |
+| D-pad up | Class tool, bank 5: syringe, pliers, smoke marker |
+| D-pad down | Class item, bank 6: dynamite, health pack, ammo pack, satchel |
 
-Letters describe Xbox positions; PlayStation bottom/right/left/top and MFi equivalents use the same actions. iOS prompts distinguish Xbox, PlayStation and generic MFi-style labels. Trigger actions remain available while holding a shoulder. A held action releases using its original binding even when the shoulder is released first. Detachment releases held actions and clears movement axes.
+Landmines/adrenaline (bank 7) and binoculars (bank 8) are reached with D-pad right, and every button can be reassigned in Settings › Controller › Buttons, which also lists knife, pistol, main weapon, lean, command map and votes. Command map and votes are also in the ••• menu. Version 2 replaced the former hold-LB/hold-RB layers, which players found hard to discover.
 
-Controller validation: the SDL virtual-controller component test passes bank changes, release ordering, disabling the option while held, trigger routing and disconnect cleanup. This is component evidence, not physical-controller play. Simulator prompts use a virtual Gamepad; no physical MFi/Xbox/PlayStation controller was available.
+The quick-chat wheel holds Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me and Affirmative. Point the right stick (it stops turning the view while the wheel is open) and release RB to send; the center shows whether the team or everyone hears it. On touch, CHAT opens it and one tap sends. Keyboard players keep ET's own V quick-message menu.
+
+The game view controller is a GCEventViewController with controller user interaction disabled, so controller presses no longer reach UIKit, which had highlighted on-screen buttons such as the top-left ••• capsule.
+
+## Keyboard and mouse
+
+ET's default binds apply (checked on the iPad profile): W A S D move, Space jump, C crouch, X prone, Shift sprint, R reload, F use, Q/E lean, 1–0 weapon banks, mouse wheel weapons, Tab scores, V quick messages, Esc menu, ~ console. Left click fires, right click is alternate fire.
+
+## Stick handling (Apple builds)
+
+Both sticks are read directly as analog axes every frame, independent of PAD0 stick binds. A radial dead zone (in_joystickThreshold, default 0.18) keeps diagonals smooth. Movement is linear. Look uses a 1.8 power curve for fine aim near center; full tilt turns about 230°/s horizontally (j_yaw −0.007) and 180°/s vertically (j_pitch 0.0055). Settings › Controller › Look Speed scales both, and Invert Look flips vertical look. While the quick-chat wheel is open, the right stick selects a message instead of looking. Triggers remain keys (RT +attack, LT weapalt).
+
+Earlier builds sent right-stick look from SDL axis events as abs(value/8000) × j_yaw, which truncated to zero and overwrote the polled value, so the right stick did nothing. That path is disabled on Apple builds.
 
 ## iPad touch controls
 
-The HUD-aware source update keeps movement on the left and look on the right, removing the former left-side utility diamond. USE now sits beside the right-thumb FIRE group, with PREV/NEXT beside weapon actions. SCORE and MENU occupy a fixed upper-left HUD gutter with the native ellipsis during active play. The resulting normal layout is visually verified in active Oasis gameplay; the corrected small left-handed layout is verified on Fuel Dump.
+The left thumb drives a floating stick that is invisible at rest and appears wherever the thumb lands on the left half of the screen, disappearing again on release. While moving buttons, its usual starting point is shown as a guide. Pushing well past the rim while mostly forward holds Sprint (the stick turns brass and shows SPRINT); Touch Settings can turn this off. The right thumb looks from anywhere on the right half, scaled by Look Speed.
 
-| Default control | Safe-area placement at normal size |
-| --- | --- |
-| Native ellipsis during active gameplay | Rectangle x=12–76, y=12–56 |
-| SCORE | Center (44, 88), fixed 64×44 points |
-| MENU | Center (44, 142), fixed 64×44 points |
-| USE | 172 points from the right, 190 from the bottom; 56-point face |
-| PREV | 250 from the right, 263 from the bottom; 48-point face |
-| NEXT | 250 from the right, 190 from the bottom; 48-point face |
+FIRE is a 104-point red button above-left of ET's ammo and weapon HUD. Holding it fires, and sliding the same finger aims. Two even rings surround it, placed from angles so every gap matches:
 
-Gameplay positions respond to viewport and Size. Left-handed mode mirrors the combat/movement/look sides, but the **default HUD gutter stays left**, because the game's HUD does not mirror. Default left-handed combat positions also move **180 UIKit points upward** to clear the fixed health/class HUD and two-line killfeed; an initial naive mirror overlapped that HUD and was corrected before acceptance. This lift applies only to defaults. Explicitly saved custom centers retain their chosen coordinates and prior mirroring behavior. Restore Default Layout adopts the new defaults. Rendered ET main/Limbo menus retain the native ellipsis's upper-right anchor.
+| Ring | Buttons (counter-clockwise from upper right) | Size |
+| --- | --- | --- |
+| Inner (radius 98) | JUMP, RELOAD, ALT, CROUCH | 62 |
+| Outer (radius 172) | USE, NEXT, PREV, PRONE | 52 |
 
-Controls use SF Symbols with short labels, a larger primary FIRE button and compact secondary/utility buttons. Resting faces are black/translucent; only pressed controls receive action color. Opacity changes the face without fading the white icon/label. Move/look guides appear only during a gesture or Arrange Controls. The implementation clamps final button width/height to at least 44 UIKit points, including at Size 0.7; this is a code property, not physical comfort certification.
+Sizes and distances are in points for an 11-inch iPad and scale with the screen the same way ET's 640×480 HUD does (about 1.19× on 12.9-inch). Size multiplies them further. SCORE, MENU and CHAT stay in the fixed top-left column under the ••• capsule. SCORE is a toggle: tap to open the scoreboard and tap again to close it. While the scoreboard is open, the other column buttons and ••• hide and SCORE moves to the bottom-left corner, clear of the tables. MENU opens ET's game menu; a Back capsule beside ••• then closes any ET menu (game menu, Team & Class, console) with Escape, so touch players are never stuck. Left-handed mode mirrors the stick and rings and lifts default combat buttons 150 points above the health HUD; saved custom positions keep their coordinates. Older saved configurations and named layouts load unchanged.
 
-Open the white three-dot capsule → **Controls**:
+Resting faces are smoked black with a cream ring; pressed buttons turn brass, and FIRE turns oxblood. Opacity changes faces only.
 
-| Item | Behavior |
-| --- | --- |
-| Show Controls | Show or hide the touch overlay |
-| Auto-Hide Controls | Hide touch controls while a controller is connected |
-| Touch Settings… | Opacity, size, left-handed mode, controller hiding, saved layouts and defaults |
-| Arrange Controls | Enter layout editing; finish with Done Arranging Controls or MENU |
-| Button Mapping… | View/edit controller bindings and restore defaults |
+## Switching between touch, controller and keyboard
 
-**Auto-Hide Controls** and **Touch Settings → Hide with controller** edit one shared preference; their states stay consistent. Touch configuration, named layouts and controller bindings persist. The connected-controller prompt also opens button mapping. Its new gameplay hint lasts eight seconds after connection and hides for scoreboard/intermission; host-only setup keeps the hint available. Button mapping remains accessible from the native menu afterward. The final simulator build renders Button Mapping… and the visibility/touch-setting labels on single lines. Opening Button Mapping… presents the proper mapping sheet; Done returns to the game.
+The input used last decides what is shown. A controller connecting or any of its buttons switches to controller mode. A hardware keyboard or mouse connecting, a key press, mouse or trackpad pointer movement (Apple Pencil hover is ignored) or locked-mouse movement switches to keyboard and mouse mode. The next finger on the screen restores touch controls and is not delivered to the game. With Settings › Touch Controls › Hide While Using a Controller or Keyboard on (the default), touch controls hide in the other two modes. For eight seconds after a switch, a chip under the top edge names that input's key controls.
+
+During play with a mouse or trackpad connected in keyboard and mouse mode, the pointer locks: mouse movement aims, left click fires, right click is alternate fire. ET's own menus then follow the mouse as their cursor.
+
+The quick-chat wheel accepts every input at once: a stick points (right or left), A or releasing RB sends, B cancels, and a tap on a wedge sends. While it is open, new controller presses go to the wheel instead of the game.
+
+On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects. In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. In ET's own menus the left stick moves the cursor, A clicks and B goes back.
+
+## Typing without a hardware keyboard
+
+When ET is editing one of its own text fields (profile name, chat, server password, search boxes) or the console is open, and no hardware keyboard is connected, ETPad raises the iPad keyboard. Typed characters go straight to the game field. Delete sends both K_BACKSPACE and the Ctrl-H character, because ET's UI text fields delete only on the character (desktop SDL sends both for the same reason). Return and the bar's Done (Enter) and Cancel (Escape) act as keys. Hardware keys reach ET through SDL's GCKeyboard input, so UIKit's copy of the same text is dropped while a hardware key is down. The bar above the keyboard shows the field's current text, because ET's chat box can sit under the keyboard. The keyboard closes when the field loses focus. The UI module answers a private ETPAD_VM_UI_TEXT_EDITING query, so detection follows ET's actual edit state.
 
 ## Native three-dot menu
 
-The menu groups immediate **Play** actions separately from **Settings** and **Tools**:
+The ••• menu holds actions only. In a match: Team & Class…, Chat ▸ (quick-chat wheel, say to team, say to everyone), Vote ▸, Command Map and Game Menu; then Play Elsewhere ▸ (Find a Server, Practice with Bots, Join by Address), Settings… and Help ▸; and Leave Match alone at the bottom. Outside a match: Find a Server, Practice with Bots ▸ and Join by Address…, then Settings… and Help ▸.
 
-- Play: Game Menu, Team & Class…, Toggle Map. Team & Class opens ET's Limbo selection directly.
-- Settings: Controls, Display, Online, Game Data & Saves.
-- Tools: Console and Game Keyboard. Report a Problem remains separately identifiable.
-
-Game Menu opens ET's existing rendered UI; the native menu does not replace it. Native touch/hover pointers enter the built-in UI/cgame frameworks through the engine's VM context. SDL handles GameController keyboard/mouse devices; UIKit hardware-key fallback avoids duplicate delivery when GCKeyboard is present.
+**Settings…** opens one sheet with sections for Touch Controls (show, hide during other input, size, opacity, look speed, push-to-sprint, left-handed, move buttons, saved layouts, restore defaults), Controller (look speed, invert look, buttons), Keyboard and Mouse (sensitivity, invert, key reference), Graphics (resolution, field of view, FPS counter), Player name and Game Data. The section for the input in use comes first.
 
 ## Scoreboard and intermission
 

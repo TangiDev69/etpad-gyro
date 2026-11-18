@@ -26,6 +26,7 @@ ANGLE = {'libEGL', 'libGLESv2'}
 SYSTEM_PREFIXES = ('/System/Library/', '/usr/lib/')
 INSTALLER_SUFFIXES = ('.run', '.dmg', '.pkg', '.mpkg', '.msi', '.exe',
                       '.zip', '.tar', '.tar.gz', '.tgz', '.tar.bz2', '.7z')
+ALLOW_PROFILE = False
 SAVE_SUFFIXES = ('.save', '.sav', '.pid', '.log', '.mobileprovision', '.p12', '.pfx', '.key', '.pem', '.p8')
 PRIVATE_NAMES = {'etkey', 'etconfig.cfg', 'setup.sh', 'etkey.sh', 'makekey',
                  'makekey.sh', 'install.sh', 'profiles', 'save', 'saves', 'savegames',
@@ -246,7 +247,9 @@ def audit(platform, path):
     files = 0
     for entry in sorted(root.rglob('*')):
         label = str(entry.relative_to(root))
-        require(not forbidden_name(label), 'Private/media/installer path: ' + label)
+        # A personal development-signed app carries Xcode's profile at the root.
+        personal = ALLOW_PROFILE and platform == 'device' and label == 'embedded.mobileprovision'
+        require(personal or not forbidden_name(label), 'Private/media/installer path: ' + label)
         if entry.is_symlink():
             require(entry.exists() and inside(entry, root), 'Broken/outside-package symlink: ' + label)
             require(not entry.is_dir(), 'Directory symlink is not supported in these exports: ' + label)
@@ -290,7 +293,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--platform', choices=('macos', 'simulator', 'device'), required=True)
     parser.add_argument('path', type=Path)
+    parser.add_argument('--allow-development-profile', action='store_true',
+                        help='Accept the root embedded.mobileprovision of a personal signed device build')
     args = parser.parse_args()
+    global ALLOW_PROFILE
+    ALLOW_PROFILE = args.allow_development_profile
     try:
         audit(args.platform, args.path)
     except (AuditError, OSError, ValueError, KeyError, plistlib.InvalidFileException) as error:
