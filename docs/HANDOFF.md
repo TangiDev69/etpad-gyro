@@ -195,3 +195,11 @@ Chris reported the Xbox controller did nothing in play, could not drive menus, H
 - **Menu.** Shorter top level with Play Elsewhere, Settings and Help folders; see [CONTROLS.md](CONTROLS.md#native-three-dot-menu).
 
 Controller movement/fire and the menu cursor still need Chris's hands-on confirmation; the agent can verify device detection but cannot press the controller.
+
+### Controller pass and audio stalls (2026-11-18)
+
+- **Right stick did nothing.** SDL controller axis events produced abs(value/8000) × j_yaw, which truncates to zero, and replaced the polled look value. Apple builds now ignore that event path and read both sticks as true analog axes each frame (radial dead zone, linear movement, curved look). Look Speed and Invert Look live under Settings › Controller and are applied on start.
+- **Quick chat on the controller.** Hold RB for an eight-way wheel (Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me, Affirmative); point the right stick and release to send ET's own vsay. The RB weapon-bank layer is removed; the D-pad still cycles weapons. A CHAT touch button opens the same wheel for tapping. All eight names exist in pak0's voice scripts.
+- **Repeating audio during stalls.** The engine mixes on the main thread; when it stalls (••• menu, asset loads) the SDL audio callback kept replaying the ring buffer. The callback now plays silence once it passes the mixer's painted horizon (s_paintedtime − s_soundtime at each submit). The host also stops reasserting key-window focus while the ••• menu is on screen.
+
+Device check: joystickInfo reports Xbox Wireless Controller as gamepad 0 and j_yaw/j_pitch read −0.007/0.0055 after start. Stick feel, the wheel and the audio fix still need Chris's hands-on confirmation.

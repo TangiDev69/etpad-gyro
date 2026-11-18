@@ -44,6 +44,7 @@
 #ifdef ETPAD_IOS
 extern int etpad_pointer_locked;
 extern int etpad_mouse_activity;
+extern int etpad_suspend_look;
 #endif
 
 static cvar_t *in_keyboardDebug = NULL;
@@ -1103,6 +1104,13 @@ static void IN_GamepadMove(void)
 	// check axes
 	for (i = 0; i < SDL_CONTROLLER_AXIS_MAX; i++)
 	{
+#ifdef __APPLE__
+		// Sticks are handled as true analog axes below; only triggers here.
+		if (i < SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+		{
+			continue;
+		}
+#endif
 		int axis    = SDL_GameControllerGetAxis(gamepad, SDL_CONTROLLER_AXIS_LEFTX + i);
 		int oldAxis = stick_state.oldaaxes[i];
 
@@ -1215,6 +1223,9 @@ static void IN_GamepadMove(void)
 			}
 		}
 	}
+#ifdef __APPLE__
+	ETPad_StickAxes();
+#endif
 }
 
 /**
@@ -1850,6 +1861,10 @@ static void IN_ProcessEvents(void)
 			}
 			break;
 		case SDL_CONTROLLERAXISMOTION:
+#ifdef __APPLE__
+			// Apple builds poll both sticks in ETPad_StickAxes.
+			break;
+#endif
 			if (!e.caxis.axis && !e.caxis.value)
 			{
 				break;

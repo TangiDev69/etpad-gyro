@@ -56,6 +56,9 @@ EXPORT void etpad_character(int codepoint) { Com_QueueEvent(0,SE_CHAR,codepoint,
 // copies are dropped there to avoid a second click.
 int etpad_pointer_locked = 0;
 int etpad_mouse_activity = 0;
+// Set while the quick-chat wheel uses the right stick to pick a message.
+int etpad_suspend_look = 0;
+EXPORT void etpad_set_suspend_look(int suspend) { etpad_suspend_look = suspend != 0; }
 EXPORT void etpad_set_pointer_locked(int locked) { etpad_pointer_locked = locked != 0; }
 EXPORT int etpad_take_mouse_activity(void) { int seen = etpad_mouse_activity; etpad_mouse_activity = 0; return seen; }
 // 0 disconnected ... CA_ACTIVE in play; see connstate_t.

@@ -159,7 +159,7 @@ final class GoldenPadTouchOverlay: UIView {
         // SCORE and MENU occupy the left HUD gutter by default.
         let x:CGFloat,y:CGFloat,diameter:CGFloat
         var compact:Bool { false }
-        var gutter:Bool { title=="SCORE" || title=="MENU" }
+        var gutter:Bool { title=="SCORE" || title=="MENU" || title=="CHAT" }
     }
     // Two even rings around FIRE. The inner ring holds the four actions used
     // constantly; the outer ring holds occasional ones. Angles run
@@ -181,6 +181,7 @@ final class GoldenPadTouchOverlay: UIView {
         ring("PRONE", "+prone",   "arrow.down.to.line", radius:172,angle:199,diameter:52),
         .init(title:"SCORE",command:"+scores",symbol:"list.number",x:0,y:88,diameter:64),
         .init(title:"MENU",command:"togglemenu",symbol:"line.3.horizontal",x:0,y:142,diameter:64)]
+        + [.init(title:"CHAT",command:"etpad_comms",symbol:"bubble.left.and.bubble.right.fill",x:0,y:196,diameter:64)]
     var onAction:((String,Bool)->Void)?
     var onMove:((CGPoint)->Void)?
     var onLook:((CGPoint)->Void)?

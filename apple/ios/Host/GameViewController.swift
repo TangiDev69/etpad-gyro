@@ -14,7 +14,9 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private var displayLink:CADisplayLink?
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
-    private let prompts=UIButton(type:.system),menu=UIButton(type:.system)
+    private let prompts=UIButton(type:.system),menu=MenuButton(type:.system)
+    private let wheel=CommsWheel(frame:.zero)
+    private var wheelFromController=false
     private let launcher=LauncherView(frame:.zero)
     private let overlay=GoldenPadTouchOverlay(frame:.zero),surface=GameSurfaceInputView(frame:.zero)
     private var gameHome:URL { dataManager.home }
@@ -80,6 +82,13 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         menuStyle.background.strokeWidth=1
         menu.automaticallyUpdatesConfiguration=false;menu.configuration=menuStyle;menu.tintColor = .white
         menu.showsMenuAsPrimaryAction=true;menu.accessibilityLabel="ETPad menu";view.addSubview(menu)
+        menu.onShow = { [weak self] showing in
+            guard let self=self else { return }
+            if showing { self.releaseInputs() } else { DispatchQueue.main.async { self.restoreHost() } }
+        }
+        wheel.onSend = { [weak self] command in self?.command(command) }
+        wheel.onClose = { [weak self] in self?.wheelFromController=false;etpad_set_suspend_look(0) }
+        view.addSubview(wheel)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
         overlay.onMove = { [weak self] value in if self?.engineReady == true { etpad_touch_move(Float(value.x),Float(value.y)) } }
         overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32((value.x*1.5).rounded()),Int32((value.y*1.5).rounded())) } }
@@ -144,7 +153,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         }
     }
     override func viewDidLayoutSubviews(){
-        super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay);setFrame(view.bounds,for:launcher)
+        super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay);setFrame(view.bounds,for:launcher);setFrame(view.bounds,for:wheel)
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         layoutMenu(in:safe)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
@@ -161,7 +170,8 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         }
         // Native menus/keyboards own their windows; reassert only SDL's window.
         host.windowLevel=engineReady ? UIWindow.Level(rawValue:UIWindow.Level.normal.rawValue+1) : .normal
-        if !host.isKeyWindow { host.makeKeyAndVisible() }
+        // While the ••• menu is open its own window must stay key.
+        if !host.isKeyWindow && !menu.showing { host.makeKeyAndVisible() }
         if UIApplication.shared.applicationState == .active { displayLink?.isPaused=false }
         view.bringSubviewToFront(menu)
         if presentedViewController==nil { becomeFirstResponder() }
@@ -239,6 +249,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
     private func command(_ text:String){guard engineReady else { return };etpad_command(text)}
     private func touchAction(_ action:String,pressed:Bool){
         if action=="togglemenu" && pressed && overlay.arranging { overlay.arranging=false;refreshMenu();return }
+        if action=="etpad_comms" { if pressed && engineReady && !overlay.arranging { wheel.show(tap:true) };return }
         guard engineReady else { return }
         if action.hasPrefix("+") { command((pressed ? "+":"-")+action.dropFirst()) }
         else if pressed { command(action) }
@@ -304,6 +315,27 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             etpad_pointer(Float(menuCursor.x),Float(menuCursor.y),pad.buttonA.isPressed ? 1:0)
         }
         if bChanged && pad.buttonB.isPressed { etpad_key(27,1);etpad_key(27,0) }
+    }
+    private func pollComms(){
+        let pad=GCController.controllers().first?.extendedGamepad
+        let rb=pad?.rightShoulder.isPressed ?? false
+        if wheelFromController {
+            if !rb || !gameplayActive || presentedViewController != nil { if rb { wheel.hide() } else { wheel.commit() } }
+            else if let stick=pad?.rightThumbstick { wheel.point(x:stick.xAxis.value,y:stick.yAxis.value) }
+        } else if rb && gameplayActive && presentedViewController==nil && wheel.isHidden && !(padPrevious["rb"] ?? false) {
+            wheelFromController=true;etpad_set_suspend_look(1);wheel.show(tap:false);setInputMode(.controller)
+        }
+        padPrevious["rb"]=rb
+    }
+    // Controller look speed and inversion, applied to ET's joystick scales.
+    private func applyPadLook(){
+        let speed=UserDefaults.standard.object(forKey:"etpad.padLook") as? Double ?? 1
+        let invert=UserDefaults.standard.bool(forKey:"etpad.padInvert")
+        command(String(format:"set j_yaw %.5f;set j_pitch %.5f",-0.007*speed,0.0055*speed*(invert ? -1:1)))
+    }
+    private func padLookSpeed(){
+        presentSettings("Controller Look Speed",rows:[.slider("Look Speed",0.4,2.5,Float(UserDefaults.standard.object(forKey:"etpad.padLook") as? Double ?? 1)){[weak self] value in
+            UserDefaults.standard.set(Double(value),forKey:"etpad.padLook");self?.applyPadLook() }])
     }
     private func refreshPrompts(){
         hasMouse = !GCMouse.mice().isEmpty
@@ -382,7 +414,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             pollInputSources()
         }
         pollMenuController()
-        if engineReady { pollGameMenuCursor() }
+        if engineReady { pollGameMenuCursor();pollComms() }
         updateTouchVisibility()
         guard engineReady else { return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
@@ -440,7 +472,11 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
             group([action("Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},hideItem]),
             group([action("Size, Opacity and Look Speed…",icon:"slider.horizontal.3"){[weak self] in self?.touchSettings()},
                 action(overlay.arranging ? "Done Moving Buttons":"Move Buttons",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])])
-        let controller=action("Controller Buttons…",icon:"gamecontroller"){[weak self] in self?.mapping()}
+        let invert=UserDefaults.standard.bool(forKey:"etpad.padInvert")
+        let controller=UIMenu(title:"Controller",image:UIImage(systemName:"gamecontroller"),children:[
+            group([action("Look Speed…",icon:"scope"){[weak self] in self?.padLookSpeed()},
+                action("Invert Look",icon:"arrow.up.arrow.down",state:invert){[weak self] in UserDefaults.standard.set(!invert,forKey:"etpad.padInvert");self?.applyPadLook();self?.refreshMenu()}]),
+            group([action("Buttons…",icon:"list.bullet"){[weak self] in self?.mapping()}])])
         controller.subtitle=GCController.controllers().first.map { $0.vendorName ?? "Connected" } ?? "No controller connected"
         let width=UserDefaults.standard.integer(forKey:"etpad.renderWidth")
         let graphics=UIMenu(title:"Graphics",image:UIImage(systemName:"display"),children:[
@@ -531,7 +567,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         presentSettings("Saved Layouts",rows:rows)
     }
     @objc private func mapping(){
-        let text="LS Move · RS Look\nRT Fire · LT Alt fire\nA / ✕ Jump · B / ○ Crouch\nX / □ Reload · Y / △ Use\nL3 Sprint · R3 Prone\nBack Score · Start Game menu\nD-pad: Map, Limbo, Previous, Next\n\nHold LB: A/B Lean · X/Y Vote Yes/No\nBack Console · Start Team · L3 Class\nD-pad: Medic, Need Ammo, Thanks, Affirmative\n\nHold RB: A/B/X/Y weapon banks 5–8\nBack 9 · Start 10 · L3 1 · R3 2\nD-pad Up/Down 3/4 · Left/Right Previous/Next"
+        let text="Left stick Move · Right stick Look\nRT Fire · LT Alt fire / scope\nA Jump · B Crouch · X Reload · Y Use\nL3 Sprint · R3 Prone\nView Scores · Menu Game menu\nD-pad: ↑ Map · ↓ Team & Class · ←/→ Weapons\n\nHold RB: quick-chat wheel. Point the right stick, release RB to send.\n\nHold LB: A/B Lean left/right · X/Y Vote yes/no\nView Console · Menu Team · L3 Class\nD-pad: Medic, Need Ammo, Thanks, Affirmative\n\nIn ET menus: left stick moves the cursor, A clicks, B goes back."
         var rows:[HostSettingsViewController.Row]=[.button("View Default Mapping"){[weak self] in self?.alert("Default Controller Mapping",text)}]
         let saved=UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:]
         for (label,key,standard) in Self.controllerKeys {
@@ -630,6 +666,7 @@ final class GameViewController:UIViewController,UIDocumentPickerDelegate {
         for (key,value) in UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:] {
             if Self.controllerKeys.contains(where:{$0.1==key}) && Self.bindingActions.contains(where:{$0.1==value}) { command("bind \(key) \"\(value)\"") }
         }
+        applyPadLook()
         restoreHost()
         // The engine now renders beneath the host window; retire the launcher.
         UIView.animate(withDuration:0.35,animations:{ self.launcher.alpha=0 }) { _ in self.launcher.removeFromSuperview() }
@@ -648,8 +685,8 @@ private final class GuideViewController:UIViewController {
         func line(_ s:String){body.append(NSAttributedString(string:s+"\n",attributes:[.font:UIFont.systemFont(ofSize:15),.foregroundColor:ETPadTheme.cream]))}
         func gap(){body.append(NSAttributedString(string:"\n",attributes:[.font:UIFont.systemFont(ofSize:8)]))}
         heading("Getting into a game");line("Play Online lists live ET: Legacy servers with people on them. Tap one to join; maps download the first time.");line("Practice with Bots starts an offline round on a classic map. Choose a team and class when the Limbo menu opens.");gap()
-        heading("Touch");line("Left thumb: drag anywhere on the left to move. Push the stick well past its rim, forward, to sprint.");line("Right thumb: drag anywhere on the right to look. Hold FIRE and slide your thumb to aim while firing.");line("JUMP, CROUCH, PRONE, RELOAD, ALT (scope or alternate fire) and USE sit around FIRE. ‹ › change weapons.");line("SCORE (hold) and MENU sit at the top left beside the ••• menu. Arrange Controls lets you move any button.");gap()
-        heading("Controller");line("Left stick moves, right stick looks. RT fires, LT alternate fire. A jump, B crouch, X reload, Y use. L3 sprint, R3 prone.");line("Back shows scores, Start opens the game menu. D-pad: map, Limbo, previous and next weapon.");line("Hold LB for lean, votes and quick chat; hold RB for weapon banks. Options › Controls › Controller Buttons shows and changes every binding.");gap()
+        heading("Touch");line("Left thumb: drag anywhere on the left to move. Push the stick well past its rim, forward, to sprint.");line("Right thumb: drag anywhere on the right to look. Hold FIRE and slide your thumb to aim while firing.");line("JUMP, CROUCH, PRONE, RELOAD, ALT (scope or alternate fire) and USE sit around FIRE. ‹ › change weapons.");line("SCORE (hold), MENU and CHAT (the quick-chat wheel) sit at the top left under the ••• menu. Settings › Touch Controls › Move Buttons lets you move any button.");gap()
+        heading("Controller");line("Left stick moves, right stick looks. RT fires, LT alternate fire or scope. A jump, B crouch, X reload, Y use. L3 sprint, R3 prone.");line("View shows scores, Menu opens the game menu. D-pad: up map, down team and class, left and right change weapon.");line("Hold RB for the quick-chat wheel: point the right stick at Medic!, Need Ammo, Cover Me and more, then let go. Hold LB for lean and votes.");line("In ET's menus the left stick moves the cursor, A clicks and B goes back. Settings › Controller has look speed, invert look and every button.");gap()
         heading("Keyboard and mouse");line("ET's standard keys work: W A S D to move, Space jump, C crouch, X prone, Shift sprint, Q and E lean, R reload, F use, 1–0 weapons, Tab scores, Esc menu, ~ console.");line("During play the pointer locks for mouse look: left click fires, right click is alternate fire. In menus the pointer clicks normally.");gap()
         heading("Switching");line("Use any input at any time. Touch controls hide while a controller or keyboard is in use and return when you touch the screen. Turn this off in Options › Controls.")
         text.attributedText=body
@@ -657,4 +694,17 @@ private final class GuideViewController:UIViewController {
         NSLayoutConstraint.activate([text.leadingAnchor.constraint(equalTo:view.leadingAnchor),text.trailingAnchor.constraint(equalTo:view.trailingAnchor),text.topAnchor.constraint(equalTo:view.topAnchor),text.bottomAnchor.constraint(equalTo:view.bottomAnchor)])
     }
     @objc private func done(){dismiss(animated:true)}
+}
+// The ••• capsule reports when its menu is on screen, so the host does not
+// pull key-window focus back from the menu while it animates.
+final class MenuButton:UIButton {
+    var onShow:((Bool)->Void)?
+    private(set) var showing=false
+    override func contextMenuInteraction(_ interaction:UIContextMenuInteraction,willDisplayMenuFor configuration:UIContextMenuConfiguration,animator:UIContextMenuInteractionAnimating?) {
+        super.contextMenuInteraction(interaction,willDisplayMenuFor:configuration,animator:animator);showing=true;onShow?(true)
+    }
+    override func contextMenuInteraction(_ interaction:UIContextMenuInteraction,willEndFor configuration:UIContextMenuConfiguration,animator:UIContextMenuInteractionAnimating?) {
+        super.contextMenuInteraction(interaction,willEndFor:configuration,animator:animator)
+        if let animator=animator { animator.addCompletion { [weak self] in self?.showing=false;self?.onShow?(false) } } else { showing=false;onShow?(false) }
+    }
 }

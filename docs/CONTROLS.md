@@ -17,12 +17,17 @@ SDL GameController supplies family-independent physical positions for supported 
 | Hold LB + X / Y | Vote yes / no |
 | Hold LB + Back / Start / L3 | Console / team / class menu |
 | Hold LB + D-pad up / down / left / right | Medic / need ammo / thanks / affirmative team quick chat |
-| Hold RB + L3 / R3 / D-pad up / down | Weapon banks 1 / 2 / 3 / 4 |
-| Hold RB + A / B / X / Y / Back / Start | Weapon banks 5 / 6 / 7 / 8 / 9 / 10 |
+| Hold RB | Quick-chat wheel (Medic!, Need Ammo, Need Backup, Need Engineer, Negative, Thanks, Cover Me, Affirmative): point the right stick, release RB to send |
 
 Letters describe Xbox positions; PlayStation bottom/right/left/top and MFi equivalents use the same actions. iOS prompts distinguish Xbox, PlayStation and generic MFi-style labels. Trigger actions remain available while holding a shoulder. A held action releases using its original binding even when the shoulder is released first. Detachment releases held actions and clears movement axes.
 
 Controller validation: the SDL virtual-controller component test passes bank changes, release ordering, disabling the option while held, trigger routing and disconnect cleanup. This is component evidence, not physical-controller play. Simulator prompts use a virtual Gamepad; no physical MFi/Xbox/PlayStation controller was available.
+
+## Stick handling (Apple builds)
+
+Both sticks are read directly as analog axes every frame, independent of PAD0 stick binds. A radial dead zone (in_joystickThreshold, default 0.18) keeps diagonals smooth. Movement is linear. Look uses a 1.8 power curve for fine aim near center; full tilt turns about 230°/s horizontally (j_yaw −0.007) and 180°/s vertically (j_pitch 0.0055). Settings › Controller › Look Speed scales both, and Invert Look flips vertical look. While the quick-chat wheel is open, the right stick selects a message instead of looking. Triggers remain keys (RT +attack, LT weapalt).
+
+Earlier builds sent right-stick look from SDL axis events as abs(value/8000) × j_yaw, which truncated to zero and overwrote the polled value, so the right stick did nothing. That path is disabled on Apple builds.
 
 ## iPad touch controls
 

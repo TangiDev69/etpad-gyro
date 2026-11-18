@@ -107,7 +107,8 @@ Download/import checks SHA-256 before installing the complete set and never runs
 | L3 / R3 | Sprint / prone |
 | Back / Start | Scoreboard / game menu |
 | D-pad up / down / left / right | Map / limbo / previous / next weapon |
-| Hold LB / RB | Utility and quick-chat layer / weapon banks 1–10 |
+| Hold RB | Quick-chat wheel: point the right stick, release to send |
+| Hold LB | Lean, votes, console and four quick chats on the D-pad |
 
 Letters describe Xbox positions; PlayStation/MFi equivalents share the actions. Defaults load once per profile, remapping persists, and disconnect clears held inputs. [CONTROLS.md](docs/CONTROLS.md) contains every layer binding, native remapping and validation limits.
 
