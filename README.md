@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Early preview" src="https://img.shields.io/badge/status-early%20preview-FF9F0A">
+  <a href="https://github.com/chrissotraidis/etpad/releases/latest"><img alt="Release 0.1.0 preview" src="https://img.shields.io/badge/release-0.1.0%20preview-FF9F0A"></a>
   <img alt="iPadOS 16 or later" src="https://img.shields.io/badge/iPadOS-16%2B-0A84FF?logo=apple">
   <img alt="Apple silicon Mac" src="https://img.shields.io/badge/Mac-Apple%20silicon-0A84FF?logo=apple">
   <img alt="ET: Legacy 2.86.2" src="https://img.shields.io/badge/ET%3A%20Legacy-2.86.2-B22222">
@@ -41,12 +41,12 @@ browser, touch controls designed around ET's HUD, controller, keyboard and mouse
 handoff, offline bots, in-app game data download and external displays.
 
 > [!NOTE]
-> **ETPad is an early preview.** It installs and plays on a physical iPad Pro,
-> with bot rounds and public servers. The first downloadable release, 0.1.0, is
-> being prepared; until it appears under [Releases](https://github.com/chrissotraidis/etpad/releases),
-> [build it from source](#get-etpad). Long sessions, every controller family,
-> keyboard and trackpad, and external displays still need more testing on real
-> hardware. [Tell us how it goes.](https://github.com/chrissotraidis/etpad/issues/new/choose)
+> **ETPad 0.1.0 is out.** [Download it](https://github.com/chrissotraidis/etpad/releases/latest),
+> build your own copy with [PadMint](https://github.com/chrissotraidis/padmint),
+> or build from source. It's an early preview: it installs and plays on a
+> physical iPad Pro, with bot rounds and public servers. Long sessions, every
+> controller family, keyboard and trackpad, and external displays still need
+> more testing on real hardware. [Tell us how it goes.](https://github.com/chrissotraidis/etpad/issues/new/choose)
 
 ## Highlights
 
@@ -77,11 +77,11 @@ tap **Download Free Game Data** and ETPad fetches and verifies them for you. If
 you already have `pak0.pk3`, `pak1.pk3` and `pak2.pk3`, you can import them
 from Files instead.
 
-<details>
-<summary><strong>Download the app</strong> (from the first release, 0.1.0)</summary>
+<details open>
+<summary><strong>Download the app</strong> (easiest)</summary>
 
-1. Download `ETPad-unsigned.ipa` from
-   [Releases](https://github.com/chrissotraidis/etpad/releases) once 0.1.0 is published.
+1. Download `ETPad-unsigned.ipa` from the
+   [latest release](https://github.com/chrissotraidis/etpad/releases/latest).
 2. Install it with a sideloading tool that signs it with your own Apple ID, such
    as [Sideloadly](https://sideloadly.io/) (Mac or Windows) or
    [AltStore](https://altstore.io/). Developers can sign it with Xcode or `devicectl`.
@@ -94,18 +94,18 @@ Refresh or reinstall over the existing app; your settings and game data stay.
 </details>
 
 <details>
-<summary><strong>Build your own copy with PadMint</strong> (Apple silicon Mac, from 0.1.0)</summary>
+<summary><strong>Build your own copy with PadMint</strong> (Apple silicon Mac)</summary>
 
 With Xcode and its iOS platform installed, plus `brew install cmake ninja xcodegen`,
 open [PadMint](https://github.com/chrissotraidis/padmint) and choose **ETPad**.
 There is no game file to pick: the game data downloads inside the app after you
-install it. PadMint builds the latest release and checks the result; ETPad
-appears in PadMint with the 0.1.0 release.
+install it. PadMint builds the latest release in about 10 minutes with about
+4 GB of free space, and checks the result.
 
 </details>
 
-<details open>
-<summary><strong>Build from source</strong> (available now)</summary>
+<details>
+<summary><strong>Build from source</strong></summary>
 
 You need an Apple silicon Mac with full Xcode selected, about 8 GB of free space and:
 
