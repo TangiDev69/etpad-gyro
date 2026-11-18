@@ -108,7 +108,12 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         wheel.onClose = { [weak self] in self?.wheelFromController=false;etpad_set_suspend_look(0) }
         view.addSubview(wheel)
         textInput.onCharacter = { [weak self] scalar in if self?.engineReady == true { etpad_character(Int32(scalar.value)) } }
-        textInput.onKey = { [weak self] key in if self?.engineReady == true { etpad_key(key,1);etpad_key(key,0) } }
+        textInput.onKey = { [weak self] key in
+            guard self?.engineReady == true else { return }
+            etpad_key(key,1);etpad_key(key,0)
+            // ET's text fields delete on the Ctrl-H character, as desktop SDL sends it.
+            if key == 127 { etpad_character(8) }
+        }
         view.addSubview(textInput)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
         overlay.onMove = { [weak self] value in if self?.engineReady == true { etpad_touch_move(Float(value.x),Float(value.y)) } }
@@ -138,7 +143,9 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
             observers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { [weak self] note in
                 guard let self=self else { return }
                 if note.name == .GCControllerDidConnect { self.setInputMode(.controller) }
-                if note.name == .GCMouseDidConnect || note.name == .GCKeyboardDidConnect { self.setInputMode(.keyboard) }
+                // A keyboard case reports as connected even when folded back,
+                // so keyboard mode starts with an actual key press instead.
+                if note.name == .GCMouseDidConnect { self.setInputMode(.keyboard) }
                 if note.name == .GCMouseDidDisconnect && GCMouse.mice().isEmpty && self.inputMode == .keyboard { self.setInputMode(.touch) }
                 if note.name == .GCControllerDidDisconnect && GCController.controllers().isEmpty && self.inputMode == .controller { self.setInputMode(.touch) }
                 self.restoreHost();self.refreshPrompts()
@@ -261,7 +268,10 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     override func pressesBegan(_ presses:Set<UIPress>,with event:UIPressesEvent?) {
         if engineReady && presentedViewController==nil && presses.contains(where:{ $0.key != nil }) { setInputMode(.keyboard) }
         if engineReady && presentedViewController==nil && GCKeyboard.coalesced==nil {
-            for press in presses { if let key=press.key { etpad_hardware_key(Int32(key.keyCode.rawValue),1) } }
+            for press in presses { if let key=press.key {
+                etpad_hardware_key(Int32(key.keyCode.rawValue),1)
+                if key.keyCode == .keyboardDeleteOrBackspace { etpad_character(8) }
+            } }
         }
         if engineReady && presentedViewController==nil {
             for press in presses { for scalar in press.key?.characters.unicodeScalars ?? "".unicodeScalars where !CharacterSet.controlCharacters.contains(scalar) { etpad_character(Int32(scalar.value)) } }
@@ -374,9 +384,11 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     // ET's text fields (profile name, chat, passwords, console) get the iPad
     // keyboard when no hardware keyboard is attached.
     private func updateSoftwareKeyboard(){
-        let wants=engineReady && presentedViewController==nil && GCKeyboard.coalesced==nil && etpad_text_input_active() != 0
-        if wants && !textInput.isFirstResponder { _=textInput.becomeFirstResponder() }
-        else if !wants && textInput.isFirstResponder { _=textInput.resignFirstResponder();becomeFirstResponder() }
+        // iPadOS decides whether the on-screen keyboard appears (it stays
+        // away while a usable hardware keyboard is attached).
+        let wants=engineReady && presentedViewController==nil && etpad_text_input_active() != 0
+        if wants && !textInput.isFirstResponder { let ok=textInput.becomeFirstResponder();NSLog("ETPad software keyboard show %d",ok ? 1:0) }
+        else if !wants && textInput.isFirstResponder { _=textInput.resignFirstResponder();becomeFirstResponder();NSLog("ETPad software keyboard hide") }
         if wants,let preview=etpad_text_input_preview() { textInput.showPreview(String(cString:preview)) }
     }
     @objc private func pointerHover(_ gesture:UIHoverGestureRecognizer){
@@ -386,12 +398,18 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     }
     // Launch-hook commands; "etpad_comms" opens the quick-chat wheel.
     private func runTest(_ text:String){
-        for part in text.split(separator:";").map({ $0.trimmingCharacters(in:.whitespaces) }) {
+        var parts=text.split(separator:";").map({ $0.trimmingCharacters(in:.whitespaces) })
+        while !parts.isEmpty {
+            let part=parts.removeFirst()
+            // "etpad_pause" waits one second before the rest run.
+            if part=="etpad_pause" { let rest=parts.joined(separator:";");DispatchQueue.main.asyncAfter(deadline:.now()+1) { [weak self] in self?.runTest(rest) };return }
             switch part {
             case "etpad_comms":wheel.show(tap:true)
             case "etpad_touch":setInputMode(.touch)
             case "etpad_scores":touchAction("etpad_scores",pressed:true)
             case "etpad_settings":showSettings()
+            case "etpad_backspace":textInput.deleteBackward()
+            case let typed where typed.hasPrefix("etpad_type "):textInput.insertText(String(typed.dropFirst(11)))
             default:command(part)
             }
         }
