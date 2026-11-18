@@ -27,6 +27,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let scene = scene as? UIWindowScene { landscape(scene) }
         (window?.rootViewController as? GameViewController)?.restoreHost()
     }
+    // When the game's scene resizes, rotates or moves to another display,
+    // SDL's render window takes the scene's new bounds right away (the same
+    // rule as the Nov. 2026 DarkPad/PeonPad window-ownership fix). The Metal
+    // drawable is re-sized from the render width on every frame.
+    func windowScene(_ windowScene: UIWindowScene, didUpdate previousCoordinateSpace: UICoordinateSpace, interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation, traitCollection previousTraitCollection: UITraitCollection) {
+        NSLog("ETPad scene geometry %@ on screen %@ scale %.1f", NSCoder.string(for: windowScene.coordinateSpace.bounds), NSCoder.string(for: windowScene.screen.bounds), windowScene.screen.scale)
+        (window?.rootViewController as? GameViewController)?.restoreHost()
+    }
     private func landscape(_ scene: UIWindowScene) {
         window?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
         scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape)) { NSLog("ETPad rotation: %@", $0.localizedDescription) }

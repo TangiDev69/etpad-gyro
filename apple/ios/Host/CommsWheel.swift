@@ -15,6 +15,7 @@ final class CommsWheel: UIView {
         .init(title:"Cover Me",command:"vsay_team CoverMe",symbol:"shield.lefthalf.filled"),
         .init(title:"Affirmative",command:"vsay_team Affirmative",symbol:"checkmark")]
     var onSend:((String)->Void)?
+    var onOpen:(()->Void)?
     var onClose:(()->Void)?
     private(set) var selected:Int?
     private let disc=UIView(),ringLayer=CAShapeLayer(),highlight=CAShapeLayer(),dividers=CAShapeLayer(),hub=CAShapeLayer()
@@ -76,8 +77,10 @@ final class CommsWheel: UIView {
     private func angle(centerOf i:Int)->CGFloat { CGFloat(i)*(.pi/4) - .pi/2 }
     private func angle(boundaryOf i:Int)->CGFloat { angle(centerOf:i) - .pi/8 }
     private func point(_ c:CGPoint,_ r:CGFloat,_ a:CGFloat)->CGPoint { CGPoint(x:c.x+cos(a)*r,y:c.y+sin(a)*r) }
-    func show(tap:Bool) { tapMode=tap;selected=nil;refresh();isHidden=false;superview?.bringSubviewToFront(self) }
-    func hide() { isHidden=true;selected=nil;onClose?() }
+    func show(tap:Bool) { tapMode=tap;selected=nil;refresh();isHidden=false;superview?.bringSubviewToFront(self);onOpen?() }
+    // Switching input mid-choice keeps the wheel open with its selection.
+    func useController() { if tapMode { tapMode=false;refresh() } }
+    func hide() { guard !isHidden else { return };isHidden=true;selected=nil;onClose?() }
     // Stick direction (x right, y up). Returning to center keeps the choice.
     func point(x:Float,y:Float) {
         guard hypot(x,y)>0.45 else { return }
@@ -97,10 +100,10 @@ final class CommsWheel: UIView {
             path.close();highlight.path=path.cgPath
             let message=Self.messages[i]
             centerTitle.text=message.title.uppercased()
-            centerDetail.text=(message.team ? "To your team":"To everyone")+"\n"+"Release RB to send"
+            centerDetail.text=(message.team ? "To your team":"To everyone")+"\n"+(tapMode ? "Tap to send":"A or release RB sends")
         } else {
             highlight.path=nil;centerTitle.text="QUICK CHAT"
-            centerDetail.text=tapMode ? "Tap a message\nTap outside to cancel":"Point the right stick\nRelease RB to send"
+            centerDetail.text=tapMode ? "Tap a message\nTap outside to cancel":"Point a stick · A sends\nB cancels"
         }
         for i in 0..<8 {
             let on=i==selected
@@ -108,7 +111,6 @@ final class CommsWheel: UIView {
         }
     }
     @objc private func tapped(_ gesture:UITapGestureRecognizer) {
-        guard tapMode else { return }
         let p=gesture.location(in:disc),c=CGPoint(x:outer,y:outer)
         let d=hypot(p.x-c.x,p.y-c.y)
         if d<inner { if selected != nil { commit() };return }

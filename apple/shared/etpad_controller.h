@@ -6,6 +6,9 @@
  */
 static int etpadHeldKeys[32];
 static int etpadSentAxes[4];
+#ifdef ETPAD_IOS
+extern int etpad_suspend_look;
+#endif
 
 static qboolean ETPad_ControllerEnabled(void)
 {
@@ -25,6 +28,14 @@ static int ETPad_ControllerKey(int source, int baseKey, qboolean pressed)
 		etpadHeldKeys[source] = 0;
 		return key;
 	}
+#ifdef ETPAD_IOS
+	/* The quick-chat wheel owns new presses (stick picks, A sends, B
+	 * cancels). Presses made before it opened still release normally. */
+	if (etpad_suspend_look)
+	{
+		return 0;
+	}
+#endif
 	if (!ETPad_ControllerEnabled())
 	{
 		etpadHeldKeys[source] = baseKey;

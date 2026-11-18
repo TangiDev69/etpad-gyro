@@ -18,7 +18,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
     private let prompts=UIButton(type:.system),menu=MenuButton(type:.system)
-    private let wheel=CommsWheel(frame:.zero)
+    private let wheel=CommsWheel(frame:.zero),back=UIButton(type:.system)
+    private var keyboardHintUntil:Double=0
     private var wheelFromController=false
     private let launcher=LauncherView(frame:.zero)
     private let overlay=GoldenPadTouchOverlay(frame:.zero),surface=GameSurfaceInputView(frame:.zero)
@@ -85,11 +86,25 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         menuStyle.background.strokeWidth=1
         menu.automaticallyUpdatesConfiguration=false;menu.configuration=menuStyle;menu.tintColor = .white
         menu.showsMenuAsPrimaryAction=true;menu.accessibilityLabel="ETPad menu";view.addSubview(menu)
+        // Back closes ET's own menus (game menu, Team & Class, console) when
+        // there is no Escape key, so a touch player is never stuck in them.
+        var backStyle=UIButton.Configuration.plain()
+        backStyle.image=UIImage(systemName:"chevron.left",withConfiguration:UIImage.SymbolConfiguration(pointSize:15,weight:.bold))
+        backStyle.title="Back";backStyle.imagePadding=6;backStyle.baseForegroundColor = .white;backStyle.cornerStyle = .capsule
+        backStyle.background.backgroundColor=UIColor(white:0.06,alpha:0.72);backStyle.background.strokeColor=UIColor.white.withAlphaComponent(0.30);backStyle.background.strokeWidth=1
+        backStyle.titleTextAttributesTransformer=UIConfigurationTextAttributesTransformer { var a=$0;a.font=UIFont.systemFont(ofSize:15,weight:.semibold);return a }
+        back.configuration=backStyle;back.isHidden=true;back.accessibilityLabel="Back to the game"
+        back.addAction(UIAction { [weak self] _ in guard self?.engineReady == true else { return };etpad_key(27,1);etpad_key(27,0) },for:.touchUpInside)
+        view.addSubview(back)
+        // A mouse or trackpad pointer (not Apple Pencil hover) means keyboard and mouse play.
+        let hover=UIHoverGestureRecognizer(target:self,action:#selector(pointerHover(_:)));view.addGestureRecognizer(hover)
         menu.onShow = { [weak self] showing in
             guard let self=self else { return }
             if showing { self.releaseInputs() } else { DispatchQueue.main.async { self.restoreHost() } }
         }
         wheel.onSend = { [weak self] command in self?.command(command) }
+        // While the wheel is open the controller drives it, not the game.
+        wheel.onOpen = { [weak self] in self?.releaseInputs();etpad_set_suspend_look(1) }
         wheel.onClose = { [weak self] in self?.wheelFromController=false;etpad_set_suspend_look(0) }
         view.addSubview(wheel)
         overlay.onAction = { [weak self] action,pressed in self?.touchAction(action,pressed:pressed) }
@@ -120,8 +135,16 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
             observers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { [weak self] note in
                 guard let self=self else { return }
                 if note.name == .GCControllerDidConnect { self.setInputMode(.controller) }
+                if note.name == .GCMouseDidConnect || note.name == .GCKeyboardDidConnect { self.setInputMode(.keyboard) }
+                if note.name == .GCMouseDidDisconnect && GCMouse.mice().isEmpty && self.inputMode == .keyboard { self.setInputMode(.touch) }
                 if note.name == .GCControllerDidDisconnect && GCController.controllers().isEmpty && self.inputMode == .controller { self.setInputMode(.touch) }
                 self.restoreHost();self.refreshPrompts()
+            })
+        }
+        // Plugging a display in or out keeps mirroring; log it for external-display checks.
+        for name in [UIScreen.didConnectNotification,UIScreen.didDisconnectNotification] {
+            observers.append(NotificationCenter.default.addObserver(forName:name,object:nil,queue:.main) { [weak self] note in
+                NSLog("ETPad %@: %d screens",note.name.rawValue,UIScreen.screens.count);self?.restoreHost()
             })
         }
         observers.append(NotificationCenter.default.addObserver(forName:UIPointerLockState.didChangeNotification,object:nil,queue:.main) { [weak self] _ in
@@ -253,6 +276,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private func touchAction(_ action:String,pressed:Bool){
         if action=="togglemenu" && pressed && overlay.arranging { overlay.arranging=false;refreshMenu();return }
         if action=="etpad_comms" { if pressed && engineReady && !overlay.arranging { wheel.show(tap:true) };return }
+        // SCORE is a toggle on touch: tap to show the scoreboard, tap to hide.
+        if action=="etpad_scores" { if pressed && engineReady { command((etpad_hud_flags() & 1) != 0 ? "-scores":"+scores") };return }
         guard engineReady else { return }
         if action.hasPrefix("+") { command((pressed ? "+":"-")+action.dropFirst()) }
         else if pressed { command(action) }
@@ -261,7 +286,9 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private func setInputMode(_ mode:InputMode){
         guard mode != inputMode else { return }
         inputMode=mode;NSLog("ETPad input mode %@",String(describing:mode))
-        if mode == .controller { controllerHintUntil=CACurrentMediaTime()+8 }
+        if mode == .controller { controllerHintUntil=CACurrentMediaTime()+8;wheel.useController() }
+        if mode == .keyboard { keyboardHintUntil=CACurrentMediaTime()+8 }
+        refreshPrompts()
         updateTouchVisibility()
     }
     // Cheap per-frame checks: GameController exposes the last event time, and
@@ -322,19 +349,40 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private func pollComms(){
         let pad=GCController.controllers().first?.extendedGamepad
         let rb=pad?.rightShoulder.isPressed ?? false
-        if wheelFromController {
-            if !rb || !gameplayActive || presentedViewController != nil { if rb { wheel.hide() } else { wheel.commit() } }
-            else if let stick=pad?.rightThumbstick { wheel.point(x:stick.xAxis.value,y:stick.yAxis.value) }
-        } else if rb && gameplayActive && presentedViewController==nil && wheel.isHidden && !(padPrevious["rb"] ?? false) {
-            wheelFromController=true;etpad_set_suspend_look(1);wheel.show(tap:false);setInputMode(.controller)
+        func edge(_ name:String,_ on:Bool)->Bool { let was=padPrevious[name] ?? false;padPrevious[name]=on;return on && !was }
+        let rbDown=edge("rb",rb),aDown=edge("wheel.a",pad?.buttonA.isPressed ?? false),bDown=edge("wheel.b",pad?.buttonB.isPressed ?? false)
+        if !wheel.isHidden {
+            // One wheel, any input: a stick points, A or releasing RB sends,
+            // B cancels, and a tap on a wedge sends from touch.
+            if !gameplayActive || presentedViewController != nil { wheel.hide();return }
+            if let pad=pad {
+                let right=pad.rightThumbstick,left=pad.leftThumbstick
+                let stick=hypot(right.xAxis.value,right.yAxis.value)>0.45 ? right:left
+                if hypot(stick.xAxis.value,stick.yAxis.value)>0.45 { wheel.useController();setInputMode(.controller) }
+                wheel.point(x:stick.xAxis.value,y:stick.yAxis.value)
+            }
+            if rbDown { wheelFromController=true;wheel.useController() }
+            if aDown { wheel.commit() } else if bDown { wheel.hide() } else if wheelFromController && !rb { wheel.commit() }
+        } else if rbDown && gameplayActive && presentedViewController==nil {
+            wheelFromController=true;wheel.show(tap:false);setInputMode(.controller)
         }
-        padPrevious["rb"]=rb
     }
     // Controller look speed and inversion, applied to ET's joystick scales.
+    @objc private func pointerHover(_ gesture:UIHoverGestureRecognizer){
+        guard gesture.state == .began || gesture.state == .changed else { return }
+        if #available(iOS 16.1,*), gesture.zOffset>0 { return } // Apple Pencil hover
+        setInputMode(.keyboard)
+    }
     // Launch-hook commands; "etpad_comms" opens the quick-chat wheel.
     private func runTest(_ text:String){
         for part in text.split(separator:";").map({ $0.trimmingCharacters(in:.whitespaces) }) {
-            if part=="etpad_comms" { wheel.show(tap:true) } else { command(part) }
+            switch part {
+            case "etpad_comms":wheel.show(tap:true)
+            case "etpad_touch":setInputMode(.touch)
+            case "etpad_scores":touchAction("etpad_scores",pressed:true)
+            case "etpad_settings":showSettings()
+            default:command(part)
+            }
         }
     }
     private func applyPadLook(){
@@ -346,20 +394,27 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         presentSettings("Controller Look Speed",rows:[.slider("Look Speed",0.4,2.5,Float(UserDefaults.standard.object(forKey:"etpad.padLook") as? Double ?? 1)){[weak self] value in
             UserDefaults.standard.set(Double(value),forKey:"etpad.padLook");self?.applyPadLook() }])
     }
+    // The chip under the top edge names the active input's key controls for
+    // eight seconds after switching to it.
     private func refreshPrompts(){
         hasMouse = !GCMouse.mice().isEmpty
-        guard let controller=GCController.controllers().first else {
-            controllerConnected=false;setHidden(true,for:prompts);promptController=nil;controllerHintUntil=0;updateTouchVisibility();return
+        let controller=GCController.controllers().first
+        controllerConnected=controller != nil
+        if let controller=controller,promptController !== controller { controllerHintUntil=CACurrentMediaTime()+8;promptController=controller }
+        if controller==nil { promptController=nil }
+        var style=prompts.configuration
+        if inputMode == .keyboard {
+            style?.image=UIImage(systemName:"keyboard");style?.title=hasMouse ? "Mouse aims · Esc menu · V quick chat · Tab scores":"Esc menu · V quick chat · Tab scores"
+            prompts.accessibilityLabel="Keyboard and mouse controls"
+        } else if let controller=controller {
+            let profile=controller.physicalInputProfile
+            let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
+            style?.image=UIImage(systemName:"gamecontroller.fill")
+            style?.title=playStation ? "R2 Fire · △ Grenade · R1 Quick chat":"RT Fire · Y Grenade · RB Quick chat"
+            prompts.accessibilityLabel="\(controller.vendorName ?? "Controller") connected. Controller buttons"
         }
-        controllerConnected=true
-        if promptController !== controller { controllerHintUntil=CACurrentMediaTime()+8;promptController=controller }
-        let profile=controller.physicalInputProfile
-        let playStation=profile is GCDualShockGamepad || profile is GCDualSenseGamepad
-        let family=playStation ? "PlayStation" : profile is GCXboxGamepad ? "Xbox" : "Controller"
-        let quickBindings=playStation ? "R2 Fire · △ Grenade · R1 Quick chat" : "RT Fire · Y Grenade · RB Quick chat"
-        prompts.setTitle(quickBindings,for:.normal)
-        prompts.accessibilityLabel="\(controller.vendorName ?? family) connected. Controller Button Mapping"
-        setHidden(false,for:prompts);view.setNeedsLayout();updateTouchVisibility()
+        prompts.configuration=style
+        view.setNeedsLayout();updateTouchVisibility()
     }
     private func setHidden(_ hidden:Bool,for target:UIView){
         if target.isHidden != hidden { target.isHidden=hidden }
@@ -376,6 +431,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
             : (!started ? CGRect(x:safe.maxX-48-48,y:safe.minY+26,width:48,height:44)
             : CGRect(x:safe.maxX-60,y:safe.minY+12,width:48,height:44))
         setFrame(frame,for:menu)
+        // An open scoreboard needs the whole screen; ••• returns when it closes.
+        setHidden(gameplayActive && overlay.scoreboardVisible,for:menu)
     }
     private func updateTouchVisibility(){
         // Keep actual HUD/scoreboard polling every display tick. Controller
@@ -399,7 +456,13 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         let hudFlags=engineReady ? etpad_hud_flags():0
         let scoreboard=(hudFlags & 3) != 0
         if overlay.scoreboardVisible != scoreboard { overlay.scoreboardVisible=scoreboard }
-        setHidden(!controllerConnected || inputMode != .controller || (!hostOnly && (scoreboard || CACurrentMediaTime()>controllerHintUntil)),for:prompts)
+        let now=CACurrentMediaTime()
+        let hint=(inputMode == .controller && controllerConnected && now<controllerHintUntil) || (inputMode == .keyboard && now<keyboardHintUntil)
+        setHidden(!started || !hint || scoreboard || !wheel.isHidden,for:prompts)
+        // Back shows over ET's own menus during a match.
+        let inEngineMenu=engineReady && state==8 && !gameplayActive && presentedViewController==nil
+        setHidden(!inEngineMenu,for:back)
+        if inEngineMenu { let safe=view.bounds.inset(by:view.safeAreaInsets);setFrame(CGRect(x:safe.maxX-60-12-104,y:safe.minY+12,width:104,height:44),for:back) }
         layoutMenu(in:view.bounds.inset(by:view.safeAreaInsets))
         let otherInput=autoHide && inputMode != .touch
         let active=hostOnly || gameplayActive
@@ -409,7 +472,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
             overlay.isHidden=hidden
         }
         // Lock the pointer for mouse look only during play with a mouse attached.
-        let lock=engineReady && gameplayActive && hasMouse && presentedViewController==nil && !overlay.arranging
+        let lock=engineReady && gameplayActive && hasMouse && inputMode == .keyboard && presentedViewController==nil && !overlay.arranging && wheel.isHidden
         if lock != wantsPointerLock { wantsPointerLock=lock;setNeedsUpdateOfPrefersPointerLocked() }
     }
     @objc private func frame(){
@@ -447,81 +510,97 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         refreshMenu()
     }
     private func group(_ children:[UIMenuElement],_ title:String="")->UIMenu { UIMenu(title:title,options:.displayInline,children:children) }
-    // Short top level: what you do right now, then three folders.
-    //   In a match: Team & Class · Game Menu · Chat ▸ · Vote ▸ · Command Map
-    //   Otherwise:  Find a Server · Practice with Bots ▸ · Join by Address
-    //   Then:       Play Elsewhere ▸ (in a match) · Settings ▸ · Help ▸
-    //   Last:       Leave Match (in a match)
+    // The ••• menu holds actions only; everything adjustable is in Settings.
+    //   In a match: Team & Class · Chat ▸ · Vote ▸ · Command Map · Game Menu
+    //               Play Elsewhere ▸ · Settings… · Help ▸ · Leave Match
+    //   Otherwise:  Find a Server · Practice with Bots ▸ · Join by Address…
+    //               Settings… · Help ▸
     private func refreshMenu(){
-        // Layout restore/import also changes this one canonical setting.
         UserDefaults.standard.set(autoHide,forKey:"etpad.autoHide")
         let servers=action("Find a Server",icon:"globe"){[weak self] in self?.showServers()}
         servers.subtitle=inMatch ? "Leaves this match when you join":"Live servers with players"
         let practice=UIMenu(title:"Practice with Bots",image:UIImage(systemName:"person.3.sequence"),children:practiceItems())
         practice.subtitle=inMatch ? "Leaves this match":"\(botCount-1) bots, offline"
         let address=action("Join by Address…",icon:"link"){[weak self] in self?.joinAddress()}
+        let settings=action("Settings…",icon:"gearshape"){[weak self] in self?.showSettings()}
+        settings.subtitle="Touch, controller, keyboard and mouse, graphics"
+        let help=UIMenu(title:"Help",image:UIImage(systemName:"questionmark.circle"),children:[
+            group([action("How to Play",icon:"book"){[weak self] in self?.showGuide()}]),
+            group([action("Console…",icon:"terminal"){[weak self] in self?.console()},
+                action("Type into the Game…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}]),
+            group([action("Report a Problem…",icon:"exclamationmark.bubble"){[weak self] in self?.reportProblem()},
+                action("ETPad on GitHub",icon:"safari"){ UIApplication.shared.open(URL(string:"https://github.com/chrissotraidis/etpad")!) }])])
         var sections:[UIMenuElement]=[]
         if inMatch {
             sections.append(group(matchItems()))
             let elsewhere=UIMenu(title:"Play Elsewhere",image:UIImage(systemName:"arrow.triangle.swap"),children:[servers,practice,address])
-            sections.append(group([elsewhere,settingsMenu(),helpMenu()]))
+            sections.append(group([elsewhere,settings,help]))
             sections.append(group([action("Leave Match",icon:"rectangle.portrait.and.arrow.right",attributes:.destructive){[weak self] in self?.leaveMatch()}]))
         } else {
             sections.append(group([servers,practice,address]))
-            sections.append(group([settingsMenu(),helpMenu()]))
+            sections.append(group([settings,help]))
         }
         menu.menu=UIMenu(title:"",children:sections)
         updateLauncher()
         updateTouchVisibility()
     }
-    private func settingsMenu()->UIMenu {
-        let hideItem=action("Hide When Using a Controller",icon:"eye.slash",state:autoHide){[weak self] in guard let s=self else{return};s.setAutoHide(!s.autoHide)}
-        hideItem.subtitle="Or a keyboard. Touch the screen to bring them back."
-        let touch=UIMenu(title:"Touch Controls",image:UIImage(systemName:"hand.tap"),children:[
-            group([action("Show Touch Controls",state:showTouch){[weak self] in guard let s=self else{return};s.showTouch.toggle();UserDefaults.standard.set(s.showTouch,forKey:"etpad.showTouch");s.refreshMenu()},hideItem]),
-            group([action("Size, Opacity and Look Speed…",icon:"slider.horizontal.3"){[weak self] in self?.touchSettings()},
-                action(overlay.arranging ? "Done Moving Buttons":"Move Buttons",icon:overlay.arranging ? "checkmark":"hand.draw"){[weak self] in guard let s=self else{return};s.releaseInputs();s.overlay.arranging.toggle();s.refreshMenu()}])])
-        let invert=UserDefaults.standard.bool(forKey:"etpad.padInvert")
-        let controller=UIMenu(title:"Controller",image:UIImage(systemName:"gamecontroller"),children:[
-            group([action("Look Speed…",icon:"scope"){[weak self] in self?.padLookSpeed()},
-                action("Invert Look",icon:"arrow.up.arrow.down",state:invert){[weak self] in UserDefaults.standard.set(!invert,forKey:"etpad.padInvert");self?.applyPadLook();self?.refreshMenu()}]),
-            group([action("Buttons…",icon:"list.bullet"){[weak self] in self?.mapping()}])])
-        controller.subtitle=GCController.controllers().first.map { $0.vendorName ?? "Connected" } ?? "No controller connected"
-        let width=UserDefaults.standard.integer(forKey:"etpad.renderWidth")
-        let graphics=UIMenu(title:"Graphics",image:UIImage(systemName:"display"),children:[
-            UIMenu(title:"Resolution",options:.displayInline,children:[960,1280,1600,1920].map { w in action("\(w) pixels wide",state:(width==0 ? 1280:width)==w){[weak self] in self?.resolution(w)} }),
-            group([action("Field of View…",icon:"viewfinder"){[weak self] in self?.fieldOfView()},
-                action("Show FPS Counter",icon:"speedometer",state:UserDefaults.standard.bool(forKey:"etpad.fps")){[weak self] in guard let s=self else{return};let on = !UserDefaults.standard.bool(forKey:"etpad.fps");UserDefaults.standard.set(on,forKey:"etpad.fps");s.command("set cg_drawFPS \(on ? 1:0)");s.refreshMenu()}])])
-        let name=action("Player Name…",icon:"person.crop.circle"){[weak self] in self?.playerName()}
-        name.subtitle=UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer"
-        let data=UIMenu(title:"Game Data",image:UIImage(systemName:"folder"),children:[
-            group([action("Download Free Game Data",icon:"arrow.down.circle"){[weak self] in self?.downloadData()},
-                action("Import pak Files…",icon:"square.and.arrow.down"){[weak self] in self?.importData()}]),
-            group([action("Remove Stored Game Data",icon:"trash",attributes:.destructive){[weak self] in self?.removeData()}])])
-        return UIMenu(title:"Settings",image:UIImage(systemName:"gearshape"),children:[group([touch,controller]),group([graphics,name]),group([data])])
-    }
-    private func helpMenu()->UIMenu {
-        UIMenu(title:"Help",image:UIImage(systemName:"questionmark.circle"),children:[
-            group([action("How to Play",icon:"book"){[weak self] in self?.showGuide()}]),
-            group([action("Console…",icon:"terminal"){[weak self] in self?.console()},
-                action("Game Keyboard…",icon:"keyboard"){[weak self] in self?.gameKeyboard()}]),
-            group([action("Report a Problem…",icon:"exclamationmark.bubble"){[weak self] in self?.reportProblem()},
-                action("ETPad on GitHub",icon:"safari"){ UIApplication.shared.open(URL(string:"https://github.com/chrissotraidis/etpad")!) }])])
-    }
     private func matchItems()->[UIMenuElement]{
-        let quick=[("Medic!","vsay_team Medic"),("Need Ammo","vsay_team NeedAmmo"),("Need Backup","vsay_team NeedBackup"),("Need an Engineer","vsay_team NeedEngineer"),
-                   ("Cover Me","vsay_team CoverMe"),("Affirmative","vsay_team Affirmative"),("Negative","vsay_team Negative"),("Thanks","vsay Thanks"),("Great Shot","vsay GreatShot")]
         let chat=UIMenu(title:"Chat",image:UIImage(systemName:"bubble.left.and.bubble.right"),children:[
-            group([action("Say to Everyone…",icon:"bubble.left.and.bubble.right"){[weak self] in self?.chat("say")},
-                action("Say to Team…",icon:"bubble.left"){[weak self] in self?.chat("say_team")}]),
-            group(quick.map { title,cmd in action(title){[weak self] in self?.command(cmd)} },"Quick Chat")])
+            action("Quick-Chat Wheel",icon:"circle.grid.cross"){[weak self] in self?.wheel.show(tap:true)},
+            action("Say to Team…",icon:"bubble.left"){[weak self] in self?.chat("say_team")},
+            action("Say to Everyone…",icon:"bubble.left.and.bubble.right"){[weak self] in self?.chat("say")}])
         let vote=UIMenu(title:"Vote",image:UIImage(systemName:"hand.raised"),children:[
             action("Vote Yes",icon:"hand.thumbsup"){[weak self] in self?.command("vote yes")},
             action("Vote No",icon:"hand.thumbsdown"){[weak self] in self?.command("vote no")}])
         return [action("Team & Class…",icon:"person.2"){[weak self] in self?.command("openlimbomenu")},
-                action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")},
                 chat,vote,
-                action("Command Map",icon:"map"){[weak self] in self?.command("ToggleAutoMap")}]
+                action("Command Map",icon:"map"){[weak self] in self?.command("ToggleAutoMap")},
+                action("Game Menu",icon:"list.bullet.rectangle"){[weak self] in self?.command("togglemenu")}]
+    }
+    private func showSettings(){
+        let d=UserDefaults.standard,c=overlay.configuration
+        let width=d.integer(forKey:"etpad.renderWidth"),widths=[960,1280,1600,1920]
+        let pad=GCController.controllers().first
+        typealias S=HostSettingsViewController.Section
+        var sections:[S]=[
+            S(title:"Touch Controls",footer:"Touch the screen at any time to bring touch controls back.",rows:[
+                .toggle("Show Touch Controls",showTouch){[weak self] on in guard let s=self else{return};s.showTouch=on;d.set(on,forKey:"etpad.showTouch");s.refreshMenu()},
+                .toggle("Hide While Using a Controller or Keyboard",autoHide){[weak self] in self?.setAutoHide($0)},
+                .slider("Size",0.7,1.3,Float(c.size)){[weak self] in self?.overlay.configuration.size=Double($0)},
+                .slider("Opacity",0.25,1,Float(c.opacity)){[weak self] in self?.overlay.configuration.opacity=Double($0)},
+                .slider("Look Speed",0.4,2.5,Float(c.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
+                .toggle("Push Stick Forward to Sprint",c.sprintByPush){[weak self] in self?.overlay.configuration.sprintByPush=$0},
+                .toggle("Left-Handed",c.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
+                .button("Move Buttons"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
+                .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
+                .destructive("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}]),
+            S(title:"Controller",footer:pad.map { "\($0.vendorName ?? "Controller") connected." } ?? "Pair an Xbox, PlayStation or MFi controller in iPad Settings › Bluetooth.",rows:[
+                .slider("Look Speed",0.4,2.5,Float(d.object(forKey:"etpad.padLook") as? Double ?? 1)){[weak self] in d.set(Double($0),forKey:"etpad.padLook");self?.applyPadLook()},
+                .toggle("Invert Look",d.bool(forKey:"etpad.padInvert")){[weak self] in d.set($0,forKey:"etpad.padInvert");self?.applyPadLook()},
+                .button("Buttons"){[weak self] in self?.mapping()}]),
+            S(title:"Keyboard and Mouse",footer:"WASD move · Space jump · C crouch · X prone · Shift sprint · R reload · F use · 1–0 weapons · Tab scores · V quick chat · Esc menu. The pointer locks for aiming during play.",rows:[
+                .slider("Mouse Sensitivity",1,20,Float(d.object(forKey:"etpad.mouseSensitivity") as? Double ?? 5)){[weak self] in d.set(Double($0),forKey:"etpad.mouseSensitivity");self?.applyMouse()},
+                .toggle("Invert Mouse",d.bool(forKey:"etpad.mouseInvert")){[weak self] in d.set($0,forKey:"etpad.mouseInvert");self?.applyMouse()}]),
+            S(title:"Graphics",footer:"Higher resolutions look sharper and use more power.",rows:[
+                .segment("Resolution (pixels wide)",widths.map(String.init),widths.firstIndex(of:width==0 ? 1280:width) ?? 1){[weak self] in self?.resolution(widths[$0])},
+                .slider("Field of View",75,120,Float(d.object(forKey:"etpad.fov") as? Double ?? 90)){[weak self] v in d.set(Double(v),forKey:"etpad.fov");self?.command("set cg_fov \(Int(v))")},
+                .toggle("Show FPS Counter",d.bool(forKey:"etpad.fps")){[weak self] on in d.set(on,forKey:"etpad.fps");self?.command("set cg_drawFPS \(on ? 1:0)")}]),
+            S(title:"Player",footer:nil,rows:[.button("Name: \(d.string(forKey:"etpad.name") ?? "ETPadPlayer")"){[weak self] in self?.playerName()}]),
+            S(title:"Game Data",footer:dataReady ? "Original pak0, pak1 and pak2 are installed and verified.":"ETPad needs the original pak0, pak1 and pak2 files.",rows:[
+                .button("Download Free Game Data"){[weak self] in self?.downloadData()},
+                .button("Import pak Files…"){[weak self] in self?.importData()},
+                .destructive("Remove Stored Game Data"){[weak self] in self?.removeData()}])]
+        // Lead with the controls for the input in use.
+        let lead=inputMode == .controller ? "Controller":(inputMode == .keyboard ? "Keyboard and Mouse":"Touch Controls")
+        if let index=sections.firstIndex(where:{ $0.title==lead }) { sections.insert(sections.remove(at:index),at:0) }
+        releaseInputs()
+        let controller=UINavigationController(rootViewController:HostSettingsViewController(title:"Settings",sections:sections))
+        controller.modalPresentationStyle = .formSheet;controller.preferredContentSize=CGSize(width:600,height:680);present(controller,animated:true)
+    }
+    private func applyMouse(){
+        let d=UserDefaults.standard
+        let sensitivity=d.object(forKey:"etpad.mouseSensitivity") as? Double ?? 5
+        command(String(format:"set sensitivity %.2f;set m_pitch %.3f",sensitivity,d.bool(forKey:"etpad.mouseInvert") ? -0.022:0.022))
     }
     private func chat(_ verb:String){
         prompt(verb=="say" ? "Say to Everyone":"Say to Team",placeholder:"Message",submit:"Send"){[weak self] text in
@@ -556,18 +635,6 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     }
     private func presentSettings(_ title:String,rows:[HostSettingsViewController.Row]){
         releaseInputs();let controller=UINavigationController(rootViewController:HostSettingsViewController(title:title,rows:rows));controller.modalPresentationStyle = .formSheet;controller.preferredContentSize=CGSize(width:560,height:570);present(controller,animated:true)
-    }
-    private func touchSettings(){
-        presentSettings("Touch Control Settings",rows:[
-            .slider("Opacity",0.25,1,Float(overlay.configuration.opacity)){[weak self] in self?.overlay.configuration.opacity=Double($0)},
-            .slider("Size",0.7,1.3,Float(overlay.configuration.size)){[weak self] in self?.overlay.configuration.size=Double($0)},
-            .toggle("Left-handed",overlay.configuration.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
-            .slider("Look Speed",0.4,2.5,Float(overlay.configuration.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
-            .toggle("Push stick forward to sprint",overlay.configuration.sprintByPush){[weak self] in self?.overlay.configuration.sprintByPush=$0},
-            .toggle("Hide while a controller or keyboard is used",autoHide){[weak self] in self?.setAutoHide($0)},
-            .button("Arrange Controls"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
-            .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
-            .button("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}])
     }
     private func savedLayouts(){
         var saved=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:]
@@ -680,7 +747,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         for (key,value) in UserDefaults.standard.dictionary(forKey:"etpad.controller.bindings") as? [String:String] ?? [:] {
             if Self.controllerKeys.contains(where:{$0.1==key}) && Self.bindingActions.contains(where:{$0.1==value}) { command("bind \(key) \"\(value)\"") }
         }
-        applyPadLook()
+        applyPadLook();applyMouse()
         restoreHost()
         // The engine now renders beneath the host window; retire the launcher.
         UIView.animate(withDuration:0.35,animations:{ self.launcher.alpha=0 }) { _ in self.launcher.removeFromSuperview() }

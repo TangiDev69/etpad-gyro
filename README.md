@@ -113,9 +113,9 @@ Download/import checks SHA-256 before installing the complete set and never runs
 
 Letters describe Xbox positions; PlayStation/MFi equivalents share the actions. Defaults load once per profile, remapping persists, and disconnect clears held inputs. [CONTROLS.md](docs/CONTROLS.md) contains every binding, the quick-chat wheel, keyboard and mouse, native remapping and validation limits.
 
-On iPad, the left thumb drives a floating movement stick (push it well past the rim, forward, to sprint) and the right thumb looks. FIRE is the large red button; hold it and slide to aim while firing. Jump, Reload, Alt and Crouch form an even inner ring around FIRE, with Use, weapon Next/Prev and Prone on an outer ring, all clear of ET's ammo and health HUD. Controls scale with the screen like ET's HUD. Score and Menu sit in the top-left gutter beside the ••• menu.
+On iPad, the left thumb drives an invisible floating stick that appears under the thumb (push it well past the rim, forward, to sprint) and the right thumb looks. FIRE is the large red button; hold it and slide to aim while firing. Jump, Reload, Alt and Crouch form an even inner ring around FIRE, with Use, weapon Next/Prev and Prone on an outer ring, all clear of ET's ammo and health HUD. Controls scale with the screen like ET's HUD. Score (a tap toggle), Menu and Chat sit in the top-left column under ••• , and Back closes ET's menus on touch.
 
-Every input works at any time. Touch controls hide while a controller or keyboard is in use and come back on the first touch, which never reaches the game as a shot. During play with a mouse or trackpad attached the pointer locks for mouse look; in menus it clicks normally.
+Every input works at any time. Connecting or using a controller, keyboard or mouse switches modes automatically; touch controls hide and come back on the first touch, which never reaches the game as a shot. During play with a mouse or trackpad attached the pointer locks for mouse look; in menus it clicks normally.
 
 The ••• menu keeps a short top level (match actions in a game, ways to play otherwise) with Settings and Help folders and Leave Match last. In ET menus the left stick moves the cursor, A clicks and B goes back; on the launcher and server list the D-pad moves the highlight. [CONTROLS.md](docs/CONTROLS.md) has the full reference.
 

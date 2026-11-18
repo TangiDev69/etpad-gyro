@@ -179,7 +179,7 @@ final class GoldenPadTouchOverlay: UIView {
         ring("NEXT",  "weapnext", "chevron.right",      radius:172,angle:117,diameter:52),
         ring("PREV",  "weapprev", "chevron.left",       radius:172,angle:158,diameter:52),
         ring("PRONE", "+prone",   "arrow.down.to.line", radius:172,angle:199,diameter:52),
-        .init(title:"SCORE",command:"+scores",symbol:"list.number",x:0,y:88,diameter:64),
+        .init(title:"SCORE",command:"etpad_scores",symbol:"list.number",x:0,y:88,diameter:64),
         .init(title:"MENU",command:"togglemenu",symbol:"line.3.horizontal",x:0,y:142,diameter:64)]
         + [.init(title:"CHAT",command:"etpad_comms",symbol:"bubble.left.and.bubble.right.fill",x:0,y:196,diameter:64)]
     var onAction:((String,Bool)->Void)?
@@ -266,8 +266,11 @@ final class GoldenPadTouchOverlay: UIView {
             let height=action.gutter ? 44:width
             button.bounds=CGRect(x:0,y:0,width:width,height:height)
             button.center=CGPoint(x:max(safe.minX+width/2,min(safe.maxX-width/2,center.x)),y:max(safe.minY+height/2,min(safe.maxY-height/2,center.y)))
+            // An open scoreboard fills the screen; SCORE moves to the free
+            // bottom-left corner to close it again.
+            if scoreboardVisible && !arranging && action.title=="SCORE" { button.center=CGPoint(x:safe.minX+44,y:safe.maxY-34) }
             button.layer.cornerRadius=button.bounds.height/2
-            button.isHidden=scoreboardVisible && !arranging && !action.gutter
+            button.isHidden=scoreboardVisible && !arranging && action.title != "SCORE"
             button.editingLayout=arranging;button.opacity=configuration.opacity;button.updateFace()
             button.gestureRecognizers?.forEach { $0.isEnabled=arranging }
         }
@@ -276,8 +279,10 @@ final class GoldenPadTouchOverlay: UIView {
         // Right of ET's portrait and slot HUD, at a resting left-thumb height.
         let homeX=safe.minX+360*spacing
         stickHome=CGPoint(x:configuration.leftHanded ? safe.maxX-(homeX-safe.minX):homeX,y:safe.maxY-140*spacing)
+        // The stick is invisible at rest and appears under the thumb. While
+        // arranging, its home position shows where a thumb usually starts.
         if moveTouch==nil { stick.place(center:stickHome,diameter:stickSide) }
-        stick.isHidden=scoreboardVisible && !arranging
+        stick.isHidden=arranging ? false:(scoreboardVisible || moveTouch==nil)
         stick.alpha=CGFloat(0.55+configuration.opacity*0.45)
         if !arranging && lookTouch==nil { lookGuide.isHidden=true }
     }
@@ -295,7 +300,7 @@ final class GoldenPadTouchOverlay: UIView {
         for touch in touches {
             let p=touch.location(in:self),left=p.x<bounds.midX
             if left != configuration.leftHanded && moveTouch==nil {
-                moveTouch=touch;moveOrigin=p;stick.active=true;stick.place(center:p,diameter:stick.bounds.width)
+                moveTouch=touch;moveOrigin=p;stick.active=true;stick.place(center:p,diameter:stick.bounds.width);stick.isHidden=false
             } else if lookTouch==nil {
                 lookTouch=touch;lastLook=p
                 lookGuide.bounds=CGRect(x:0,y:0,width:60,height:60);lookGuide.layer.cornerRadius=30;lookGuide.center=p;lookGuide.isHidden=false
@@ -336,13 +341,13 @@ final class GoldenPadTouchOverlay: UIView {
         sprinting=on;stick.sprinting=on;onAction?("+sprint",on)
     }
     private func endMove() {
-        moveTouch=nil;setSprint(false);stick.active=false;stick.place(center:stickHome,diameter:stick.bounds.width);onMove?(.zero)
+        moveTouch=nil;setSprint(false);stick.active=false;stick.isHidden = !arranging;stick.place(center:stickHome,diameter:stick.bounds.width);onMove?(.zero)
     }
     private func updateButtonVisibility() {
         for action in Self.actions {
-            buttons[action.title]?.isHidden=scoreboardVisible && !arranging && !action.gutter
+            buttons[action.title]?.isHidden=scoreboardVisible && !arranging && action.title != "SCORE"
         }
-        stick.isHidden=scoreboardVisible && !arranging
+        stick.isHidden=arranging ? false:(scoreboardVisible || moveTouch==nil)
     }
     private func releaseCombatActions() {
         for action in Self.actions where !action.gutter {

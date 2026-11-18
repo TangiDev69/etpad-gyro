@@ -36,7 +36,7 @@ Earlier builds sent right-stick look from SDL axis events as abs(value/8000) × 
 
 ## iPad touch controls
 
-The left thumb drives a floating stick. Its resting ring sits right of ET's portrait and slot HUD to show where to start; a touch anywhere on the left half moves it under the finger. Pushing well past the rim while mostly forward holds Sprint (the stick turns brass and shows SPRINT); Touch Settings can turn this off. The right thumb looks from anywhere on the right half, scaled by Look Speed.
+The left thumb drives a floating stick that is invisible at rest and appears wherever the thumb lands on the left half of the screen, disappearing again on release. While moving buttons, its usual starting point is shown as a guide. Pushing well past the rim while mostly forward holds Sprint (the stick turns brass and shows SPRINT); Touch Settings can turn this off. The right thumb looks from anywhere on the right half, scaled by Look Speed.
 
 FIRE is a 104-point red button above-left of ET's ammo and weapon HUD. Holding it fires, and sliding the same finger aims. Two even rings surround it, placed from angles so every gap matches:
 
@@ -45,21 +45,25 @@ FIRE is a 104-point red button above-left of ET's ammo and weapon HUD. Holding i
 | Inner (radius 98) | JUMP, RELOAD, ALT, CROUCH | 62 |
 | Outer (radius 172) | USE, NEXT, PREV, PRONE | 52 |
 
-Sizes and distances are in points for an 11-inch iPad and scale with the screen the same way ET's 640×480 HUD does (about 1.19× on 12.9-inch). Size multiplies them further. SCORE (hold) and MENU stay in the fixed top-left gutter beside the ••• capsule. Left-handed mode mirrors the stick and rings and lifts default combat buttons 150 points above the health HUD; saved custom positions keep their coordinates. Older saved configurations and named layouts load unchanged.
+Sizes and distances are in points for an 11-inch iPad and scale with the screen the same way ET's 640×480 HUD does (about 1.19× on 12.9-inch). Size multiplies them further. SCORE, MENU and CHAT stay in the fixed top-left column under the ••• capsule. SCORE is a toggle: tap to open the scoreboard and tap again to close it. While the scoreboard is open, the other column buttons and ••• hide and SCORE moves to the bottom-left corner, clear of the tables. MENU opens ET's game menu; a Back capsule beside ••• then closes any ET menu (game menu, Team & Class, console) with Escape, so touch players are never stuck. Left-handed mode mirrors the stick and rings and lifts default combat buttons 150 points above the health HUD; saved custom positions keep their coordinates. Older saved configurations and named layouts load unchanged.
 
 Resting faces are smoked black with a cream ring; pressed buttons turn brass, and FIRE turns oxblood. Opacity changes faces only.
 
 ## Switching between touch, controller and keyboard
 
-The input used last decides whether touch controls show (Settings › Touch Controls › Hide During Controller or Keyboard Play, on by default). Connecting a controller or pressing any of its buttons switches to controller mode; any key or locked-mouse movement switches to keyboard mode; the next finger on the screen restores touch controls and is not delivered to the game. Hiding the overlay releases only commands touch was holding, so the controller press that caused the switch keeps working.
+The input used last decides what is shown. A controller connecting or any of its buttons switches to controller mode. A hardware keyboard or mouse connecting, a key press, mouse or trackpad pointer movement (Apple Pencil hover is ignored) or locked-mouse movement switches to keyboard and mouse mode. The next finger on the screen restores touch controls and is not delivered to the game. With Settings › Touch Controls › Hide While Using a Controller or Keyboard on (the default), touch controls hide in the other two modes. For eight seconds after a switch, a chip under the top edge names that input's key controls.
 
-With a mouse or trackpad connected, the pointer locks during play: SDL delivers mouse look, left click fires and right click is alternate fire. In menus, the launcher and native sheets the pointer is unlocked and clicks through UIKit; SDL's duplicate mouse events are ignored then, so one click is one click.
+During play with a mouse or trackpad connected in keyboard and mouse mode, the pointer locks: mouse movement aims, left click fires, right click is alternate fire. ET's own menus then follow the mouse as their cursor.
 
-In ET's own menus (main menu, Limbo team/class selection, Host Game, server browser) the left stick moves ET's mouse cursor with a curved speed response, A clicks and B sends Escape to go back. On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects (Practice starts the last practice map). In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. B also closes guides and settings sheets.
+The quick-chat wheel accepts every input at once: a stick points (right or left), A or releasing RB sends, B cancels, and a tap on a wedge sends. While it is open, new controller presses go to the wheel instead of the game.
+
+On the launcher, a controller's D-pad or left stick moves a brass highlight across Play Online, Practice with Bots and Main Menu; A selects. In Who's Playing Now, up/down selects a server, A joins, Y refreshes and B closes. In ET's own menus the left stick moves the cursor, A clicks and B goes back.
 
 ## Native three-dot menu
 
-The top level stays short. In a match it shows Team & Class…, Game Menu, Chat ▸, Vote ▸ and Command Map; elsewhere it shows Find a Server, Practice with Bots ▸ and Join by Address…. Below that come three folders: **Play Elsewhere** (in a match only: Find a Server, Practice, Join by Address), **Settings** (Touch Controls, Controller Buttons, Graphics, Player Name, Game Data) and **Help** (How to Play, Console, Game Keyboard, Report a Problem, GitHub). **Leave Match** sits alone at the bottom with a confirmation.
+The ••• menu holds actions only. In a match: Team & Class…, Chat ▸ (quick-chat wheel, say to team, say to everyone), Vote ▸, Command Map and Game Menu; then Play Elsewhere ▸ (Find a Server, Practice with Bots, Join by Address), Settings… and Help ▸; and Leave Match alone at the bottom. Outside a match: Find a Server, Practice with Bots ▸ and Join by Address…, then Settings… and Help ▸.
+
+**Settings…** opens one sheet with sections for Touch Controls (show, hide during other input, size, opacity, look speed, push-to-sprint, left-handed, move buttons, saved layouts, restore defaults), Controller (look speed, invert look, buttons), Keyboard and Mouse (sensitivity, invert, key reference), Graphics (resolution, field of view, FPS counter), Player name and Game Data. The section for the input in use comes first.
 
 ## Scoreboard and intermission
 

@@ -212,3 +212,17 @@ After playing Battery, Chris asked for a clearer layout: grenade on Y, D-pad rig
 - Quick chat is a radial wheel with brass wedge highlight and a center label saying who hears the message; touch sends with one tap.
 - Controller presses no longer reach UIKit (GCEventViewController), the likely source of the top-left highlight; Chris should confirm it is gone.
 - Device check on Battery: etpad_bindingsVersion 2, PAD0_Y weaponbank 4, PAD0_LEFTSHOULDER +activate, PAD0_DPAD_LEFT weaplastused, PAD0_DPAD_UP weaponbank 5; keyboard/mouse binds w, SPACE, MOUSE1, MOUSE2, v, f present; wheel screenshot inspected.
+
+### Touch, input-mode and menu pass (2026-11-18)
+
+Chris's touch feedback: the movement stick should be invisible and appear under the thumb; SCORE should not need holding; MENU left touch players stuck in ET's menu; the ••• menu still meandered; keyboard and mouse should be detected and switched to; quick chat broke when switching from touch to controller; and ETPad should carry the latest external-display patch.
+
+- Stick invisible at rest, appears at the thumb (device screenshot of active touch layout with no resting ring).
+- SCORE toggles; open scoreboard hides other column buttons and ••• and moves SCORE to the bottom-left (device screenshot, tables unobstructed).
+- Back capsule over ET menus during a match sends Escape (device screenshot over the in-game menu).
+- ••• menu holds actions only; a single Settings sheet with ordered sections replaces nested submenus (device screenshot).
+- Keyboard and mouse mode on keyboard/mouse connect, key press, pointer hover (Pencil ignored) or locked-mouse movement; pointer lock only in that mode; mouse sensitivity and invert settings.
+- Quick-chat wheel accepts stick, A, B, RB release and taps together; controller presses are withheld from the game while it is open.
+- External display: SceneDelegate now applies the application scene's new bounds to SDL's window whenever the scene resizes, rotates or changes display, and logs screen connects, completing parity with DarkPad b98eded/192d21b (scene ownership and per-frame drawable sizing were already in place). Physical display still untested.
+
+SDL's own view controller also requests pointer lock while ET's mouse is in relative mode; the device log showed a lock in controller mode at startup. Mouse input works through it, but if Chris sees the trackpad cursor vanish during touch play, gating SDL's lock is the next step.
