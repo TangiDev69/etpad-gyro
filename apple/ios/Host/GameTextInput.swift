@@ -16,6 +16,13 @@ final class GameTextInput: UIView, UIKeyInput, UITextInputTraits {
     var keyboardAppearance:UIKeyboardAppearance = .dark
     private let bar=UIView(frame:CGRect(x:0,y:0,width:100,height:48))
     private let label=UILabel()
+    // Hardware keys already reach the game through SDL's GCKeyboard input.
+    // While one is down, UIKit's copy of the same text is dropped; the
+    // on-screen keyboard produces no UIPress events, so its text passes.
+    private var hardwareKeysDown=0
+    override func pressesBegan(_ presses:Set<UIPress>,with event:UIPressesEvent?) { hardwareKeysDown+=presses.filter { $0.key != nil }.count;super.pressesBegan(presses,with:event) }
+    override func pressesEnded(_ presses:Set<UIPress>,with event:UIPressesEvent?) { hardwareKeysDown=max(0,hardwareKeysDown-presses.filter { $0.key != nil }.count);super.pressesEnded(presses,with:event) }
+    override func pressesCancelled(_ presses:Set<UIPress>,with event:UIPressesEvent?) { hardwareKeysDown=0;super.pressesCancelled(presses,with:event) }
     // Mirrors the game field's text; empty shows a hint.
     func showPreview(_ text:String) {
         let value=text.isEmpty ? "Typing into the game":text
@@ -43,9 +50,10 @@ final class GameTextInput: UIView, UIKeyInput, UITextInputTraits {
     // ET owns the text; always allow Delete so it reaches the field.
     var hasText:Bool { true }
     func insertText(_ text:String) {
+        guard hardwareKeysDown==0 else { return }
         for scalar in text.unicodeScalars {
             if scalar == "\n" { onKey?(13) } else if !CharacterSet.controlCharacters.contains(scalar) { onCharacter?(scalar) }
         }
     }
-    func deleteBackward() { onKey?(127) }
+    func deleteBackward() { if hardwareKeysDown==0 { onKey?(127) } }
 }

@@ -230,3 +230,5 @@ SDL's own view controller also requests pointer lock while ET's mouse is in rela
 ### iPad keyboard for ET text fields (2026-11-18)
 
 Chris could not rename his profile: tapping ET's text fields raised no keyboard without a hardware keyboard. The UI module now reports when a text field is being edited (private VM command), and the host shows the iPad keyboard for UI text fields and the console, mirroring the field text in a bar with Cancel and Done. Device check: messagemode raised the keyboard and the bar showed the field's text. The profile rename screen uses the same edit-field path but was not opened by the agent.
+
+Follow-up: Backspace did nothing in the profile field because ET's UI text fields delete on the Ctrl-H character, not the K_BACKSPACE key, and the software keyboard sent only the key. Delete now sends both. Device check: typed "Chrisxyz" into messagemode, three Deletes left "Chris", and the field stayed in edit mode. Hardware typing is no longer delivered twice, and a keyboard case connecting no longer switches to keyboard mode until a key is pressed.

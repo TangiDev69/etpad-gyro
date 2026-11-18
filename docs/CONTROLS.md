@@ -61,7 +61,7 @@ On the launcher, a controller's D-pad or left stick moves a brass highlight acro
 
 ## Typing without a hardware keyboard
 
-When ET is editing one of its own text fields (profile name, chat, server password, search boxes) or the console is open, and no hardware keyboard is connected, ETPad raises the iPad keyboard. Typed characters go straight to the game field; Delete, Return and the bar's Done (Enter) and Cancel (Escape) act as keys. The bar above the keyboard shows the field's current text, because ET's chat box can sit under the keyboard. The keyboard closes when the field loses focus. The UI module answers a private ETPAD_VM_UI_TEXT_EDITING query, so detection follows ET's actual edit state.
+When ET is editing one of its own text fields (profile name, chat, server password, search boxes) or the console is open, and no hardware keyboard is connected, ETPad raises the iPad keyboard. Typed characters go straight to the game field. Delete sends both K_BACKSPACE and the Ctrl-H character, because ET's UI text fields delete only on the character (desktop SDL sends both for the same reason). Return and the bar's Done (Enter) and Cancel (Escape) act as keys. Hardware keys reach ET through SDL's GCKeyboard input, so UIKit's copy of the same text is dropped while a hardware key is down. The bar above the keyboard shows the field's current text, because ET's chat box can sit under the keyboard. The keyboard closes when the field loses focus. The UI module answers a private ETPAD_VM_UI_TEXT_EDITING query, so detection follows ET's actual edit state.
 
 ## Native three-dot menu
 
