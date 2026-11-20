@@ -37,6 +37,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     private func landscape(_ scene: UIWindowScene) {
         window?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
-        scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape)) { NSLog("ETPad rotation: %@", $0.localizedDescription) }
+        scene.requestGeometryUpdate(.iOS(interfaceOrientations: scene.traitCollection.userInterfaceIdiom == .pad ? .all : .landscape)) { NSLog("ETPad rotation: %@", $0.localizedDescription) }
     }
 }

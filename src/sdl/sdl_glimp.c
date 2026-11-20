@@ -1016,7 +1016,14 @@ static int GLimp_SetMode(glconfig_t *glConfig, int mode, qboolean fullscreen, qb
 			continue;
 		}
 
+#ifdef ETPAD_IOS
+		// iOS windows are already full-screen. Switching the display mode uses
+		// the iPad's own mode and can leave an external display (a TV) black,
+		// so keep fullscreen (it also drives mouse grab) but skip the switch.
+		if (qfalse)
+#else
 		if (fullscreen)
+#endif
 		{
 			SDL_DisplayMode modefullScreen;
 

@@ -1379,7 +1379,10 @@ int main(int argc, char **argv)
 	char commandLine[MAX_STRING_CHARS] = { 0 };
 #ifdef ETPAD_IOS
 	SDL_SetMainReady();
-	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+	const char *iPad = getenv("ETPAD_IPAD");
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, iPad && iPad[0] == '1'
+		? "Portrait PortraitUpsideDown LandscapeLeft LandscapeRight"
+		: "LandscapeLeft LandscapeRight");
 #endif
 
 #ifdef MAIN_MUST_RETURN

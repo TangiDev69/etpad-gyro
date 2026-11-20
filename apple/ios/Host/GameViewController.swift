@@ -46,7 +46,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     static let practiceMaps=[("Oasis","oasis","Allies breach the walls of an old desert city"),("Goldrush","goldrush","Steal the gold from the Axis bank"),
         ("Radar","radar","Allies destroy two radar arrays"),("Battery","battery","Storm a coastal gun battery"),
         ("Fuel Dump","fueldump","Escort the tank to the Axis fuel depot"),("Rail Gun","railgun","Disable an Axis railway gun")]
-    override var supportedInterfaceOrientations:UIInterfaceOrientationMask { .landscape }
+    override var supportedInterfaceOrientations:UIInterfaceOrientationMask { traitCollection.userInterfaceIdiom == .pad ? .all : .landscape }
     override var prefersStatusBarHidden:Bool { true }
     override var prefersHomeIndicatorAutoHidden:Bool { true }
     override var prefersPointerLocked:Bool { wantsPointerLock }
@@ -745,13 +745,15 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         do{try text.write(to:url,atomically:true,encoding:.utf8);let share=UIActivityViewController(activityItems:[url],applicationActivities:nil);share.popoverPresentationController?.sourceView=menu;share.popoverPresentationController?.sourceRect=menu.bounds;present(share,animated:true)}catch{self.alert("Report Unavailable",error.localizedDescription)}
     }
     private func waitForLandscape(attempt:Int,extra:[String]) {
-        if view.window?.windowScene?.interfaceOrientation.isLandscape == true && view.bounds.width > view.bounds.height {
+        if view.window?.windowScene != nil && view.bounds.width > 0 && view.bounds.height > 0 &&
+            (traitCollection.userInterfaceIdiom == .pad || view.window?.windowScene?.interfaceOrientation.isLandscape == true) {
             startEngine(extra:extra)
         } else if attempt < 40 {
             DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { [weak self] in self?.waitForLandscape(attempt:attempt+1,extra:extra) }
         } else { started=false;updateLauncher();alert("Rotate to Landscape","ETPad could not enter landscape. Rotate the iPad and try again.") }
     }
     private func startEngine(extra:[String]) {
+        setenv("ETPAD_IPAD", traitCollection.userInterfaceIdiom == .pad ? "1" : "0", 1)
         view.backgroundColor = .clear
         let profile = gameHome.appendingPathComponent("legacy/profiles/ETPad")
         try? FileManager.default.createDirectory(at:profile,withIntermediateDirectories:true)
