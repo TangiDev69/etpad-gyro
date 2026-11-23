@@ -93,7 +93,7 @@ def build(platform):
     sdkname = 'iphonesimulator' if platform == 'simulator' else 'iphoneos'
     sdk = subprocess.check_output(['xcrun', '--sdk', sdkname, '--show-sdk-path'], text=True).strip()
     out = base / platform
-    jobs = max(1, int(subprocess.check_output(['sysctl', '-n', 'hw.ncpu'])) // 2)
+    jobs = max(1, int(os.environ.get('ETPAD_BUILD_JOBS', '2')))
     env = dict(os.environ, SDKROOT=sdk, CMAKE_BUILD_PARALLEL_LEVEL=str(jobs))
     subprocess.run(['cmake', '-S', str(source), '-B', str(out / 'cmake'), '-G', 'Ninja',
                     '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_SYSTEM_NAME=iOS',
@@ -102,7 +102,7 @@ def build(platform):
                     '-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY',
                     '-DMVK_EXCLUDE_SPIRV_TOOLS=ON',
                     '-DCPM_SOURCE_CACHE=' + str(base / 'cpm')], env=env, check=True)
-    subprocess.run(['cmake', '--build', str(out / 'cmake'), '-j' + str(jobs)], env=env, check=True)
+    subprocess.run(['cmake', '--build', str(out / 'cmake'), '--parallel', str(jobs)], env=env, check=True)
     framework = out / 'MoltenVK.framework'
     framework.mkdir(parents=True, exist_ok=True)
     binary = framework / 'MoltenVK'
