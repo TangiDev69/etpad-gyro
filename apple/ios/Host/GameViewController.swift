@@ -534,7 +534,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         updateSoftwareKeyboard()
         guard engineReady else { fpsBadge.isHidden=true;return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
-        if UserDefaults.standard.bool(forKey:"etpad.fps") && gameplayActive && !scoreboard { fpsBadge.isHidden=false;fpsWindowFrames+=1;if fpsWindowStart==0 { fpsWindowStart=start };if start-fpsWindowStart>=1 { currentFPS=Int((Double(fpsWindowFrames)/(start-fpsWindowStart)).rounded());fpsBadge.text="FPS  \(currentFPS)";fpsWindowFrames=0;fpsWindowStart=start } } else { fpsBadge.isHidden=true;fpsWindowFrames=0;fpsWindowStart=0 }
+        if UserDefaults.standard.bool(forKey:"etpad.fps") && gameplayActive && !overlay.scoreboardVisible { fpsBadge.isHidden=false;fpsWindowFrames+=1;if fpsWindowStart==0 { fpsWindowStart=start };if start-fpsWindowStart>=1 { currentFPS=Int((Double(fpsWindowFrames)/(start-fpsWindowStart)).rounded());fpsBadge.text="FPS  \(currentFPS)";fpsWindowFrames=0;fpsWindowStart=start } } else { fpsBadge.isHidden=true;fpsWindowFrames=0;fpsWindowStart=0 }
         frameTimes.append(engineMilliseconds)
         hostTimes.append(max(0,totalMilliseconds-engineMilliseconds))
         callbackTimes.append(totalMilliseconds)
