@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   build-ipa:
-    runs-on: macos-15
+    runs-on: macos-26-intel
     timeout-minutes: 180
     steps:
       - name: Checkout (including pinned libraries)
