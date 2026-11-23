@@ -58,6 +58,7 @@ targets:
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         NSLocalNetworkUsageDescription: ETPad connects to Enemy Territory game servers and finds LAN games.
+        NSMotionUsageDescription: ETPad uses device motion for gyro aiming when you enable it.
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
           UISceneConfigurations:
