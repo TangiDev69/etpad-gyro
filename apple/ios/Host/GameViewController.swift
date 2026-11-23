@@ -718,10 +718,10 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     }
     private func savedLayouts(){
         var saved=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:]
-        var rows:[HostSettingsViewController.Row]=[.button("Save Current Layout…"){[weak self] in self?.prompt("Save Layout",placeholder:"Layout name") { name in guard let self=self,!name.trimmingCharacters(in:.whitespaces).isEmpty,let data=try? JSONEncoder().encode(self.overlay.configuration) else{return};saved[String(name.prefix(48))]=data;UserDefaults.standard.set(saved,forKey:"etpad.touch.saved") }}]
+        var rows:[HostSettingsViewController.Row]=[.button("Save Current Layout…"){[weak self] in self?.prompt("Save Layout",placeholder:"Layout name") { name in guard let self=self,!name.trimmingCharacters(in:.whitespaces).isEmpty,let data=try? JSONEncoder().encode(self.overlay.configuration) else{return};saved[String(name.prefix(48))]=data;UserDefaults.standard.set(saved,forKey:"etpad.touch.saved");self.savedLayouts() }}]
         for name in saved.keys.sorted(){
             rows.append(.button("Load: \(name)"){[weak self] in if let data=saved[name],let config=try? JSONDecoder().decode(TouchConfiguration.self,from:data){self?.releaseInputs();self?.overlay.configuration=config;self?.refreshMenu()} })
-            rows.append(.destructive("Delete: \(name)"){ let alert=UIAlertController(title:"Delete Layout?",message:"Delete saved layout ‘\(name)’?",preferredStyle:.alert);alert.addAction(UIAlertAction(title:"Cancel",style:.cancel));alert.addAction(UIAlertAction(title:"Delete",style:.destructive){_ in var current=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:];current.removeValue(forKey:name);UserDefaults.standard.set(current,forKey:"etpad.touch.saved")});self.present(alert,animated:true) })
+            rows.append(.destructive("Delete: \(name)"){ let alert=UIAlertController(title:"Delete Layout?",message:"Delete saved layout ‘\(name)’?",preferredStyle:.alert);alert.addAction(UIAlertAction(title:"Cancel",style:.cancel));alert.addAction(UIAlertAction(title:"Delete",style:.destructive){_ in var current=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:];current.removeValue(forKey:name);UserDefaults.standard.set(current,forKey:"etpad.touch.saved");self.savedLayouts()});self.present(alert,animated:true) })
         }
         presentSettings("Saved Layouts",rows:rows)
     }
