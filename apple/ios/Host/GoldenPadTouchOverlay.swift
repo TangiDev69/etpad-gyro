@@ -274,7 +274,7 @@ final class GoldenPadTouchOverlay: UIView {
             // at large Size settings. Gameplay targets still follow Size.
             let individualSize=CGFloat(configuration.buttonSizes[action.title] ?? 1)
             let width=action.gutter ? max(44,64*individualSize):max(36,action.diameter*responsive*configuration.size*individualSize)
-            let height=action.gutter ? 44:width
+            let height=action.gutter ? max(32,44*individualSize):width
             button.bounds=CGRect(x:0,y:0,width:width,height:height)
             button.center=CGPoint(x:max(safe.minX+width/2,min(safe.maxX-width/2,center.x)),y:max(safe.minY+height/2,min(safe.maxY-height/2,center.y)))
             // An open scoreboard fills the screen; SCORE moves to the free
