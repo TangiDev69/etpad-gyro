@@ -62,7 +62,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     override var canBecomeFirstResponder:Bool { true }
     override func viewDidLoad(){
         super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black;controllerUserInteractionEnabled=false
-        fpsBadge.textAlignment = .center;fpsBadge.font = UIFont.monospacedDigitSystemFont(ofSize:20,weight:.heavy);fpsBadge.textColor=UIColor(red:0.72,green:1,blue:0.30,alpha:1);fpsBadge.backgroundColor=UIColor.black.withAlphaComponent(0.88);fpsBadge.layer.cornerRadius=10;fpsBadge.layer.borderWidth=1.5;fpsBadge.layer.borderColor=UIColor(red:0.72,green:1,blue:0.30,alpha:0.9).cgColor;fpsBadge.layer.masksToBounds=true;fpsBadge.isUserInteractionEnabled=false;fpsBadge.text="FPS --";fpsBadge.isHidden=true;view.addSubview(fpsBadge)
+        fpsBadge.textAlignment = .left;fpsBadge.font = UIFont.monospacedDigitSystemFont(ofSize:12,weight:.medium);fpsBadge.textColor=UIColor(red:0.72,green:1,blue:0.30,alpha:1);fpsBadge.backgroundColor = .clear;fpsBadge.layer.borderWidth=0;fpsBadge.layer.cornerRadius=0;fpsBadge.layer.masksToBounds=false;fpsBadge.isUserInteractionEnabled=false;fpsBadge.text="--";fpsBadge.isHidden=true;view.addSubview(fpsBadge)
         showTouch=UserDefaults.standard.object(forKey:"etpad.showTouch") as? Bool ?? true
         motionManager.deviceMotionUpdateInterval=1.0/60.0
         if gyroEnabled { motionManager.startDeviceMotionUpdates() }
@@ -132,6 +132,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         overlay.onLook = { [weak self] value in if self?.engineReady == true { etpad_mouse(Int32((value.x*1.5).rounded()),Int32((value.y*1.5).rounded())) } }
         overlay.onTouch = { [weak self] in self?.setInputMode(.touch) }
         overlay.onConfigurationChanged = { [weak self] in self?.refreshMenu() }
+        overlay.onExitArrange = { [weak self] in guard let self=self else{return};self.overlay.arranging=false;self.refreshMenu() }
         surface.pointer = { [weak self] point,edge in
             guard let self=self,self.engineReady else { return }
             self.menuCursor=point;etpad_pointer(Float(point.x),Float(point.y),edge)
@@ -204,7 +205,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay);setFrame(view.bounds,for:launcher);setFrame(view.bounds,for:wheel)
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         layoutMenu(in:safe)
-        setFrame(CGRect(x:safe.minX+12,y:safe.minY+12,width:112,height:42),for:fpsBadge)
+        setFrame(CGRect(x:safe.minX+12,y:safe.minY+12,width:42,height:18),for:fpsBadge)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
         setFrame(CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44),for:prompts)
         restoreHost()
@@ -534,7 +535,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         updateSoftwareKeyboard()
         guard engineReady else { fpsBadge.isHidden=true;return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
-        if UserDefaults.standard.bool(forKey:"etpad.fps") && gameplayActive && !overlay.scoreboardVisible { fpsBadge.isHidden=false;fpsWindowFrames+=1;if fpsWindowStart==0 { fpsWindowStart=start };if start-fpsWindowStart>=1 { currentFPS=Int((Double(fpsWindowFrames)/(start-fpsWindowStart)).rounded());fpsBadge.text="FPS  \(currentFPS)";fpsWindowFrames=0;fpsWindowStart=start } } else { fpsBadge.isHidden=true;fpsWindowFrames=0;fpsWindowStart=0 }
+        if UserDefaults.standard.bool(forKey:"etpad.fps") && gameplayActive && !overlay.scoreboardVisible { fpsBadge.isHidden=false;fpsWindowFrames+=1;if fpsWindowStart==0 { fpsWindowStart=start };if start-fpsWindowStart>=1 { currentFPS=Int((Double(fpsWindowFrames)/(start-fpsWindowStart)).rounded());fpsBadge.text="\(currentFPS)";fpsWindowFrames=0;fpsWindowStart=start } } else { fpsBadge.isHidden=true;fpsWindowFrames=0;fpsWindowStart=0 }
         frameTimes.append(engineMilliseconds)
         hostTimes.append(max(0,totalMilliseconds-engineMilliseconds))
         callbackTimes.append(totalMilliseconds)
@@ -616,7 +617,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
                 .slider("Look Speed",0.4,8.0,Float(c.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
                 .toggle("Push Stick Forward to Sprint",c.sprintByPush){[weak self] in self?.overlay.configuration.sprintByPush=$0},
                 .toggle("Left-Handed",c.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
-                .button("Move Buttons"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
+                .button("Move / Resize Buttons"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
+                .button("Customize Each Button"){[weak self] in self?.customizeButtons()},
                 .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
                 .destructive("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}]),
             S(title:"Gyroscope",footer:"Landscape handheld mapping based on your Quake III port. If aiming feels reversed, invert each axis independently.",rows:[
@@ -705,10 +707,22 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private func presentSettings(_ title:String,rows:[HostSettingsViewController.Row]){
         releaseInputs();let controller=UINavigationController(rootViewController:HostSettingsViewController(title:title,rows:rows));controller.modalPresentationStyle = .formSheet;controller.preferredContentSize=CGSize(width:560,height:570);present(controller,animated:true)
     }
+    private func customizeButtons(){
+        let c=overlay.configuration
+        var rows:[HostSettingsViewController.Row]=[]
+        for action in GoldenPadTouchOverlay.actions {
+            rows.append(.slider("\(action.title) Size",0.55,1.8,Float(c.buttonSizes[action.title] ?? 1)){[weak self] in self?.overlay.setButtonSize(action.title,Double($0))})
+            rows.append(.slider("\(action.title) Opacity",0.15,1,Float(c.buttonOpacities[action.title] ?? 1)){[weak self] in self?.overlay.setButtonOpacity(action.title,Double($0))})
+        }
+        presentSettings("Individual Button Controls",rows:rows)
+    }
     private func savedLayouts(){
         var saved=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:]
         var rows:[HostSettingsViewController.Row]=[.button("Save Current Layout…"){[weak self] in self?.prompt("Save Layout",placeholder:"Layout name") { name in guard let self=self,!name.trimmingCharacters(in:.whitespaces).isEmpty,let data=try? JSONEncoder().encode(self.overlay.configuration) else{return};saved[String(name.prefix(48))]=data;UserDefaults.standard.set(saved,forKey:"etpad.touch.saved") }}]
-        for name in saved.keys.sorted(){rows.append(.button(name){[weak self] in if let data=saved[name],let config=try? JSONDecoder().decode(TouchConfiguration.self,from:data){self?.releaseInputs();self?.overlay.configuration=config;self?.refreshMenu()} })}
+        for name in saved.keys.sorted(){
+            rows.append(.button("Load: \(name)"){[weak self] in if let data=saved[name],let config=try? JSONDecoder().decode(TouchConfiguration.self,from:data){self?.releaseInputs();self?.overlay.configuration=config;self?.refreshMenu()} })
+            rows.append(.destructive("Delete: \(name)"){ let alert=UIAlertController(title:"Delete Layout?",message:"Delete saved layout ‘\(name)’?",preferredStyle:.alert);alert.addAction(UIAlertAction(title:"Cancel",style:.cancel));alert.addAction(UIAlertAction(title:"Delete",style:.destructive){_ in var current=UserDefaults.standard.dictionary(forKey:"etpad.touch.saved") as? [String:Data] ?? [:];current.removeValue(forKey:name);UserDefaults.standard.set(current,forKey:"etpad.touch.saved")});self.present(alert,animated:true) })
+        }
         presentSettings("Saved Layouts",rows:rows)
     }
     @objc private func mapping(){
