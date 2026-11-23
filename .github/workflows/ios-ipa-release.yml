@@ -31,10 +31,21 @@ jobs:
           ref: ${{ github.ref }}
           submodules: recursive
 
+      - name: Restore native build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/ios-engine-device
+            build/gl4es
+            build/omnibot-device
+            build/DerivedData-ETPad-device
+          key: ${{ runner.os }}-etpad-ios-${{ github.ref_name }}-${{ hashFiles('CMakeLists.txt', 'cmake/**', 'scripts/**', 'libs/**', 'apple/ios/Host/project.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-etpad-ios-${{ github.ref_name }}-
+
       - name: Install build tools
         run: |
-          brew update
-          brew install cmake ninja xcodegen
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake ninja xcodegen
 
       - name: Build unsigned iOS IPA
         run: |
