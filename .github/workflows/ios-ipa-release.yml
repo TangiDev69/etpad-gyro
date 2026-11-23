@@ -6,6 +6,7 @@ on:
       - iphone-gyro-custom-resolution-download-tuning
     paths:
       - 'apple/ios/**'
+      - 'apple/shared/**'
       - 'scripts/**'
       - 'CMakeLists.txt'
       - 'cmake/**'
@@ -24,12 +25,19 @@ jobs:
   build-ipa:
     runs-on: macos-26-intel
     timeout-minutes: 180
+    env:
+      # The native dependency graph is memory-heavy. Two concurrent compiler
+      # jobs are substantially safer on hosted macOS runners than CPU-count/2.
+      ETPAD_BUILD_JOBS: '2'
+      CMAKE_BUILD_PARALLEL_LEVEL: '2'
+      SWIFTPM_MAX_CONCURRENT_OPERATIONS: '2'
     steps:
       - name: Checkout (including pinned libraries)
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           submodules: recursive
+          fetch-depth: 1
 
       - name: Restore native build cache
         uses: actions/cache@v4
@@ -37,19 +45,34 @@ jobs:
           path: |
             build/ios-engine-device
             build/gl4es
-            build/omnibot-device
-            build/DerivedData-ETPad-device
-          key: ${{ runner.os }}-etpad-ios-${{ github.ref_name }}-${{ hashFiles('CMakeLists.txt', 'cmake/**', 'scripts/**', 'libs/**', 'apple/ios/Host/project.yml') }}
+            build/omnibot-ios
+            build/sources/gl4es
+            build/sources/omni-bot
+            build/sources/boost_1_85_0
+            build/boost_1_85_0.tar.bz2
+            build/dependencies/angle-prebuilt
+          key: ${{ runner.os }}-etpad-ios-v2-${{ github.ref_name }}-${{ hashFiles('CMakeLists.txt', 'cmake/**', 'scripts/**', 'libs/**', 'apple/ios/**', 'apple/shared/**') }}
           restore-keys: |
-            ${{ runner.os }}-etpad-ios-${{ github.ref_name }}-
+            ${{ runner.os }}-etpad-ios-v2-${{ github.ref_name }}-
+
+      - name: Inspect runner resources
+        run: |
+          echo "Runner: $(uname -a)"
+          echo "CPU count: $(sysctl -n hw.ncpu)"
+          echo "Physical memory: $(sysctl -n hw.memsize)"
+          df -h .
+          xcodebuild -version
+          cmake --version || true
 
       - name: Install build tools
         run: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake ninja xcodegen
 
       - name: Build unsigned iOS IPA
+        shell: bash
         run: |
-          ./scripts/build-etpad.sh --platform device --output build/output --ipa build/output/ETPad-iOS-unsigned.ipa
+          set -o pipefail
+          ./scripts/build-etpad.sh --platform device --output build/output --ipa build/output/ETPad-iOS-unsigned.ipa 2>&1 | tee build/output/build.log
 
       - name: Verify IPA and calculate SHA-256
         run: |
@@ -57,6 +80,19 @@ jobs:
           unzip -t build/output/ETPad-iOS-unsigned.ipa
           shasum -a 256 build/output/ETPad-iOS-unsigned.ipa > build/output/SHA256SUMS.txt
           cat build/output/SHA256SUMS.txt
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ETPad-iOS-build-diagnostics
+          path: |
+            build/output/build.log
+            build/ios-engine-device/CMakeCache.txt
+            build/omnibot-ios/device/bot/CMakeCache.txt
+            build/gl4es/device/apple-build/CMakeCache.txt
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
