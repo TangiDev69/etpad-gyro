@@ -3,6 +3,7 @@
 import UIKit
 import GameController
 import UniformTypeIdentifiers
+import CoreMotion
 
 // GCEventViewController keeps controller presses away from UIKit (which
 // otherwise highlights on-screen buttons); the game and host read them
@@ -15,6 +16,12 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private var showTouch=true
     private var autoHide:Bool { overlay.configuration.hideWithController }
     private var displayLink:CADisplayLink?
+    private let motionManager=CMMotionManager()
+    private var gyroLastTime:Double=0,gyroAccumX:Double=0,gyroAccumY:Double=0
+    private var gyroEnabled:Bool { UserDefaults.standard.bool(forKey:"etpad.gyro") }
+    private var gyroSensitivity:Double { UserDefaults.standard.object(forKey:"etpad.gyroSensitivity") as? Double ?? 2.0 }
+    private var gyroInvertX:Bool { UserDefaults.standard.bool(forKey:"etpad.gyroInvertX") }
+    private var gyroInvertY:Bool { UserDefaults.standard.object(forKey:"etpad.gyroInvertY") as? Bool ?? true }
     private var observers:[NSObjectProtocol]=[]
     private let dataManager=GameDataManager()
     private let prompts=UIButton(type:.system),menu=MenuButton(type:.system)
@@ -54,6 +61,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     override func viewDidLoad(){
         super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black;controllerUserInteractionEnabled=false
         showTouch=UserDefaults.standard.object(forKey:"etpad.showTouch") as? Bool ?? true
+        motionManager.deviceMotionUpdateInterval=1.0/60.0
+        if gyroEnabled { motionManager.startDeviceMotionUpdates() }
         // Migrate the two older switches without changing effective visibility.
         let legacyAutoHide=UserDefaults.standard.object(forKey:"etpad.autoHide") as? Bool ?? true
         overlay.configuration.hideWithController=legacyAutoHide && overlay.configuration.hideWithController
@@ -162,7 +171,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
             etpad_set_pointer_locked(locked ? 1:0);NSLog("ETPad pointer lock %@",locked ? "on":"off")
         })
         observers.append(NotificationCenter.default.addObserver(forName:UIApplication.willResignActiveNotification,object:nil,queue:.main) { [weak self] _ in
-            guard let self=self else { return };self.releaseInputs();self.displayLink?.isPaused=true;self.lastFrameTime=0;NSLog("ETPad lifecycle paused")
+            guard let self=self else { return };self.releaseInputs();self.displayLink?.isPaused=true;self.lastFrameTime=0;self.motionManager.stopDeviceMotionUpdates();self.gyroLastTime=0;NSLog("ETPad lifecycle paused")
         })
         if !GCController.controllers().isEmpty { inputMode = .controller }
         displayLink=CADisplayLink(target:self,selector:#selector(frame));displayLink?.preferredFrameRateRange=CAFrameRateRange(minimum:30,maximum:60,preferred:60);displayLink?.add(to:.main,forMode:.common)
@@ -510,6 +519,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         let start=CACurrentMediaTime()
         var engineMilliseconds:Double=0
         if engineReady {
+            pollGyro(now:start)
             etpad_frame();engineMilliseconds=(CACurrentMediaTime()-start)*1000
             if lastFrameTime>0 { intervals.append((start-lastFrameTime)*1000) };lastFrameTime=start
             pollInputSources()
@@ -598,12 +608,17 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
                 .toggle("Hide While Using a Controller or Keyboard",autoHide){[weak self] in self?.setAutoHide($0)},
                 .slider("Size",0.7,1.3,Float(c.size)){[weak self] in self?.overlay.configuration.size=Double($0)},
                 .slider("Opacity",0.25,1,Float(c.opacity)){[weak self] in self?.overlay.configuration.opacity=Double($0)},
-                .slider("Look Speed",0.4,2.5,Float(c.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
+                .slider("Look Speed",0.4,8.0,Float(c.lookSpeed)){[weak self] in self?.overlay.configuration.lookSpeed=Double($0)},
                 .toggle("Push Stick Forward to Sprint",c.sprintByPush){[weak self] in self?.overlay.configuration.sprintByPush=$0},
                 .toggle("Left-Handed",c.leftHanded){[weak self] in self?.releaseInputs();self?.overlay.configuration.leftHanded=$0},
                 .button("Move Buttons"){[weak self] in self?.overlay.arranging=true;self?.refreshMenu()},
                 .button("Saved Layouts"){[weak self] in self?.savedLayouts()},
                 .destructive("Restore Default Layout"){[weak self] in self?.overlay.restoreDefault();self?.refreshMenu()}]),
+            S(title:"Gyroscope",footer:"Landscape handheld mapping based on your Quake III port. If aiming feels reversed, invert each axis independently.",rows:[
+                .toggle("Enable Gyroscope",gyroEnabled){[weak self] on in UserDefaults.standard.set(on,forKey:"etpad.gyro");self?.setGyroEnabled(on)},
+                .slider("Gyro Sensitivity",0.5,6.0,Float(gyroSensitivity)){[weak self] in UserDefaults.standard.set(Double($0),forKey:"etpad.gyroSensitivity");self?.gyroAccumX=0;self?.gyroAccumY=0},
+                .toggle("Invert Horizontal",gyroInvertX){[weak self] on in UserDefaults.standard.set(on,forKey:"etpad.gyroInvertX");self?.gyroAccumX=0},
+                .toggle("Invert Vertical",gyroInvertY){[weak self] on in UserDefaults.standard.set(on,forKey:"etpad.gyroInvertY");self?.gyroAccumY=0}]),
             S(title:"Controller",footer:pad.map { "\($0.vendorName ?? "Controller") connected." } ?? "Pair an Xbox, PlayStation or MFi controller in iPad Settings › Bluetooth.",rows:[
                 .slider("Look Speed",0.4,2.5,Float(d.object(forKey:"etpad.padLook") as? Double ?? 1)){[weak self] in d.set(Double($0),forKey:"etpad.padLook");self?.applyPadLook()},
                 .toggle("Invert Look",d.bool(forKey:"etpad.padInvert")){[weak self] in d.set($0,forKey:"etpad.padInvert");self?.applyPadLook()},
@@ -613,6 +628,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
                 .toggle("Invert Mouse",d.bool(forKey:"etpad.mouseInvert")){[weak self] in d.set($0,forKey:"etpad.mouseInvert");self?.applyMouse()}]),
             S(title:"Graphics",footer:"Higher resolutions look sharper and use more power.",rows:[
                 .segment("Resolution (pixels wide)",widths.map(String.init),widths.firstIndex(of:width==0 ? 1280:width) ?? 1){[weak self] in self?.resolution(widths[$0])},
+                .button("Custom Resolution…"){[weak self] in self?.customResolution()},
                 .slider("Field of View",75,120,Float(d.object(forKey:"etpad.fov") as? Double ?? 90)){[weak self] v in d.set(Double(v),forKey:"etpad.fov");self?.command("set cg_fov \(Int(v))")},
                 .toggle("Show FPS Counter",d.bool(forKey:"etpad.fps")){[weak self] on in d.set(on,forKey:"etpad.fps");self?.command("set cg_drawFPS \(on ? 1:0)")}]),
             S(title:"Player",footer:nil,rows:[.button("Name: \(d.string(forKey:"etpad.name") ?? "ETPadPlayer")"){[weak self] in self?.playerName()}]),
@@ -626,6 +642,24 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         releaseInputs()
         let controller=UINavigationController(rootViewController:HostSettingsViewController(title:"Settings",sections:sections))
         controller.modalPresentationStyle = .formSheet;controller.preferredContentSize=CGSize(width:600,height:680);present(controller,animated:true)
+    }
+    private func setGyroEnabled(_ on:Bool){
+        gyroAccumX=0;gyroAccumY=0;gyroLastTime=0
+        if on && UIApplication.shared.applicationState == .active { motionManager.startDeviceMotionUpdates() } else { motionManager.stopDeviceMotionUpdates() }
+    }
+    private func pollGyro(now:Double){
+        guard gyroEnabled,gyroSensitivity>0,motionManager.isDeviceMotionAvailable,motionManager.deviceMotion != nil,
+              inMatch,gameplayActive,inputMode == .touch,presentedViewController==nil,!overlay.arranging,wheel.isHidden,!hasMouse else { gyroLastTime=now;return }
+        let dt=max(0,min(0.05,now-(gyroLastTime>0 ? gyroLastTime:now)));gyroLastTime=now
+        guard dt>0 else{return}
+        let rate=motionManager.deviceMotion!.rotationRate
+        // Match the handheld landscape axis/sign convention used by the Quake III port.
+        let left=view.window?.windowScene?.interfaceOrientation == .landscapeLeft ? -1.0:1.0
+        let gain=gyroSensitivity*8.0*dt*120.0*left
+        gyroAccumX += -rate.x*gain*(gyroInvertX ? -1.0:1.0)
+        gyroAccumY += rate.y*gain*(gyroInvertY ? -1.0:1.0)
+        let dx=Int32(gyroAccumX.rounded(.towardZero)),dy=Int32(gyroAccumY.rounded(.towardZero))
+        if dx != 0 || dy != 0 { gyroAccumX-=Double(dx);gyroAccumY-=Double(dy);etpad_mouse(dx,dy) }
     }
     private func applyMouse(){
         let d=UserDefaults.standard
@@ -707,8 +741,21 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         }})
     }
     private func resolution(_ width:Int){
-        UserDefaults.standard.set(width,forKey:"etpad.renderWidth")
-        if engineReady { let height=Int((CGFloat(width)*view.bounds.height/view.bounds.width).rounded());command("set r_customwidth \(width);set r_customheight \(height);vid_restart") }
+        UserDefaults.standard.set(width,forKey:"etpad.renderWidth");UserDefaults.standard.set(0,forKey:"etpad.renderHeight")
+        let height=Int((CGFloat(width)*view.bounds.height/max(view.bounds.width,1)).rounded())
+        applyResolution(width,height)
+    }
+    private func customResolution(){
+        let d=UserDefaults.standard,w=d.integer(forKey:"etpad.renderWidth"),h=d.integer(forKey:"etpad.renderHeight")
+        let defaultHeight=Int((CGFloat(w>0 ? w:1280)*view.bounds.height/max(view.bounds.width,1)).rounded())
+        prompt("Custom Resolution",placeholder:"Width x Height",value:"\(w>0 ? w:1280) x \(h>0 ? h:defaultHeight)",submit:"Apply") {[weak self] raw in
+            let parts=raw.lowercased().split(whereSeparator:{!$0.isNumber})
+            guard parts.count==2,let width=Int(parts[0]),let height=Int(parts[1]),width>=320,width<=4096,height>=240,height<=4096 else { self?.alert("Invalid Resolution","Enter width and height, for example 1280 x 720. Values must be between 320×240 and 4096×4096.");return }
+            d.set(width,forKey:"etpad.renderWidth");d.set(height,forKey:"etpad.renderHeight");self?.applyResolution(width,height)
+        }
+    }
+    private func applyResolution(_ width:Int,_ height:Int){
+        if engineReady { command("set r_customwidth \(width);set r_customheight \(height);vid_restart") }
         refreshMenu()
     }
     private func fieldOfView(){presentSettings("Field of View",rows:[.slider("Field of View",75,120,Float(UserDefaults.standard.object(forKey:"etpad.fov") as? Double ?? 90)){[weak self] value in UserDefaults.standard.set(Double(value),forKey:"etpad.fov");self?.command("set cg_fov \(Int(value))") }])}
@@ -759,11 +806,11 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         try? FileManager.default.createDirectory(at:profile,withIntermediateDirectories:true)
         try? "\"ETPad\"".write(to:profile.appendingPathComponent("profile.dat"),atomically:true,encoding:.utf8)
         try? "\"ETPad\"".write(to:profile.deletingLastPathComponent().appendingPathComponent("defaultprofile.dat"),atomically:true,encoding:.utf8)
-        let stored=UserDefaults.standard.integer(forKey:"etpad.renderWidth")
-        let renderWidth=[960,1280,1600,1920].contains(stored) ? stored:1280
-        let renderHeight=Int((CGFloat(renderWidth)*view.bounds.height/view.bounds.width).rounded())
+        let d=UserDefaults.standard,stored=d.integer(forKey:"etpad.renderWidth"),storedHeight=d.integer(forKey:"etpad.renderHeight")
+        let renderWidth=(stored>=320 && stored<=4096) ? stored:1280
+        let renderHeight=(storedHeight>=240 && storedHeight<=4096) ? storedHeight:Int((CGFloat(renderWidth)*view.bounds.height/max(view.bounds.width,1)).rounded())
         var args = [Bundle.main.executablePath ?? "ETPad", "+set","fs_basepath",Bundle.main.bundleURL.appendingPathComponent("GameContent").path,
-                    "+set","fs_homepath",gameHome.path,"+set","fs_game","legacy","+set","in_joystick","1","+set","in_joystickUseAnalog","1","+set","cl_wwwDownload","0","+set","com_introplayed","1","+set","logfile","2",
+                    "+set","fs_homepath",gameHome.path,"+set","fs_game","legacy","+set","in_joystick","1","+set","in_joystickUseAnalog","1","+set","cl_wwwDownload","1","+set","rate","100000","+set","com_introplayed","1","+set","logfile","2",
                     "+set","r_fullscreen","1","+set","r_mode","-1","+set","r_customwidth",String(renderWidth),"+set","r_customheight",String(renderHeight),
                     "+set","r_allowSoftwareGL","1","+set","r_swapInterval","0","+set","com_maxfps","250","+set","name",UserDefaults.standard.string(forKey:"etpad.name") ?? "ETPadPlayer",
                     "+set","cg_fov",String(Int(UserDefaults.standard.object(forKey:"etpad.fov") as? Double ?? 90)),
