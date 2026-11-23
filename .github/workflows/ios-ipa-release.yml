@@ -19,7 +19,7 @@ permissions:
 
 concurrency:
   group: etpad-ios-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-ipa:
@@ -67,6 +67,9 @@ jobs:
       - name: Install build tools
         run: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake ninja xcodegen
+
+      - name: Prepare build log directory
+        run: mkdir -p build/output
 
       - name: Build unsigned iOS IPA
         shell: bash
