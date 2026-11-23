@@ -16,6 +16,8 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     private var showTouch=true
     private var autoHide:Bool { overlay.configuration.hideWithController }
     private var displayLink:CADisplayLink?
+    private let fpsBadge=UILabel()
+    private var fpsWindowStart:Double=0,fpsWindowFrames=0,currentFPS=0
     private let motionManager=CMMotionManager()
     private var gyroLastTime:Double=0,gyroAccumX:Double=0,gyroAccumY:Double=0
     private var gyroEnabled:Bool { UserDefaults.standard.bool(forKey:"etpad.gyro") }
@@ -60,6 +62,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     override var canBecomeFirstResponder:Bool { true }
     override func viewDidLoad(){
         super.viewDidLoad();overrideUserInterfaceStyle = .dark;view.backgroundColor = .black;controllerUserInteractionEnabled=false
+        fpsBadge.textAlignment = .center;fpsBadge.font = UIFont.monospacedDigitSystemFont(ofSize:20,weight:.heavy);fpsBadge.textColor=UIColor(red:0.72,green:1,blue:0.30,alpha:1);fpsBadge.backgroundColor=UIColor.black.withAlphaComponent(0.88);fpsBadge.layer.cornerRadius=10;fpsBadge.layer.borderWidth=1.5;fpsBadge.layer.borderColor=UIColor(red:0.72,green:1,blue:0.30,alpha:0.9).cgColor;fpsBadge.layer.masksToBounds=true;fpsBadge.isUserInteractionEnabled=false;fpsBadge.text="FPS --";fpsBadge.isHidden=true;view.addSubview(fpsBadge)
         showTouch=UserDefaults.standard.object(forKey:"etpad.showTouch") as? Bool ?? true
         motionManager.deviceMotionUpdateInterval=1.0/60.0
         if gyroEnabled { motionManager.startDeviceMotionUpdates() }
@@ -201,6 +204,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         super.viewDidLayoutSubviews();setFrame(view.bounds,for:surface);setFrame(view.bounds,for:overlay);setFrame(view.bounds,for:launcher);setFrame(view.bounds,for:wheel)
         let safe=view.bounds.inset(by:view.safeAreaInsets)
         layoutMenu(in:safe)
+        setFrame(CGRect(x:safe.minX+12,y:safe.minY+12,width:112,height:42),for:fpsBadge)
         let chipWidth=min(prompts.sizeThatFits(CGSize(width:420,height:44)).width,min(420,safe.width-144))
         setFrame(CGRect(x:safe.midX-chipWidth/2,y:safe.minY+12,width:chipWidth,height:44),for:prompts)
         restoreHost()
@@ -528,8 +532,9 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         if engineReady { pollGameMenuCursor();pollComms() }
         updateTouchVisibility()
         updateSoftwareKeyboard()
-        guard engineReady else { return }
+        guard engineReady else { fpsBadge.isHidden=true;return }
         let totalMilliseconds=(CACurrentMediaTime()-start)*1000
+        if UserDefaults.standard.bool(forKey:"etpad.fps") && gameplayActive && !scoreboard { fpsBadge.isHidden=false;fpsWindowFrames+=1;if fpsWindowStart==0 { fpsWindowStart=start };if start-fpsWindowStart>=1 { currentFPS=Int((Double(fpsWindowFrames)/(start-fpsWindowStart)).rounded());fpsBadge.text="FPS  \(currentFPS)";fpsWindowFrames=0;fpsWindowStart=start } } else { fpsBadge.isHidden=true;fpsWindowFrames=0;fpsWindowStart=0 }
         frameTimes.append(engineMilliseconds)
         hostTimes.append(max(0,totalMilliseconds-engineMilliseconds))
         callbackTimes.append(totalMilliseconds)
@@ -630,7 +635,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
                 .segment("Resolution (pixels wide)",widths.map(String.init),widths.firstIndex(of:width==0 ? 1280:width) ?? 1){[weak self] in self?.resolution(widths[$0])},
                 .button("Custom Resolution…"){[weak self] in self?.customResolution()},
                 .slider("Field of View",75,120,Float(d.object(forKey:"etpad.fov") as? Double ?? 90)){[weak self] v in d.set(Double(v),forKey:"etpad.fov");self?.command("set cg_fov \(Int(v))")},
-                .toggle("Show FPS Counter",d.bool(forKey:"etpad.fps")){[weak self] on in d.set(on,forKey:"etpad.fps");self?.command("set cg_drawFPS \(on ? 1:0)")}]),
+                .toggle("Show FPS Counter",d.bool(forKey:"etpad.fps")){[weak self] on in d.set(on,forKey:"etpad.fps");self?.fpsBadge.isHidden = !on;self?.fpsWindowFrames=0;self?.fpsWindowStart=0;self?.command("set cg_drawFPS \(on ? 1:0)")}]),
             S(title:"Player",footer:nil,rows:[.button("Name: \(d.string(forKey:"etpad.name") ?? "ETPadPlayer")"){[weak self] in self?.playerName()}]),
             S(title:"Game Data",footer:dataReady ? "Original pak0, pak1 and pak2 are installed and verified.":"ETPad needs the original pak0, pak1 and pak2 files.",rows:[
                 .button("Download Free Game Data"){[weak self] in self?.downloadData()},
