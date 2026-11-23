@@ -217,7 +217,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
         host.windowLevel=engineReady ? UIWindow.Level(rawValue:UIWindow.Level.normal.rawValue+1) : .normal
         // While the ••• menu is open its own window must stay key.
         if !host.isKeyWindow && !menu.showing { host.makeKeyAndVisible() }
-        if UIApplication.shared.applicationState == .active { displayLink?.isPaused=false }
+        if UIApplication.shared.applicationState == .active { displayLink?.isPaused=false;if gyroEnabled && !motionManager.isDeviceMotionActive { motionManager.startDeviceMotionUpdates() } }
         view.bringSubviewToFront(menu)
         if presentedViewController==nil && !textInput.isFirstResponder { becomeFirstResponder() }
     }
@@ -649,7 +649,7 @@ final class GameViewController:GCEventViewController,UIDocumentPickerDelegate {
     }
     private func pollGyro(now:Double){
         guard gyroEnabled,gyroSensitivity>0,motionManager.isDeviceMotionAvailable,motionManager.deviceMotion != nil,
-              inMatch,gameplayActive,inputMode == .touch,presentedViewController==nil,!overlay.arranging,wheel.isHidden,!hasMouse else { gyroLastTime=now;return }
+              inMatch,gameplayActive,inputMode == .touch,presentedViewController==nil,!menu.showing,!overlay.arranging,wheel.isHidden,!hasMouse else { gyroLastTime=now;return }
         let dt=max(0,min(0.05,now-(gyroLastTime>0 ? gyroLastTime:now)));gyroLastTime=now
         guard dt>0 else{return}
         let rate=motionManager.deviceMotion!.rotationRate
