@@ -26,7 +26,7 @@ struct TouchConfiguration: Codable {
         centers=try c.decodeIfPresent([String:[Double]].self,forKey:.centers) ?? [:]
     }
     mutating func sanitize() {
-        opacity = max(0.25,min(1,opacity));size=max(0.7,min(1.3,size));lookSpeed=max(0.4,min(2.5,lookSpeed))
+        opacity = max(0.25,min(1,opacity));size=max(0.7,min(1.3,size));lookSpeed=max(0.4,min(8.0,lookSpeed))
         centers=centers.filter { $0.value.count == 2 && $0.value.allSatisfy(\.isFinite) }.mapValues { [max(0.04,min(0.96,$0[0])),max(0.08,min(0.92,$0[1]))] }
     }
 }
