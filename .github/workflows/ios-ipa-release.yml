@@ -1,0 +1,75 @@
+name: Build ETPad iOS IPA
+
+on:
+  push:
+    branches:
+      - iphone-gyro-custom-resolution-download-tuning
+    paths:
+      - 'apple/ios/**'
+      - 'scripts/**'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'libs'
+      - '.github/workflows/ios-ipa-release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etpad-ios-release
+  cancel-in-progress: false
+
+jobs:
+  build-ipa:
+    runs-on: macos-15
+    timeout-minutes: 180
+    steps:
+      - name: Checkout (including pinned libraries)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          submodules: recursive
+
+      - name: Install build tools
+        run: |
+          brew update
+          brew install cmake ninja xcodegen
+
+      - name: Build unsigned iOS IPA
+        run: |
+          ./scripts/build-etpad.sh --platform device --output build/output --ipa build/output/ETPad-iOS-unsigned.ipa
+
+      - name: Verify IPA and calculate SHA-256
+        run: |
+          test -s build/output/ETPad-iOS-unsigned.ipa
+          unzip -t build/output/ETPad-iOS-unsigned.ipa
+          shasum -a 256 build/output/ETPad-iOS-unsigned.ipa > build/output/SHA256SUMS.txt
+          cat build/output/SHA256SUMS.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ETPad-iOS-unsigned-IPA
+          path: |
+            build/output/ETPad-iOS-unsigned.ipa
+            build/output/SHA256SUMS.txt
+          retention-days: 30
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: etpad-ios-build-${{ github.run_number }}
+          name: ETPad iOS — Custom Gyro Build ${{ github.run_number }}
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            build/output/ETPad-iOS-unsigned.ipa
+            build/output/SHA256SUMS.txt
+          body: |
+            Experimental, unsigned iOS build of ETPad from the gyro/custom-resolution branch.
+
+            Included: gyro aim and independent inversion, custom resolution, increased touch look sensitivity, improved FPS overlay, and download configuration changes.
+
+            This IPA is **unsigned** and must be installed using a sideloading/signing tool. No original Wolfenstein: Enemy Territory game data is bundled; download/import your data in the app.
