@@ -178,7 +178,9 @@ endforeach()
 ''')
     sdkname = 'iphonesimulator' if platform == 'simulator' else 'iphoneos'
     sdk = subprocess.check_output(['xcrun', '--sdk', sdkname, '--show-sdk-path'], text=True).strip()
-    jobs = min(4, max(1, int(subprocess.check_output(['sysctl', '-n', 'hw.ncpu'])) // 2))
+    # Boost and Omni-bot compile many large translation units; cap parallelism
+    # to avoid exhausting memory on hosted runners.
+    jobs = max(1, int(os.environ.get('ETPAD_BUILD_JOBS', '2')))
     env = dict(os.environ, SDKROOT=sdk)
     args = ['-G', 'Ninja', '-DCMAKE_SYSTEM_NAME=iOS', '-DCMAKE_OSX_SYSROOT=' + sdk,
             '-DCMAKE_OSX_ARCHITECTURES=arm64', '-DCMAKE_OSX_DEPLOYMENT_TARGET=16.0',
