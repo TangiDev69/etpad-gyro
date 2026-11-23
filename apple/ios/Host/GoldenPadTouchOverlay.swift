@@ -12,6 +12,8 @@ struct TouchConfiguration: Codable {
     var lookSpeed:Double = 1
     var sprintByPush = true
     var centers:[String:[Double]] = [:]
+    var buttonSizes:[String:Double] = [:]
+    var buttonOpacities:[String:Double] = [:]
     init() {}
     // Older saves lack newer keys; decode each one optionally so a saved
     // configuration or named layout is never discarded by an update.
@@ -24,10 +26,14 @@ struct TouchConfiguration: Codable {
         lookSpeed=try c.decodeIfPresent(Double.self,forKey:.lookSpeed) ?? 1
         sprintByPush=try c.decodeIfPresent(Bool.self,forKey:.sprintByPush) ?? true
         centers=try c.decodeIfPresent([String:[Double]].self,forKey:.centers) ?? [:]
+        buttonSizes=try c.decodeIfPresent([String:Double].self,forKey:.buttonSizes) ?? [:]
+        buttonOpacities=try c.decodeIfPresent([String:Double].self,forKey:.buttonOpacities) ?? [:]
     }
     mutating func sanitize() {
         opacity = max(0.25,min(1,opacity));size=max(0.7,min(1.3,size));lookSpeed=max(0.4,min(8.0,lookSpeed))
         centers=centers.filter { $0.value.count == 2 && $0.value.allSatisfy(\.isFinite) }.mapValues { [max(0.04,min(0.96,$0[0])),max(0.08,min(0.92,$0[1]))] }
+        buttonSizes=buttonSizes.filter { $0.value.isFinite }.mapValues { max(0.55,min(1.8,$0)) }
+        buttonOpacities=buttonOpacities.filter { $0.value.isFinite }.mapValues { max(0.15,min(1,$0)) }
     }
 }
 
@@ -187,6 +193,8 @@ final class GoldenPadTouchOverlay: UIView {
     var onLook:((CGPoint)->Void)?
     var onTouch:(()->Void)?
     var onConfigurationChanged:(()->Void)?
+    var onExitArrange:(()->Void)?
+    private let arrangeDone=UIButton(type:.system)
     var configuration:TouchConfiguration { didSet { configuration.sanitize();persist();setNeedsLayout() } }
     var arranging=false {
         didSet {
@@ -218,6 +226,7 @@ final class GoldenPadTouchOverlay: UIView {
         addSubview(stick)
         lookGuide.backgroundColor=ETPadTheme.ink.withAlphaComponent(0.2);lookGuide.layer.borderColor=ETPadTheme.cream.withAlphaComponent(0.4).cgColor
         lookGuide.layer.borderWidth=1;lookGuide.isHidden=true;lookGuide.isUserInteractionEnabled=false;addSubview(lookGuide)
+        arrangeDone.setTitle("Done",for:.normal);arrangeDone.setImage(UIImage(systemName:"checkmark.circle.fill"),for:.normal);arrangeDone.tintColor=ETPadTheme.cream;arrangeDone.backgroundColor=ETPadTheme.ink.withAlphaComponent(0.82);arrangeDone.layer.cornerRadius=16;arrangeDone.layer.borderWidth=1;arrangeDone.layer.borderColor=ETPadTheme.brass.cgColor;arrangeDone.titleLabel?.font=ETPadTheme.stencil(15);arrangeDone.addTarget(self,action:#selector(exitArrange),for:.touchUpInside);arrangeDone.isHidden=true;addSubview(arrangeDone)
         for action in Self.actions {
             let button=TouchActionButton(frame:.zero)
             button.configure(title:action.title,symbol:action.symbol,primary:action.title=="FIRE",compact:action.compact || action.gutter)
@@ -243,6 +252,7 @@ final class GoldenPadTouchOverlay: UIView {
         // controls follow the same scale: larger on 12.9-inch, smaller on mini.
         let responsive=max(0.75,min(1.25,min(safe.height/800,safe.width/1150)))
         let spacing=responsive*max(1,configuration.size)
+        arrangeDone.frame=CGRect(x:safe.maxX-100,y:safe.minY+10,width:90,height:40);arrangeDone.isHidden = !arranging
         for action in Self.actions {
             guard let button=buttons[action.title] else { continue }
             let defaultCenter:CGPoint
@@ -262,7 +272,8 @@ final class GoldenPadTouchOverlay: UIView {
             let center=CGPoint(x:safe.minX+(mirror ? 1-x:x)*safe.width,y:safe.minY+y*safe.height)
             // Keep occasional controls inside the narrow scoreboard gutter even
             // at large Size settings. Gameplay targets still follow Size.
-            let width=action.gutter ? 64:max(44,action.diameter*responsive*configuration.size)
+            let individualSize=CGFloat(configuration.buttonSizes[action.title] ?? 1)
+            let width=action.gutter ? max(44,64*individualSize):max(36,action.diameter*responsive*configuration.size*individualSize)
             let height=action.gutter ? 44:width
             button.bounds=CGRect(x:0,y:0,width:width,height:height)
             button.center=CGPoint(x:max(safe.minX+width/2,min(safe.maxX-width/2,center.x)),y:max(safe.minY+height/2,min(safe.maxY-height/2,center.y)))
@@ -271,7 +282,7 @@ final class GoldenPadTouchOverlay: UIView {
             if scoreboardVisible && !arranging && action.title=="SCORE" { button.center=CGPoint(x:safe.minX+44,y:safe.maxY-34) }
             button.layer.cornerRadius=button.bounds.height/2
             button.isHidden=scoreboardVisible && !arranging && action.title != "SCORE"
-            button.editingLayout=arranging;button.opacity=configuration.opacity;button.updateFace()
+            button.editingLayout=arranging;button.opacity=configuration.opacity;button.alpha=CGFloat(configuration.buttonOpacities[action.title] ?? 1);button.updateFace()
             button.gestureRecognizers?.forEach { $0.isEnabled=arranging }
         }
         // The resting stick sits beside ET's health/portrait HUD.
@@ -286,6 +297,7 @@ final class GoldenPadTouchOverlay: UIView {
         stick.alpha=CGFloat(0.55+configuration.opacity*0.45)
         if !arranging && lookTouch==nil { lookGuide.isHidden=true }
     }
+    @objc private func exitArrange(){onExitArrange?()}
     @objc private func arrange(_ recognizer:UIPanGestureRecognizer) {
         guard arranging,let button=recognizer.view as? TouchActionButton else { return }
         let title=button.actionTitle
@@ -365,4 +377,6 @@ final class GoldenPadTouchOverlay: UIView {
         if moveTouch != nil { endMove() } else { setSprint(false) } // a controller stick shares the move axes
     }
     func restoreDefault(){configuration=TouchConfiguration();onConfigurationChanged?()}
+    func setButtonSize(_ title:String,_ value:Double){configuration.buttonSizes[title]=value}
+    func setButtonOpacity(_ title:String,_ value:Double){configuration.buttonOpacities[title]=value}
 }
