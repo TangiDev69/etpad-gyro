@@ -65,7 +65,8 @@ def build(platform):
                '-DNOX11=ON', '-DNOEGL=ON', '-DSTATICLIB=ON', '-DNO_LOADER=ON',
                '-DNO_INIT_CONSTRUCTOR=ON', '-DDEFAULT_ES=2']
     subprocess.run(command, env=env, check=True)
-    subprocess.run(['cmake', '--build', str(out / 'apple-build'), '-j', str(max(1, int(subprocess.check_output(['sysctl', '-n', 'hw.ncpu'])) // 2))], env=env, check=True)
+    jobs = max(1, int(os.environ.get('ETPAD_BUILD_JOBS', '2')))
+    subprocess.run(['cmake', '--build', str(out / 'apple-build'), '--parallel', str(jobs)], env=env, check=True)
     library = out / 'lib/libGL.a'
     shutil.copy2(ref / 'LICENSE', out / 'LICENSE.gl4es')
     receipt = dict(url=URL, commit=COMMIT, platform=platform, configure=command,
