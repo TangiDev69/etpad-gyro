@@ -24,7 +24,9 @@ def main():
     renderer = os.environ.get('ETPAD_RENDERER', 'angle')
     if renderer not in ('angle', 'vulkan'): parser.error('ETPAD_RENDERER must be angle or vulkan')
     if args.ipa and args.platform != 'device': parser.error('--ipa requires device platform')
-    jobs = max(1, int(subprocess.check_output(['sysctl','-n','hw.ncpu'])) // 2)
+    # Keep peak memory bounded on hosted macOS runners. The workflow sets this
+    # to 2; local builders may opt into a different positive value.
+    jobs = max(1, int(os.environ.get('ETPAD_BUILD_JOBS', '2')))
     sdkname = 'iphonesimulator' if args.platform == 'simulator' else 'iphoneos'
     sdk = subprocess.check_output(['xcrun','--sdk',sdkname,'--show-sdk-path'],text=True).strip()
     variant = '-vulkan' if renderer == 'vulkan' else ''
